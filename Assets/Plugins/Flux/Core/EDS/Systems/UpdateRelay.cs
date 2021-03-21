@@ -52,6 +52,11 @@ namespace Flux.EDS
             if (hasSystem && system.IsActive) system.Update();
             foreach (var child in childs) child.Update();
         }
+        public void Shutdown()
+        {
+            if (hasSystem) system.Shutdown();
+            foreach (var child in childs) child.Shutdown();
+        }
         
         //---[Sorting]--------------------------------------------------------------------------------------------------/
         

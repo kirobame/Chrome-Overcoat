@@ -115,12 +115,18 @@ namespace Flux.EDS
         private static FlagTranslator flagTranslator;
 
         private static HashSet<Command> commands;
+        private static Hook hook;
         
         //---[Initialization methods]-----------------------------------------------------------------------------------/
         
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
         static void Bootup()
         {
+            var hookObj = new GameObject("EDS Hook");
+            hook = hookObj.AddComponent<Hook>();
+
+            hook.onDestroyed += OnShutdown;
+            
             bridgeLinks = new Dictionary<Type, Link>();
             bridgeLookups = new Dictionary<Type, Type[]>();
             dirtiedBridges = new Dictionary<Entity, Dictionary<Type, HashSet<Type>>>();
@@ -154,6 +160,14 @@ namespace Flux.EDS
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void Initialize() => root.Initialize();
+        
+        static void OnShutdown()
+        {
+            hook.onDestroyed -= OnShutdown;
+            root.Shutdown();
+        }
+
+        //--------------------------------------------------------------------------------------------------------------/
         
         private static void RegisterBridgeType(Type type)
         {

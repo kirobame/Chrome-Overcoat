@@ -98,6 +98,10 @@ namespace Flux.EDS
             
             IsActive = true;
             unresolvedRelays = null;
+
+            OnBindingsResolved();
         }
+        
+        protected virtual void OnBindingsResolved() { }
     }
 }

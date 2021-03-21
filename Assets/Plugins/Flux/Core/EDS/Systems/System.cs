@@ -7,6 +7,8 @@
         public bool IsActive { get; protected set; } = true;
         
         public virtual void Initialize() { }
-        public abstract void Update();
+        public virtual void Shutdown() { }
+        
+        public virtual void Update() { }
     }
 }
