@@ -8,8 +8,81 @@ using UnityEngine.PlayerLoop;
 
 namespace Flux.EDS
 {
+    public interface IQueryFilter
+    {
+        void Affect(HashSet<Entity> search);
+    }
+    
+    public struct WithType<T1> : IQueryFilter
+    {
+        public void Affect(HashSet<Entity> search)
+        {
+            if (Entities.Values.TryGetValue(typeof(T1), out var T1Set)) search.IntersectWith(T1Set);
+        }
+    }
+    public struct WithType<T1,T2> : IQueryFilter
+    {
+        public void Affect(HashSet<Entity> search)
+        {
+            if (Entities.Values.TryGetValue(typeof(T1), out var T1Set)) search.IntersectWith(T1Set);
+            if (Entities.Values.TryGetValue(typeof(T2), out var T2Set)) search.IntersectWith(T2Set);
+        }
+    }
+    public struct WithType<T1,T2,T3> : IQueryFilter
+    {
+        public void Affect(HashSet<Entity> search)
+        {
+            if (Entities.Values.TryGetValue(typeof(T1), out var T1Set)) search.IntersectWith(T1Set);
+            if (Entities.Values.TryGetValue(typeof(T2), out var T2Set)) search.IntersectWith(T2Set);
+            if (Entities.Values.TryGetValue(typeof(T3), out var T3Set)) search.IntersectWith(T3Set);
+        }
+    }
+
+    public struct WithoutType<T1> : IQueryFilter
+    {
+        public void Affect(HashSet<Entity> search)
+        {
+            if (Entities.Values.TryGetValue(typeof(T1), out var T1Set)) search.ExceptWith(T1Set);
+        }
+    }
+    public struct WithoutType<T1,T2> : IQueryFilter
+    {
+        public void Affect(HashSet<Entity> search)
+        {
+            if (Entities.Values.TryGetValue(typeof(T1), out var T1Set)) search.ExceptWith(T1Set);
+            if (Entities.Values.TryGetValue(typeof(T2), out var T2Set)) search.ExceptWith(T2Set);
+        }
+    }
+    public struct WithoutType<T1,T2,T3> : IQueryFilter
+    {
+        public void Affect(HashSet<Entity> search)
+        {
+            if (Entities.Values.TryGetValue(typeof(T1), out var T1Set)) search.ExceptWith(T1Set);
+            if (Entities.Values.TryGetValue(typeof(T2), out var T2Set)) search.ExceptWith(T2Set);
+            if (Entities.Values.TryGetValue(typeof(T3), out var T3Set)) search.ExceptWith(T3Set);
+        }
+    }
+
+    public struct WithoutFlags : IQueryFilter
+    {
+        public WithoutFlags(Enum[] flags) => this.flags = flags;
+
+        private Enum[] flags;
+
+        public void Affect(HashSet<Entity> search)
+        {
+            foreach (var flag in flags)
+            {
+                var key = Entities.Translator.Translate(flag);
+                if (Entities.FlaggedValues.TryGetValue(key, out var set)) search.ExceptWith(set);
+            }
+        }
+    }
+    
     public static class Entities
     {
+        #region Utilities
+
         private static bool Insert(this UpdateRelay parent, out UpdateRelay output, string[] chain, int index = 0)
         {
             if (index == chain.Length)
@@ -56,6 +129,7 @@ namespace Flux.EDS
 
             return output;
         }
+        #endregion
         
         #region Nested Types
 
@@ -102,19 +176,26 @@ namespace Flux.EDS
         public delegate void WRRR<T1,T2,T3,T4>(Entity entity, ref T1 argOne, in T2 argTwo, in T3 argThree, in T4 argFour) where T1 : IData where T2 : IData where T3 : IData where T4 : IData;
         
         #endregion
-        
+
         private static Dictionary<Type, Link> bridgeLinks;
         private static Dictionary<Type, Type[]> bridgeLookups;
         private static Dictionary<Entity, Dictionary<Type, HashSet<Type>>> dirtiedBridges;
-
-        private static UpdateRelay root;
         
+        //---<
+        
+        internal static IReadOnlyDictionary<Type, HashSet<Entity>> Values => values;
         private static Dictionary<Type, HashSet<Entity>> values;
+
+        internal static IReadOnlyDictionary<int, HashSet<Entity>> FlaggedValues => flaggedValues;
         private static Dictionary<int, HashSet<Entity>> flaggedValues;
 
-        private static FlagTranslator flagTranslator;
+        internal static FlagTranslator Translator => translator;
+        private static FlagTranslator translator;
+        
+        //---<
 
         private static HashSet<Command> commands;
+        private static UpdateRelay root;
         private static Hook hook;
         
         //---[Initialization methods]-----------------------------------------------------------------------------------/
@@ -136,7 +217,7 @@ namespace Flux.EDS
             values = new Dictionary<Type, HashSet<Entity>>();
             flaggedValues = new Dictionary<int, HashSet<Entity>>();
             
-            flagTranslator = new FlagTranslator();
+            translator = new FlagTranslator();
             
             commands= new HashSet<Command>();
 
@@ -221,15 +302,35 @@ namespace Flux.EDS
         }
 
         //---[Core]-----------------------------------------------------------------------------------------------------/
+
+        private static void ForEachBridge(Action<Link,IData,Component> method)
+        {
+            var entities = new HashSet<Entity>();
+            foreach (var kvp in values) entities.UnionWith(kvp.Value);
+
+            foreach (var entity in entities)
+            {
+                foreach (var data in entity.Table)
+                {
+                    if (!bridgeLookups.TryGetValue(data.GetType(), out var lookups)) continue;
+                    foreach (var lookup in lookups) method(bridgeLinks[lookup], data, entity.BridgedComponents[lookup]);
+                }
+            }
+        }
         
         static void Update()
         {
-            root.Update();
-            
             #if UNITY_EDITOR
             if (!Application.isPlaying) return;
             #endif
             
+            ForEachBridge((link, data, comp) => link.ReceiveData(data, comp));
+            root.Update();
+            ForEachBridge((link, data, comp) => link.SendData(data, comp));
+        }
+
+        public static void Sync()
+        {
             foreach (var kvp in dirtiedBridges)
             {
                 foreach (var subKvp in kvp.Value)
@@ -238,17 +339,213 @@ namespace Flux.EDS
                     foreach (var bridgedType in subKvp.Value)
                     {
                         var component = kvp.Key.BridgedComponents[bridgedType];
+                        
                         bridgeLinks[bridgedType].SendData(bridge, component);
+                        bridgeLinks[bridgedType].ReceiveData(bridge, component);
                     }
                     
                     subKvp.Value.Clear();
                 }
             }
             
-            Sync();
+            ExecuteCommands();
         }
 
-        public static void Sync() => ExecuteCommands();
+        #region Filters
+
+        public static List<IQueryFilter> With<T1>() => new List<IQueryFilter>() { new WithType<T1>() };
+        public static List<IQueryFilter> With<T1,T2>() => new List<IQueryFilter>() { new WithType<T1,T2>() };
+        public static List<IQueryFilter> With<T1,T2,T3>() => new List<IQueryFilter>() { new WithType<T1,T2,T3>() };
+        
+        public static List<IQueryFilter> Without<T1>() => new List<IQueryFilter>() { new WithoutType<T1>() };
+        public static List<IQueryFilter> Without<T1,T2>() => new List<IQueryFilter>() { new WithoutType<T1,T2>() };
+        public static List<IQueryFilter> Without<T1,T2,T3>() => new List<IQueryFilter>() { new WithoutType<T1,T2,T3>() };
+        
+        public static List<IQueryFilter> WithoutFlags(params Enum[] flags) => new List<IQueryFilter>() { new WithoutFlags(flags) };
+
+        public static List<IQueryFilter> With<T1>(this List<IQueryFilter> filters)
+        {
+            filters.Add(new WithType<T1>());
+            return filters;
+        }
+        public static List<IQueryFilter> With<T1,T2>(this List<IQueryFilter> filters)
+        {
+            filters.Add(new WithType<T1,T2>());
+            return filters;
+        }
+        public static List<IQueryFilter> With<T1,T2,T3>(this List<IQueryFilter> filters)
+        {
+            filters.Add(new WithType<T1,T2,T3>());
+            return filters;
+        }
+        
+        public static List<IQueryFilter> Without<T1>(this List<IQueryFilter> filters)
+        {
+            filters.Add(new WithoutType<T1>());
+            return filters;
+        }
+        public static List<IQueryFilter> Without<T1,T2>(this List<IQueryFilter> filters)
+        {
+            filters.Add(new WithoutType<T1,T2>());
+            return filters;
+        }
+        public static List<IQueryFilter> Without<T1,T2,T3>(this List<IQueryFilter> filters)
+        {
+            filters.Add(new WithoutType<T1,T2,T3>());
+            return filters;
+        }
+        
+        public static List<IQueryFilter> WithoutFlags(this List<IQueryFilter> filters, params Enum[] flags)
+        {
+            filters.Add(new WithoutFlags(flags));
+            return filters;
+        }
+        #endregion
+
+        #region Filtered ForEach
+
+       public static void ForEach<T1>(this IEnumerable<IQueryFilter> filters, P<T1> method, params Enum[] flags) where T1 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1))) entity.Relay(method);
+        }
+        public static void ForEach<T1,T2>(this IEnumerable<IQueryFilter> filters, PP<T1,T2> method, params Enum[] flags) where T1 : IData where T2 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2))) entity.Relay(method);
+        }
+        public static void ForEach<T1,T2,T3>(this IEnumerable<IQueryFilter> filters, PPP<T1,T2,T3> method, params Enum[] flags) where T1 : IData where T2 : IData where T3 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2), typeof(T3))) entity.Relay(method);
+        }
+        public static void ForEach<T1,T2,T3,T4>(this IEnumerable<IQueryFilter> filters, PPPP<T1,T2,T3,T4> method, params Enum[] flags) where T1 : IData where T2 : IData where T3 : IData where T4 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2), typeof(T3), typeof(T4))) entity.Relay(method);
+        }
+        
+        public static void ForEach<T1>(this IEnumerable<IQueryFilter> filters, W<T1> method, params Enum[] flags) where T1 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1))) entity.Relay(method);
+        }
+        public static void ForEach<T1,T2>(this IEnumerable<IQueryFilter> filters, WW<T1,T2> method, params Enum[] flags) where T1 : IData where T2 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2))) entity.Relay(method);
+        }
+        public static void ForEach<T1,T2,T3>(this IEnumerable<IQueryFilter> filters, WWW<T1,T2,T3> method, params Enum[] flags) where T1 : IData where T2 : IData where T3 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2), typeof(T3))) entity.Relay(method);
+        }
+        public static void ForEach<T1,T2,T3,T4>(this IEnumerable<IQueryFilter> filters, WWWW<T1,T2,T3,T4> method, params Enum[] flags) where T1 : IData where T2 : IData where T3 : IData where T4 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2), typeof(T3), typeof(T4))) entity.Relay(method);
+        }
+        
+        public static void ForEach<T1>(this IEnumerable<IQueryFilter> filters, R<T1> method, params Enum[] flags) where T1 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1))) entity.Relay(method);
+        }
+        public static void ForEach<T1,T2>(this IEnumerable<IQueryFilter> filters, RR<T1,T2> method, params Enum[] flags) where T1 : IData where T2 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2))) entity.Relay(method);
+        }
+        public static void ForEach<T1,T2,T3>(this IEnumerable<IQueryFilter> filters, RRR<T1,T2,T3> method, params Enum[] flags) where T1 : IData where T2 : IData where T3 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2), typeof(T3))) entity.Relay(method);
+        }
+        public static void ForEach<T1,T2,T3,T4>(this IEnumerable<IQueryFilter> filters, RRRR<T1,T2,T3,T4> method, params Enum[] flags) where T1 : IData where T2 : IData where T3 : IData where T4 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2), typeof(T3), typeof(T4))) entity.Relay(method);
+        }
+        
+        public static void ForEach<T1,T2>(this IEnumerable<IQueryFilter> filters, PW<T1,T2> method, params Enum[] flags) where T1 : IData where T2 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2))) entity.Relay(method);
+        }
+        public static void ForEach<T1,T2>(this IEnumerable<IQueryFilter> filters, PR<T1,T2> method, params Enum[] flags) where T1 : IData where T2 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2))) entity.Relay(method);
+        }
+        public static void ForEach<T1,T2>(this IEnumerable<IQueryFilter> filters, WR<T1,T2> method, params Enum[] flags) where T1 : IData where T2 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2))) entity.Relay(method);
+        }
+        
+        public static void ForEach<T1,T2,T3>(this IEnumerable<IQueryFilter> filters, PPW<T1,T2,T3> method, params Enum[] flags) where T1 : IData where T2 : IData where T3 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2), typeof(T3))) entity.Relay(method);
+        }
+        public static void ForEach<T1,T2,T3>(this IEnumerable<IQueryFilter> filters, PWW<T1,T2,T3> method, params Enum[] flags) where T1 : IData where T2 : IData where T3 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2), typeof(T3))) entity.Relay(method);
+        }
+        public static void ForEach<T1,T2,T3>(this IEnumerable<IQueryFilter> filters, PPR<T1,T2,T3> method, params Enum[] flags) where T1 : IData where T2 : IData where T3 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2), typeof(T3))) entity.Relay(method);
+        }
+        public static void ForEach<T1,T2,T3>(this IEnumerable<IQueryFilter> filters, PRR<T1,T2,T3> method, params Enum[] flags) where T1 : IData where T2 : IData where T3 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2), typeof(T3))) entity.Relay(method);
+        }
+        public static void ForEach<T1,T2,T3>(this IEnumerable<IQueryFilter> filters, PWR<T1,T2,T3> method, params Enum[] flags) where T1 : IData where T2 : IData where T3 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2), typeof(T3))) entity.Relay(method);
+        }
+        public static void ForEach<T1,T2,T3>(this IEnumerable<IQueryFilter> filters, WWR<T1,T2,T3> method, params Enum[] flags) where T1 : IData where T2 : IData where T3 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2), typeof(T3))) entity.Relay(method);
+        }
+        public static void ForEach<T1,T2,T3>(this IEnumerable<IQueryFilter> filters, WRR<T1,T2,T3> method, params Enum[] flags) where T1 : IData where T2 : IData where T3 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2), typeof(T3))) entity.Relay(method);
+        }
+        
+        public static void ForEach<T1,T2,T3,T4>(this IEnumerable<IQueryFilter> filters, PPPW<T1,T2,T3,T4> method, params Enum[] flags) where T1 : IData where T2 : IData where T3 : IData where T4 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2), typeof(T3), typeof(T4))) entity.Relay(method);
+        }
+        public static void ForEach<T1,T2,T3,T4>(this IEnumerable<IQueryFilter> filters, PPWW<T1,T2,T3,T4> method, params Enum[] flags) where T1 : IData where T2 : IData where T3 : IData where T4 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2), typeof(T3), typeof(T4))) entity.Relay(method);
+        }
+        public static void ForEach<T1,T2,T3,T4>(this IEnumerable<IQueryFilter> filters, PWWW<T1,T2,T3,T4> method, params Enum[] flags) where T1 : IData where T2 : IData where T3 : IData where T4 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2), typeof(T3), typeof(T4))) entity.Relay(method);
+        }
+        public static void ForEach<T1,T2,T3,T4>(this IEnumerable<IQueryFilter> filters, PPPR<T1,T2,T3,T4> method, params Enum[] flags) where T1 : IData where T2 : IData where T3 : IData where T4 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2), typeof(T3), typeof(T4))) entity.Relay(method);
+        }
+        public static void ForEach<T1,T2,T3,T4>(this IEnumerable<IQueryFilter> filters, PPRR<T1,T2,T3,T4> method, params Enum[] flags) where T1 : IData where T2 : IData where T3 : IData where T4 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2), typeof(T3), typeof(T4))) entity.Relay(method);
+        }
+        public static void ForEach<T1,T2,T3,T4>(this IEnumerable<IQueryFilter> filters, PRRR<T1,T2,T3,T4> method, params Enum[] flags) where T1 : IData where T2 : IData where T3 : IData where T4 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2), typeof(T3), typeof(T4))) entity.Relay(method);
+        }
+        public static void ForEach<T1,T2,T3,T4>(this IEnumerable<IQueryFilter> filters, PPWR<T1,T2,T3,T4> method, params Enum[] flags) where T1 : IData where T2 : IData where T3 : IData where T4 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2), typeof(T3), typeof(T4))) entity.Relay(method);
+        }
+        public static void ForEach<T1,T2,T3,T4>(this IEnumerable<IQueryFilter> filters, PWWR<T1,T2,T3,T4> method, params Enum[] flags) where T1 : IData where T2 : IData where T3 : IData where T4 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2), typeof(T3), typeof(T4))) entity.Relay(method);
+        }
+        public static void ForEach<T1,T2,T3,T4>(this IEnumerable<IQueryFilter> filters, PWRR<T1,T2,T3,T4> method, params Enum[] flags) where T1 : IData where T2 : IData where T3 : IData where T4 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2), typeof(T3), typeof(T4))) entity.Relay(method);
+        }
+        public static void ForEach<T1,T2,T3,T4>(this IEnumerable<IQueryFilter> filters, WWWR<T1,T2,T3,T4> method, params Enum[] flags) where T1 : IData where T2 : IData where T3 : IData where T4 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2), typeof(T3), typeof(T4))) entity.Relay(method);
+        }
+        public static void ForEach<T1,T2,T3,T4>(this IEnumerable<IQueryFilter> filters, WWRR<T1,T2,T3,T4> method, params Enum[] flags) where T1 : IData where T2 : IData where T3 : IData where T4 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2), typeof(T3), typeof(T4))) entity.Relay(method);
+        }
+        public static void ForEach<T1,T2,T3,T4>(this IEnumerable<IQueryFilter> filters, WRRR<T1,T2,T3,T4> method, params Enum[] flags) where T1 : IData where T2 : IData where T3 : IData where T4 : IData
+        {
+            foreach (var entity in Fetch(filters, flags, typeof(T1), typeof(T2), typeof(T3), typeof(T4))) entity.Relay(method);
+        }
+        #endregion
 
         #region ForEach
 
@@ -393,11 +690,18 @@ namespace Flux.EDS
         {
             foreach (var entity in Fetch(flags, typeof(T1), typeof(T2), typeof(T3), typeof(T4))) entity.Relay(method);
         }
-        
         #endregion
 
-        public static int TranslateFlag(Enum flag) => flagTranslator.Translate(flag);
-        public static IEnumerable<Entity> Fetch(IEnumerable<Enum> flags, params Type[] types)
+        public static int TranslateFlag(Enum flag) => translator.Translate(flag);
+
+        public static HashSet<Entity> Fetch(IEnumerable<IQueryFilter> filters, IEnumerable<Enum> flags, params Type[] types)
+        {
+            var output = Fetch(flags, types);
+            foreach (var filter in filters) filter.Affect(output);
+
+            return output;
+        }
+        public static HashSet<Entity> Fetch(IEnumerable<Enum> flags, params Type[] types)
         {
             if (!values.TryGetValue(types[0], out var output))
             {
@@ -417,7 +721,7 @@ namespace Flux.EDS
             }
             foreach (var flag in flags)
             {
-                if (!flaggedValues.TryGetValue(flagTranslator.Translate(flag), out var hashSet))
+                if (!flaggedValues.TryGetValue(translator.Translate(flag), out var hashSet))
                 {
                     output.Clear();
                     return output;
@@ -467,7 +771,7 @@ namespace Flux.EDS
         
         private static void OnFlagAddition(Entity entity, Enum flag)
         {
-            var key = flagTranslator.Translate(flag);
+            var key = translator.Translate(flag);
 
             if (!flaggedValues.TryGetValue(key, out var hashSet))
             {
@@ -477,7 +781,7 @@ namespace Flux.EDS
 
             hashSet.Add(entity);
         }
-        private static void OnFlagRemoval(Entity entity, Enum flag) => flaggedValues[flagTranslator.Translate(flag)].Remove(entity);
+        private static void OnFlagRemoval(Entity entity, Enum flag) => flaggedValues[translator.Translate(flag)].Remove(entity);
         
         //---[Bridges handling]-----------------------------------------------------------------------------------------/
         

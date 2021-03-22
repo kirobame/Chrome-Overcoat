@@ -62,9 +62,10 @@ namespace Flux.Editor
 
         private void AddElement(ReorderableList list)
         {
-            list.List.NewElementAtEnd();
+            var elementProperty = list.List.NewElementAtEnd();
+            if (elementProperty.propertyType == SerializedPropertyType.ManagedReference) elementProperty.managedReferenceValue = null;
+            
             list.SetPage(Mathf.FloorToInt((float)list.List.arraySize / list.pageSize));
-        
             serializedObject.ApplyModifiedProperties();
         }
         private void RemoveElements(ReorderableList list)

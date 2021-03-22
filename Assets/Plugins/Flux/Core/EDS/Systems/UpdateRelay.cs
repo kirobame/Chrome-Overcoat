@@ -44,12 +44,17 @@ namespace Flux.EDS
 
         public void Initialize()
         {
-            if (hasSystem) system.Initialize();
+            if (hasSystem) system.Bootup();
             foreach (var child in childs) child.Initialize();
         }
         public void Update()
         {
-            if (hasSystem && system.IsActive) system.Update();
+            if (hasSystem && system.IsActive)
+            {
+                system.Update();
+                Entities.Sync();
+            }
+            
             foreach (var child in childs) child.Update();
         }
         public void Shutdown()

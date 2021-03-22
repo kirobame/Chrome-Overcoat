@@ -44,7 +44,7 @@ namespace Flux.EDS
         
         private Dictionary<int, Relay> unresolvedRelays;
         
-        public override void Initialize()
+        public override void Bootup()
         {
             unresolvedRelays = new Dictionary<int, Relay>();
             IsActive = false;

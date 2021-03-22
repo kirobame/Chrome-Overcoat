@@ -115,7 +115,7 @@ namespace Flux.Editor
             if (indent) EditorGUI.indentLevel++;
             else EditorGUIUtility.labelWidth -= 14.0f; 
         
-            while (copy.Next(search))
+            while (copy.NextVisible(search))
             {
                 search = false;
 
@@ -131,7 +131,7 @@ namespace Flux.Editor
             void DrawCurrent()
             {
                 rect.height = EditorGUI.GetPropertyHeight(copy);
-                EditorGUI.PropertyField(rect, copy, new GUIContent(copy.displayName));
+                EditorGUI.PropertyField(rect, copy, new GUIContent(copy.displayName), true);
                 rect.y += rect.height + Margin;
             }
         }
