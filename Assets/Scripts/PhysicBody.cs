@@ -35,6 +35,8 @@ namespace Chrome
         {
             if (velocity.y > 0 && hit.normal.y < 0)
             {
+                Debug.Log("Redirection");
+            
                 var length = velocity.magnitude;
                 velocity += hit.normal * length;
                 

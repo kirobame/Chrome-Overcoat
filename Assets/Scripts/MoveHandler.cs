@@ -25,9 +25,16 @@ namespace Chrome
 
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.LeftShift) && body.Controller.isGrounded) isSprinting = true;
+            if (Input.GetKeyDown(KeyCode.LeftShift) && body.IsGrounded) isSprinting = true;
             if (Input.GetKeyUp(KeyCode.LeftShift)) isSprinting = false;
             
+            var delta = ComputeDelta();
+            Intent = Vector3.SmoothDamp(Intent, delta, ref velocity, body.IsGrounded? smoothing : smoothing / airControl);
+            body.intent += Intent;
+        }
+
+        private Vector3 ComputeDelta()
+        {
             var speed = this.speed;
             if (isSprinting)
             {
@@ -46,8 +53,7 @@ namespace Chrome
             var inputs = new Vector3(Input.GetAxisRaw("Horizontal"), 0.0f, Input.GetAxisRaw("Vertical")).normalized;
             var direction = body.transform.TransformVector(inputs);
 
-            Intent = Vector3.SmoothDamp(Intent, direction * speed, ref velocity, body.IsGrounded ? smoothing : smoothing / airControl);
-            body.intent += Intent;
+            return direction * speed;
         }
     }
 }
