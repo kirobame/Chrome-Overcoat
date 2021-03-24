@@ -3,29 +3,24 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class DebugHandler : MonoBehaviour
-    {
-        
-    }
-
-    public class JumpHandler : MonoBehaviour
-    {
-        
-    }
-    
     public class MoveHandler : MonoBehaviour
     {
-        [SerializeField] private PhysicBody body;
+        public Vector3 Intent { get; private set; }
+
+        [BoxGroup("Dependencies"), SerializeField] private PhysicBody body;
         
-        [BoxGroup("Move"), SerializeField] private float speed;
-        [BoxGroup("Move"), SerializeField] private float sprintSpeed;
-        [BoxGroup("Move"), SerializeField] private float smoothing;
+        [BoxGroup("Values"), SerializeField] private float speed;
+        [BoxGroup("Values"), SerializeField] private float smoothing;
+        [BoxGroup("Values"), SerializeField, Range(0.0001f, 1.0f)] private float airControl;
 
-        [BoxGroup("Jump"), SerializeField] private float jumpForce;
-
+        [BoxGroup("Sprint"), SerializeField] private AnimationCurve acceleration;
+        [BoxGroup("Sprint"), SerializeField] private float boost;
+        [BoxGroup("Sprint"), SerializeField] private float peek;
+        [BoxGroup("Sprint"), SerializeField] private Vector2 rate;
+        
         private bool isSprinting;
+        private float sprintTime;
         
-        private Vector3 current;
         private Vector3 velocity;
 
         void Update()
@@ -33,29 +28,26 @@ namespace Chrome
             if (Input.GetKeyDown(KeyCode.LeftShift) && body.Controller.isGrounded) isSprinting = true;
             if (Input.GetKeyUp(KeyCode.LeftShift)) isSprinting = false;
             
-            if (Input.GetKeyDown(KeyCode.Space) && body.Controller.isGrounded) Jump();
-            Move();
-        }
-        
-        private void Move()
-        {
-            var boost = speed;
+            var speed = this.speed;
             if (isSprinting)
             {
-                isSprinting = body.Controller.isGrounded;
-                boost += sprintSpeed;
+                if (body.IsGrounded) sprintTime += Time.deltaTime * rate.x;
+                else
+                {
+                    isSprinting = false;
+                    sprintTime -= Time.deltaTime * rate.y;
+                }
             }
-            
-            var target = new Vector3(Input.GetAxisRaw("Horizontal"), 0.0f, Input.GetAxisRaw("Vertical"));
-            target = body.transform.TransformVector(target.normalized) * boost;
+            else sprintTime -= Time.deltaTime * rate.y;
 
-            current = Vector3.SmoothDamp(current, target, ref velocity, smoothing);
-            body.intent += current;
-        }
-        private void Jump()
-        {
-            var delta = Vector3.up * jumpForce;
-            body.velocity += delta;
+            sprintTime = Mathf.Clamp(sprintTime, 0.0f, peek);
+            speed += acceleration.Evaluate(sprintTime / peek) * boost;
+            
+            var inputs = new Vector3(Input.GetAxisRaw("Horizontal"), 0.0f, Input.GetAxisRaw("Vertical")).normalized;
+            var direction = body.transform.TransformVector(inputs);
+
+            Intent = Vector3.SmoothDamp(Intent, direction * speed, ref velocity, body.IsGrounded ? smoothing : smoothing / airControl);
+            body.intent += Intent;
         }
     }
 }

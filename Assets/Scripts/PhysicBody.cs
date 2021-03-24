@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Chrome
@@ -12,29 +13,26 @@ namespace Chrome
         public bool IsGrounded => controller.isGrounded;
         public CharacterController Controller => controller;
         
-        [SerializeField] private CharacterController controller;
+        [BoxGroup("Dependencies"), SerializeField] private CharacterController controller;
+
+        [BoxGroup("Values"), SerializeField, Range(0.0f, 5.0f)] private float affect;
 
         [HideInInspector] public Vector3 intent;
         [HideInInspector] public Vector3 velocity;
 
-        private bool ignoreCollisions;
-
         void Update()
         {
-            ignoreCollisions = true;
-            controller.Move(intent * Time.deltaTime);
-            intent = Vector3.zero;
-            ignoreCollisions = false;
+            velocity += Physics.gravity * (affect * Time.deltaTime);
+            controller.Move((velocity + intent) * Time.deltaTime);
 
-            velocity += Physics.gravity * Time.deltaTime;
-            controller.Move(velocity * Time.deltaTime);
+            velocity += intent * Time.deltaTime;
+            intent = Vector3.zero;
+            
             if (IsGrounded) velocity = Vector3.zero;
         }
 
         void OnControllerColliderHit(ControllerColliderHit hit)
         {
-            if (ignoreCollisions) return;
-
             if (velocity.y > 0 && hit.normal.y < 0)
             {
                 var length = velocity.magnitude;
