@@ -3,6 +3,16 @@ using UnityEngine;
 
 namespace Chrome
 {
+    public class DebugHandler : MonoBehaviour
+    {
+        
+    }
+
+    public class JumpHandler : MonoBehaviour
+    {
+        
+    }
+    
     public class MoveHandler : MonoBehaviour
     {
         [SerializeField] private PhysicBody body;
@@ -40,8 +50,7 @@ namespace Chrome
             target = body.transform.TransformVector(target.normalized) * boost;
 
             current = Vector3.SmoothDamp(current, target, ref velocity, smoothing);
-            if (body.Controller.isGrounded) body.intent += current;
-            else body.velocity += current * Time.deltaTime;
+            body.intent += current;
         }
         private void Jump()
         {
