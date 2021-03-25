@@ -4,22 +4,22 @@ using UnityEngine;
 namespace Chrome
 {
     [Serializable]
-    public abstract class ViewRotation : IMouseHandler
+    public abstract class ViewRotation : IViewAxisHandler
     {
         public bool IsLocked { get; private set; }
         
-        [SerializeField] private AnimationCurve map;
-        [SerializeField] private float limit;
-        [SerializeField] private float factor;
-        [SerializeField] private float smoothing;
+        [SerializeField] protected AnimationCurve map;
+        [SerializeField] protected float limit;
+        [SerializeField] protected float factor;
+        [SerializeField] protected float smoothing;
 
         protected float current;
-        private float velocity;
+        protected float velocity;
 
         public void Lock() => IsLocked = true;
         public void Unlock() => IsLocked = false;
 
-        public void Bootup(float rotation) => current = rotation;
+        public void Set(float rotation) => current = rotation;
         public float Process(float delta)
         {
             if (IsLocked) return current;

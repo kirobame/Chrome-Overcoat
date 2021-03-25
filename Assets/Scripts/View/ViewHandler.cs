@@ -6,18 +6,18 @@ namespace Chrome
     public class ViewHandler : MonoBehaviour
     {
         [BoxGroup("Yaw"), SerializeField] private Transform yawTarget;
-        [BoxGroup("Yaw"), SerializeReference] private IMouseHandler yaw;
+        [BoxGroup("Yaw"), SerializeReference] private IViewAxisHandler yaw;
 
         [BoxGroup("Pitch"), SerializeField] private Transform pitchTarget;
-        [BoxGroup("Pitch"), SerializeReference] private IMouseHandler pitch;
+        [BoxGroup("Pitch"), SerializeReference] private IViewAxisHandler pitch;
         
         void Awake()
         {
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
             
-            yaw.Bootup(yawTarget.localEulerAngles.y);
-            pitch.Bootup(pitchTarget.localEulerAngles.x);
+            yaw.Set(yawTarget.localEulerAngles.y);
+            pitch.Set(pitchTarget.localEulerAngles.x);
         }
         void OnDestroy()
         {

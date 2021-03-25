@@ -4419,14 +4419,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1116115623}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -1, z: -0, w: -0.0000007599591}
+  m_LocalPosition: {x: -10, y: 4.6, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 280569047129800818}
   m_Father: {fileID: 0}
   m_RootOrder: 12
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
 --- !u!143 &1116115625
 CharacterController:
   m_ObjectHideFlags: 0
@@ -4568,34 +4568,41 @@ MonoBehaviour:
   body: {fileID: 1116115628}
   speed: 5
   smoothing: 0.05
-  airControl: 0.2
-  acceleration:
+  switchMap:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 1.7379128
-      outSlope: 1.7379128
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.048854962
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.25
+      value: 0
+      inSlope: Infinity
+      outSlope: 0.019741997
+      tangentMode: 7
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.15928753
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 1.7939754
-      outSlope: 1.7939754
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.047328234
+      inWeight: 0
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  boost: 4
-  peek: 0.4
-  rate: {x: 1, y: 1.5}
+  switchTime: 2.25
+  airControl: 0.4
 --- !u!114 &1116115628
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4610,6 +4617,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controller: {fileID: 1116115625}
   affect: 1
+  move: {x: 0, y: 0, z: 0}
   intent: {x: 0, y: 0, z: 0}
   velocity: {x: 0, y: 0, z: 0}
 --- !u!114 &1116115629
@@ -4642,65 +4650,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   body: {fileID: 1116115628}
   move: {fileID: 1116115627}
-  margin: 0.2
+  margin: 0.225
   height: 1.5
-  keyDownDetection: 0.1
-  forceMap:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0.5
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.9984741
-      value: 1
-      inSlope: 1.6852219
-      outSlope: 1.6852219
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.05045949
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  chargeTime: 1.5
-  charge: 1.75
-  moveAffectMap:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  forward: 1.5
-  limit: 15
-  controlTime: 0.4
-  airTimeLimit: 0.75
-  resistance: 12.5
-  stomp: 25
+  keyDownDetection: 0.15
 --- !u!1001 &1132056810
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10904,6 +10856,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 280374594933509256}
+  - component: {fileID: 283606065032798067}
   - component: {fileID: 196391311799807002}
   m_Layer: 8
   m_Name: Mesh
@@ -10912,6 +10865,75 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &283606065032798067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 283606065032798066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c9921f513ab42508acda7801ab2adb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  body: {fileID: 1116115628}
+  pitch:
+    map:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    limit: 6
+    factor: 3
+    smoothing: 0.125
+  roll:
+    map:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    limit: 6
+    factor: 12.36
+    smoothing: 0.125
 --- !u!1 &283625572202787916
 GameObject:
   m_ObjectHideFlags: 0

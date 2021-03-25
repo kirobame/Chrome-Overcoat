@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace Chrome
 {
-    public interface IMouseHandler
+    public interface IViewAxisHandler
     {
         void Lock();
         void Unlock();
 
-        void Bootup(float rotation);
+        void Set(float rotation);
         float Process(float delta);
     }
 }
