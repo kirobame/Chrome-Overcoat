@@ -4400,11 +4400,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1116115624}
   - component: {fileID: 1116115625}
+  - component: {fileID: 1116115629}
   - component: {fileID: 1116115628}
   - component: {fileID: 1116115627}
-  - component: {fileID: 1116115630}
   - component: {fileID: 1116115626}
-  - component: {fileID: 1116115629}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -4454,105 +4453,95 @@ MonoBehaviour:
   m_GameObject: {fileID: 1116115623}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d1115f418844f45bb2e7b1de106ef24, type: 3}
+  m_Script: {fileID: 11500000, guid: 2bedcaa9b1454057a629be47e7c32911, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   yawTarget: {fileID: 1116115624}
-  yaw:
-    id: 0
+  yawKnob:
+    map:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1.8133211
+        outSlope: 1.8133211
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.043740574
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1.8133216
+        outSlope: 1.8133216
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.04374057
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    limit: 7.5
+    factor: 8
+    smoothing: 0.04
+  yawAcceleration:
+    map:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 2
+        outSlope: 2
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    time: 0.4
+    threshold: 12.5
   pitchTarget: {fileID: 280569047129800818}
-  pitch:
-    id: 1
-  references:
-    version: 1
-    00000000:
-      type: {class: GainViewRotation, ns: Chrome, asm: Assembly-CSharp}
-      data:
-        map:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 1.7379128
-            outSlope: 1.7379128
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0.048854962
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1.7939754
-            outSlope: 1.7939754
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0.047328234
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        limit: 10
-        factor: 100
-        smoothing: 0.075
-        threshold: 7.5
-        gainMap:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 2
-            outSlope: 2
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        gainFactor: 22.5
-        gainTime: 0.05
-    00000001:
-      type: {class: ClampedViewRotation, ns: Chrome, asm: Assembly-CSharp}
-      data:
-        map:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 1.7379128
-            outSlope: 1.7379128
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0.048854962
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 1.7939754
-            outSlope: 1.7939754
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0.047328234
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        limit: 10
-        factor: 85
-        smoothing: 0.075
-        range: {x: -85, y: 75}
+  pitchKnob:
+    map:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1.8133211
+        outSlope: 1.8133211
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.043740574
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1.8133216
+        outSlope: 1.8133216
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.04374057
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    limit: 7.5
+    factor: 4
+    smoothing: 0.04
+  pitchRange: {x: -85, y: 75}
 --- !u!114 &1116115627
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4562,47 +4551,49 @@ MonoBehaviour:
   m_GameObject: {fileID: 1116115623}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b3426ef9ebe4410a48e1d7e565382e8, type: 3}
+  m_Script: {fileID: 11500000, guid: f5cec9ca08c84b058f22822e1c94bc97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  body: {fileID: 1116115628}
-  speed: 5
-  smoothing: 0.05
-  switchMap:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.25
-      value: 0
-      inSlope: Infinity
-      outSlope: 0.019741997
-      tangentMode: 7
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.15928753
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  switchTime: 2.25
-  airControl: 0.4
+  body: {fileID: 1116115629}
+  speed: 7
+  sprint: 2
+  smoothing: 0.075
+  airFriction:
+    map:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.25
+        value: 0
+        inSlope: Infinity
+        outSlope: 0.021650482
+        tangentMode: 7
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.19155355
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    time: 2
+  airManoeuvrability: 0.35
 --- !u!114 &1116115628
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4612,14 +4603,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1116115623}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3be26d640194883833efb1cf29f3f58, type: 3}
+  m_Script: {fileID: 11500000, guid: ec28c13bdd6a421b9b8c422365578c9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: {fileID: 1116115625}
+  body: {fileID: 1116115629}
   affect: 1
-  move: {x: 0, y: 0, z: 0}
-  intent: {x: 0, y: 0, z: 0}
-  velocity: {x: 0, y: 0, z: 0}
+  bypass: 0
+  overridingForce: {x: 0, y: 0, z: 0}
 --- !u!114 &1116115629
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4629,30 +4619,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1116115623}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36195ea754dc4c45ae2c071da5ba9ecf, type: 3}
+  m_Script: {fileID: 11500000, guid: c287e7a6b7d94ae08680cde49e069e97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  body: {fileID: 1116115628}
-  displayTime: 5
-  groundColor: {r: 0.34420612, g: 0.8018868, b: 0.37541455, a: 1}
-  airColor: {r: 0.8018868, g: 0.34977728, b: 0.2912513, a: 1}
---- !u!114 &1116115630
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1116115623}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c7773a1cd0e41528a3bbd05672bdf1a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  body: {fileID: 1116115628}
-  move: {fileID: 1116115627}
-  margin: 0.225
-  height: 1.5
-  keyDownDetection: 0.15
+  controller: {fileID: 1116115625}
+  move: {x: 0, y: 0, z: 0}
+  intent: {x: 0, y: 0, z: 0}
+  velocity: {x: 0, y: 0, z: 0}
 --- !u!1001 &1132056810
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10856,7 +10829,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 280374594933509256}
-  - component: {fileID: 283606065032798067}
   - component: {fileID: 196391311799807002}
   m_Layer: 8
   m_Name: Mesh
@@ -10865,75 +10837,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &283606065032798067
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 283606065032798066}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c9921f513ab42508acda7801ab2adb6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  body: {fileID: 1116115628}
-  pitch:
-    map:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    limit: 6
-    factor: 3
-    smoothing: 0.125
-  roll:
-    map:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    limit: 6
-    factor: 12.36
-    smoothing: 0.125
 --- !u!1 &283625572202787916
 GameObject:
   m_ObjectHideFlags: 0
