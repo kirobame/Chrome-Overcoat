@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.LowLevel;
 using UnityEngine.PlayerLoop;
+using Object = UnityEngine.Object;
 
 namespace Flux.EDS
 {
@@ -205,7 +206,8 @@ namespace Flux.EDS
         {
             var hookObj = new GameObject("EDS Hook");
             hook = hookObj.AddComponent<Hook>();
-
+            
+            Object.DontDestroyOnLoad(hook);
             hook.onDestroyed += OnShutdown;
             
             bridgeLinks = new Dictionary<Type, Link>();

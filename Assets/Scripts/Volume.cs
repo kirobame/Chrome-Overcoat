@@ -7,4 +7,10 @@ namespace Chrome
     {
         Run
     }
+
+    [Address]
+    public enum Interface : byte
+    {
+        Jetpack,
+    }
 }
