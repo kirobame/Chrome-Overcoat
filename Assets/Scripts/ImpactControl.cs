@@ -12,6 +12,7 @@ namespace Chrome
         [BoxGroup("Dependencies"), SerializeField] private PhysicBody body;
 
         [FoldoutGroup("Values"), SerializeField] private float factor;
+        [FoldoutGroup("Values"), SerializeField] private float maxLength;
         [FoldoutGroup("Values"), SerializeField] private float smoothing;
         [FoldoutGroup("Values"), SerializeField] private float reduction;
 
@@ -28,7 +29,11 @@ namespace Chrome
         
         void Update()
         {
-            if (!previousIsGrounded && body.IsGrounded) force = Vector3.down * (Mathf.Abs(previousVelocity.y) * factor);
+            if (!previousIsGrounded && body.IsGrounded)
+            {
+                force = Vector3.down * (Mathf.Abs(previousVelocity.y) * factor);
+                if (force.magnitude > maxLength) force = force.normalized * maxLength;
+            }
 
             previousVelocity = body.Controller.velocity;
             previousIsGrounded = body.IsGrounded;
