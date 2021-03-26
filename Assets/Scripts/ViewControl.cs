@@ -1,4 +1,5 @@
 ﻿using Sirenix.OdinInspector;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Chrome
@@ -12,10 +13,10 @@ namespace Chrome
         [FoldoutGroup("Pitch"), SerializeField] private Transform pitchTarget;
         [FoldoutGroup("Pitch"), SerializeField] private Knob pitchKnob;
         [FoldoutGroup("Pitch"), SerializeField] private Vector2 pitchRange;
-
+        
         private float yaw;
         private float pitch;
-        
+
         void Awake()
         {
             Cursor.visible = false;
@@ -34,14 +35,14 @@ namespace Chrome
         {
             var euler = yawTarget.localEulerAngles;
             var yawInput = Input.GetAxisRaw("Mouse X");
-            //yawInput += yawAcceleration.Process(yawInput);
-            yaw += yawKnob.Process(yawInput);
+            yawInput += yawAcceleration.Process(yawInput);
+            yaw += yawKnob.Process(yawInput) * Time.deltaTime;
             
             euler.y = yaw;
             yawTarget.localEulerAngles = euler;
 
             euler = pitchTarget.localEulerAngles;
-            pitch += pitchKnob.Process(-Input.GetAxisRaw("Mouse Y"));
+            pitch += pitchKnob.Process(-Input.GetAxisRaw("Mouse Y")) * Time.deltaTime;
             pitch = Mathf.Clamp(pitch, pitchRange.x, pitchRange.y);
             
             euler.x = pitch;

@@ -10,6 +10,11 @@ namespace Chrome
     public class Knob
     {
         public float Value => current;
+        public float Smoothing
+        {
+            get => smoothing;
+            set => smoothing = value;
+        }
         
         [SerializeField] protected AnimationCurve map;
         [SerializeField] protected float limit;
@@ -20,7 +25,7 @@ namespace Chrome
         protected float velocity;
 
         public void Set(float value) => current = value;
-        
+
         public float Process(float delta)
         {
             var target = Mathf.Clamp(Mathf.Abs(delta), 0.0f, limit);

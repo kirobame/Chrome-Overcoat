@@ -5,6 +5,7 @@ namespace Chrome
 {
     public class Gravity : MonoBehaviour
     {
+        public Vector3 Value => bypass ? overridingForce : Physics.gravity;
         public PhysicBody Body => body;
         
         [BoxGroup("Dependencies"), SerializeField] private PhysicBody body;
