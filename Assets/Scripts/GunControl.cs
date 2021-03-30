@@ -29,6 +29,7 @@ namespace Chrome
         
         void Awake()
         {
+            state = PressState.Released;
             if (parts.Length <= 1) return;
 
             var buffer = new GunPart[1];

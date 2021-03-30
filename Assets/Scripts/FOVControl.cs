@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Cinemachine;
 using Flux.Data;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -10,7 +11,7 @@ namespace Chrome
     public class FOVControl : MonoBehaviour
     {
         [BoxGroup("Dependencies"), SerializeField] private PhysicBody body;
-        [BoxGroup("Dependencies"), SerializeField] private new Camera camera;
+        [BoxGroup("Dependencies"), SerializeField] private new CinemachineVirtualCamera camera;
 
         [FoldoutGroup("Values"), SerializeField] private AnimationCurve velocityMap;
         [FoldoutGroup("Values"), SerializeField] private Converter fieldConverter;
@@ -31,7 +32,7 @@ namespace Chrome
             var volume = Repository.Get<UnityEngine.Rendering.Volume>(Volume.Run);
             if (volume.profile.TryGet<LensDistortion>(out var distortion)) distortion.intensity.value = distortionConverter.Process(current);
 
-            camera.fieldOfView = fieldConverter.Process(current);
+            camera.m_Lens.FieldOfView = fieldConverter.Process(current);
         }
     }
 }

@@ -5,6 +5,8 @@ namespace Chrome
 {
     public class MoveControl : MonoBehaviour
     {
+        public static bool canSprint;
+        
         private const string WALK_STATE = "Walk";
         private const string RUN_STATE = "Run";
         
@@ -37,8 +39,12 @@ namespace Chrome
         private Vector3 airDelta;
         private Vector3 airVelocity;
 
-        void Awake() => speedModifier = 1.0f;
-        
+        void Awake()
+        {
+            canSprint = true;
+            speedModifier = 1.0f;
+        }
+
         void Update()
         {
             var speed = this.speed * speedModifier;
@@ -51,7 +57,7 @@ namespace Chrome
                 if (Inputs != Vector3.zero && !IsWalking) IsWalking = SetAnimationState(WALK_STATE, true);
                 else if (Inputs == Vector3.zero && IsWalking) IsWalking = SetAnimationState(WALK_STATE, false);
                 
-                if (Input.GetKey(KeyCode.LeftShift) && Inputs.z > 0)
+                if (Input.GetKey(KeyCode.LeftShift) && canSprint && Inputs.z > 0)
                 {
                     if (!IsSprinting) IsSprinting = SetAnimationState(RUN_STATE, true);
                     speed += sprint;
