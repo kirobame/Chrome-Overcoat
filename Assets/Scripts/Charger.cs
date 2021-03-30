@@ -29,12 +29,6 @@ namespace Chrome
             base.Bootup(control);
         }
 
-        protected override EventArgs OnStart(Aim aim, EventArgs args)
-        {
-            MoveControl.canSprint = false;
-            return args;
-        }
-
         protected override EventArgs OnUpdate(Aim aim, EventArgs args)
         {
             progress = Mathf.Clamp(aim.pressTime, 0.0f, time);
@@ -60,7 +54,6 @@ namespace Chrome
                 return;
             }
 
-            MoveControl.canSprint = true;
             base.End(aim, args);
         }
         protected override EventArgs OnEnd(Aim aim, EventArgs args)

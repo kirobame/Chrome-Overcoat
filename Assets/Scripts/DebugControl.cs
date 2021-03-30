@@ -1,4 +1,5 @@
-﻿using Sirenix.OdinInspector;
+﻿using Flux.Feedbacks;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Chrome
@@ -15,6 +16,8 @@ namespace Chrome
         [FoldoutGroup("Airborne"), SerializeField] private Color maxAirColor;
         [FoldoutGroup("Airborne"), SerializeField] private Vector2 airRange;
 
+        [SerializeField] private Sequence sequence;
+        
         private Vector3 previousPosition;
         
         void Update()

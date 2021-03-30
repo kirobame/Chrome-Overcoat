@@ -6,6 +6,7 @@ namespace Chrome
     public class MoveControl : MonoBehaviour
     {
         public static bool canSprint;
+        public static bool canShowWalk;
         
         private const string WALK_STATE = "Walk";
         private const string RUN_STATE = "Run";
@@ -42,6 +43,8 @@ namespace Chrome
         void Awake()
         {
             canSprint = true;
+            canShowWalk = true;
+            
             speedModifier = 1.0f;
         }
 
@@ -83,11 +86,16 @@ namespace Chrome
 
             airDelta = Vector3.SmoothDamp(airDelta, delta * ratio, ref airVelocity, smoothing * airManoeuvrability);
             body.velocity += airDelta * Time.deltaTime;
+            
+            if (IsWalking && canShowWalk) animator.SetBool(WALK_STATE, true);
+            else if (IsWalking && !canShowWalk) animator.SetBool(WALK_STATE, false);
+            
+            if (!canSprint) animator.SetBool(RUN_STATE, false);
         }
 
         private bool SetAnimationState(string name, bool value)
         {
-            animator.SetBool(name, value);
+            if (canShowWalk) animator.SetBool(name, value);
             return value;
         }
     }

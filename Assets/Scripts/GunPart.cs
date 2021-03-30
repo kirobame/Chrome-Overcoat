@@ -27,7 +27,7 @@ namespace Chrome
             var modifiedArgs = OnStart(aim, args);
             foreach (var followingPart in followingParts)
             {
-                if (!followingPart.IsActive) return;
+                if (!followingPart.IsActive) continue;
                 followingPart.Start(aim, modifiedArgs);
             }
         }
@@ -38,7 +38,7 @@ namespace Chrome
             var modifiedArgs = OnUpdate(aim, args);
             foreach (var followingPart in followingParts)
             {
-                if (!followingPart.IsActive) return;
+                if (!followingPart.IsActive) continue;
                 followingPart.Update(aim, modifiedArgs);
             }
         }
@@ -49,7 +49,7 @@ namespace Chrome
             var modifiedArgs = OnEnd(aim, args);
             foreach (var followingPart in followingParts)
             {
-                if (!followingPart.IsActive) return;
+                if (!followingPart.IsActive) continue;
                 followingPart.End(aim, modifiedArgs);
             }
         }

@@ -1,4 +1,6 @@
 ﻿using System;
+using Flux.Data;
+using Flux.Feedbacks;
 using UnityEngine;
 
 namespace Chrome
@@ -15,7 +17,7 @@ namespace Chrome
 
         #endregion
         
-        public GunPart Root => parts[0];
+        public GunPart[] Roots { get; private set; }
 
         public Transform Firepoint => firepoint;
 
@@ -23,13 +25,26 @@ namespace Chrome
         [SerializeField] private Transform raypoint;
         [SerializeField] private Transform firepoint;
         [SerializeReference] private GunPart[] parts = new GunPart[0];
+        [SerializeReference] private GunPart[] otherParts = new GunPart[0];
 
+        private int index;
+        
         private PressState state;
         private float pressTime;
         
         void Awake()
         {
             state = PressState.Released;
+            
+            Initialize(parts);
+            Initialize(otherParts);
+
+            index = 0;
+            Roots = new GunPart[] { parts[0], otherParts[0] };
+        }
+
+        private void Initialize(GunPart[] parts)
+        {
             if (parts.Length <= 1) return;
 
             var buffer = new GunPart[1];
@@ -46,27 +61,46 @@ namespace Chrome
 
         void Update()
         {
-            if (Input.GetMouseButtonDown(0) && state == PressState.Released)
+            if (state == PressState.Released)
             {
-                if (!Root.IsActive) return;
+                if (Input.GetKeyDown(KeyCode.E) && index != 0) ChangeIndex(0);
+                if (Input.GetKeyDown(KeyCode.R) && index != 1) ChangeIndex(1);
                 
-                pressTime = 0.0f;
-                Root.Start(ComputeAim(), EventArgs.Empty);
+                if (Input.GetMouseButtonDown(0))
+                {
+                    if (!Roots[index].IsActive) return;
+                
+                    pressTime = 0.0f;
+                    Roots[index].Start(ComputeAim(), EventArgs.Empty);
 
-                state = PressState.Pressed;
+                    MoveControl.canSprint = false;
+                    state = PressState.Pressed;
+                }
             }
+            else if (state == PressState.Pressed)
+            {
+                if (Input.GetMouseButton(0))
+                {
+                    pressTime += Time.deltaTime;
+                    Roots[index].Update(ComputeAim(), EventArgs.Empty);
+                }
+
+                if (Input.GetMouseButtonUp(0))
+                {
+                    Roots[index].End(ComputeAim(), EventArgs.Empty);
+
+                    MoveControl.canSprint = true;
+                    state = PressState.Released;
+                }
+            }
+        }
+
+        private void ChangeIndex(int value)
+        {
+            index = value;
             
-            if (Input.GetMouseButton(0) && state == PressState.Pressed)
-            {
-                pressTime += Time.deltaTime;
-                Root.Update(ComputeAim(), EventArgs.Empty);
-            }
-
-            if (Input.GetMouseButtonUp(0) && state == PressState.Pressed)
-            {
-                Root.End(ComputeAim(), EventArgs.Empty);
-                state = PressState.Released;
-            }
+            var HUD = Repository.Get<GunHUD>(Interface.Gun);
+            HUD.Select(value);
         }
 
         private Aim ComputeAim()

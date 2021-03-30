@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Linq;
 using System.Numerics;
+using Flux.Event;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
@@ -12,6 +13,7 @@ namespace Chrome
         [BoxGroup("Dependencies"), SerializeField] private PhysicBody body;
         [BoxGroup("Dependencies"), SerializeField] private MoveControl move;
 
+        [FoldoutGroup("Values"), SerializeField] private float knockback;
         [FoldoutGroup("Values"), SerializeField] private float factor;
         [FoldoutGroup("Values"), SerializeField] private float maxLength;
         [FoldoutGroup("Values"), SerializeField] private float smoothing;
@@ -29,14 +31,19 @@ namespace Chrome
 
         private Coroutine speedLossRoutine;
         
-        void Awake() => anchor = transform.localPosition;
+        void Awake()
+        {
+            Events.Subscribe<float>(PlayerEvent.OnFire, OnFire);
+            anchor = transform.localPosition;
+        }
+        void OnDestroy() => Events.Unsubscribe<float>(PlayerEvent.OnFire, OnFire);
         
         void Update()
         {
             if (!previousIsGrounded && body.IsGrounded)
             {
                 force = Vector3.down * (Mathf.Abs(previousVelocity.y) * factor);
-                if (force.magnitude > maxLength) force = force.normalized * maxLength;
+                Add(force);
                 
                 if (speedLossRoutine != null) StopCoroutine(speedLossRoutine);
                 speedLossRoutine = StartCoroutine(SpeedLossRoutine(1.0f - force.magnitude / maxLength));
@@ -47,6 +54,12 @@ namespace Chrome
 
             transform.localPosition = Vector3.SmoothDamp(transform.localPosition, anchor + force, ref velocity, smoothing);
             force = Vector3.SmoothDamp(force, Vector3.zero, ref forceVelocity, reduction);
+        }
+
+        private void Add(Vector3 value)
+        {
+            force += value;
+            if (force.magnitude > maxLength) force = force.normalized * maxLength;
         }
 
         private IEnumerator SpeedLossRoutine(float startingRatio)
@@ -64,6 +77,12 @@ namespace Chrome
 
             move.speedModifier = 1.0f;
             speedLossRoutine = null;
+        }
+
+        void OnFire(float force)
+        {
+            var direction = new Vector3(0.0f, -transform.forward.y, -1.0f).normalized;
+            Add(direction * (force * knockback));
         }
     }
 }

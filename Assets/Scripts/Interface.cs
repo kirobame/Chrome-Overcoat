@@ -6,6 +6,7 @@ namespace Chrome
     public enum Interface : byte
     {
         Jetpack,
-        Charge
+        Charge, 
+        Gun
     }
 }
