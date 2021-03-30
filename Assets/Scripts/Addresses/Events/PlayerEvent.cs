@@ -6,5 +6,6 @@ namespace Chrome
     public enum PlayerEvent : byte
     {
         OnFire,
+        OnShake
     }
 }

@@ -6387,7 +6387,6 @@ GameObject:
   m_Component:
   - component: {fileID: 912466068}
   - component: {fileID: 912466071}
-  - component: {fileID: 912466072}
   m_Layer: 0
   m_Name: cm
   m_TagString: Untagged
@@ -6421,23 +6420,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &912466072
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 912466067}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68bb026fafb42b14791938953eaace77, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_NoiseProfile: {fileID: 11400000, guid: b241f91b9ccf8ff489abf204b30d3112, type: 2}
-  m_PivotOffset: {x: 0, y: 0, z: 0}
-  m_AmplitudeGain: 0
-  m_FrequencyGain: 0
-  mNoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!4 &912506548 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4855193289971172, guid: 2e23bb932cf4ec7498eb4b727d9113fa, type: 3}
@@ -7980,52 +7962,6 @@ MonoBehaviour:
   minAirColor: {r: 0.62963533, g: 0.34242615, b: 0.764151, a: 1}
   maxAirColor: {r: 0.8396226, g: 0.42259273, b: 0.36040404, a: 1}
   airRange: {x: 0, y: 17.5}
-  sequence:
-    root:
-      rect:
-        serializedVersion: 2
-        x: 100
-        y: 100
-        width: 73
-        height: 71
-      linkIndices: 0100000000000000
-    effects:
-    - id: 0
-    - id: 1
-    - id: 2
-  references:
-    version: 1
-    00000000:
-      type: {class: Display, ns: Flux.Feedbacks, asm: Flux.Feedbacks}
-      data:
-        rect:
-          serializedVersion: 2
-          x: 262
-          y: -17
-          width: 126
-          height: 99
-        linkIndices: 
-        message: 
-    00000001:
-      type: {class: End, ns: Flux.Feedbacks, asm: Flux.Feedbacks}
-      data:
-        rect:
-          serializedVersion: 2
-          x: 267
-          y: 218
-          width: 102
-          height: 71
-        linkIndices: 02000000
-    00000002:
-      type: {class: End, ns: Flux.Feedbacks, asm: Flux.Feedbacks}
-      data:
-        rect:
-          serializedVersion: 2
-          x: 478
-          y: 159
-          width: 102
-          height: 71
-        linkIndices: 
 --- !u!114 &1116115628
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8233,6 +8169,8 @@ MonoBehaviour:
   controlLosses: {x: 0.25, y: 0.5, z: 0.75}
   airTime: 1
   airForce: 1.75
+  shakeFactor: 2
+  maxShake: 0.75
 --- !u!1001 &1120293017
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15489,6 +15427,7 @@ GameObject:
   - component: {fileID: 2007891213}
   - component: {fileID: 2007891217}
   - component: {fileID: 2007891215}
+  - component: {fileID: 2007891218}
   - component: {fileID: 2007891216}
   - component: {fileID: 2007891214}
   m_Layer: 0
@@ -15738,6 +15677,72 @@ MonoBehaviour:
     type: Chrome.Reference, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     value: 1
   value: {fileID: 2007891214}
+--- !u!114 &2007891218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2007891212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4723e98d4ab44283ab09f8f696aa1ca3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  smoothing: 0.05
+  reduction: 0.1
+  range: 2
+  lengthRange: {x: 0.0025, y: 0.065}
+  amplitudeMap:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  maxAmplitude: 0.6
+  frequencyMap:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  maxFrequency: 85
 --- !u!4 &2012476359 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4855193289971172, guid: 2e23bb932cf4ec7498eb4b727d9113fa, type: 3}
@@ -17665,7 +17670,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   body: {fileID: 1116115626}
   move: {fileID: 1116115629}
-  test: {fileID: 2007891213}
   knockback: 0.4
   factor: 0.2
   maxLength: 2
@@ -18124,6 +18128,7 @@ GameObject:
   m_Component:
   - component: {fileID: 280374594933509256}
   - component: {fileID: 283606065032798067}
+  - component: {fileID: 283606065032798069}
   - component: {fileID: 283606065032798068}
   - component: {fileID: 196391311799807002}
   m_Layer: 8
@@ -18237,56 +18242,8 @@ MonoBehaviour:
       data:
         time: 1
         threshold: 0.25
-        shakeAmplitude:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        shakeAmplitudeGoal: 0.25
-        shakeFrequency:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 0
-            inSlope: 3.0896227
-            outSlope: 3.0896227
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0.03664122
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
-        shakeFrequencyGoal: 6.25
+        shakeFactor: 2.5
+        maxShake: 2
     00000001:
       type: {class: MuzzleFlash, ns: Chrome, asm: Assembly-CSharp}
       data:
@@ -18311,6 +18268,72 @@ MonoBehaviour:
         animator: {fileID: 196391311799807002}
         bullet: {fileID: 34740033821788151, guid: 1095f378cc57ad54595eae679fdcf637, type: 3}
         force: 0.75
+--- !u!114 &283606065032798069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 283606065032798066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4723e98d4ab44283ab09f8f696aa1ca3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  smoothing: 0.05
+  reduction: 0.1
+  range: 2
+  lengthRange: {x: 0.0025, y: 0.015}
+  amplitudeMap:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  maxAmplitude: 0.75
+  frequencyMap:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  maxFrequency: 70
 --- !u!1 &283625572202787916
 GameObject:
   m_ObjectHideFlags: 0

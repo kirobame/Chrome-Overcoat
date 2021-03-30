@@ -15,8 +15,6 @@ namespace Chrome
         [FoldoutGroup("Airborne"), SerializeField] private Color minAirColor;
         [FoldoutGroup("Airborne"), SerializeField] private Color maxAirColor;
         [FoldoutGroup("Airborne"), SerializeField] private Vector2 airRange;
-
-        [SerializeField] private Sequence sequence;
         
         private Vector3 previousPosition;
         

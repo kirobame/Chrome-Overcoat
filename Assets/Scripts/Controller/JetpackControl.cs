@@ -2,6 +2,7 @@
 using Flux;
 using Flux.Data;
 using Sirenix.OdinInspector;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 namespace Chrome
@@ -20,6 +21,9 @@ namespace Chrome
         [FoldoutGroup("Airborne"), SerializeField] private Vector3 controlLosses;
         [FoldoutGroup("Airborne"), SerializeField] private float airTime;
         [FoldoutGroup("Airborne"), SerializeField] private float airForce;
+
+        [FoldoutGroup("Feedbacks"), SerializeField] private float shakeFactor;
+        [FoldoutGroup("Feedbacks"), SerializeField] private float maxShake;
         
         private JetpackHUD HUD;
 
@@ -42,7 +46,10 @@ namespace Chrome
                 if (Input.GetKey(KeyCode.Space) && !hasJumped && cooldownRoutine == null)
                 {
                     pressTime += Time.deltaTime;
-                    HUD.IndicateCharge(Mathf.InverseLerp(pressRange.x, pressRange.y, pressTime));
+                    var ratio = Mathf.InverseLerp(pressRange.x, pressRange.y, pressTime);
+                    
+                    HUD.IndicateCharge(ratio);
+                    Flux.Event.Events.ZipCall(PlayerEvent.OnShake, ratio * shakeFactor, maxShake);
                 }
                 
                 airTimer += Time.deltaTime;
