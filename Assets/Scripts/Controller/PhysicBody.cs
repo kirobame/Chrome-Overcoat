@@ -41,7 +41,7 @@ namespace Chrome
                 intent = Vector3.zero;
                 velocity.y = 0;
             }
-            
+
             onCollision?.Invoke(hit);
         }
     }

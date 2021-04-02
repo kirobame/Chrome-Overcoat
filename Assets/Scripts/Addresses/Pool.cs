@@ -7,6 +7,7 @@ namespace Chrome
     {
         Bullet,
         MuzzleFlash,
-        Impact
+        Impact,
+        Death
     }
 }

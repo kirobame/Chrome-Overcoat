@@ -10,6 +10,7 @@ namespace Chrome
     public class EnergyBall : Bullet
     {
         [FoldoutGroup("Values"), SerializeField] private float maxSpeed;
+        [FoldoutGroup("Values"), SerializeField] private Vector2 damages;
         
         [FoldoutGroup("Bounce"), SerializeField] private int bounceCount;
         [FoldoutGroup("Bounce"), SerializeField] private float deactivationTime;
@@ -27,9 +28,12 @@ namespace Chrome
         private int bounceCounter;
         private float deactivationTimer;
 
+        private float damage;
+
         public override void Shoot(Aim aim, EventArgs args)
         {
             var ratio = ((IWrapper<float>) args).Value;
+            damage = Mathf.Lerp(damages.x, damages.y, ratio);
             
             actualSpeed = Mathf.Lerp(speed, maxSpeed, ratio);
             var size = Mathf.Lerp(range.x, range.y, ratio);
@@ -70,13 +74,23 @@ namespace Chrome
             
             if (bounceCounter <= 0)
             {
-                PlayImpact(vfxPool.RequestSingle(impactVfx), hit);
+                var vfx = PlayImpact(vfxPool.RequestSinglePoolable(impactVfx), hit);
+                if (hit.collider.TryGetComponent<IDamageable>(out var damageable))
+                {
+                    damageable.Hit(hit, damage);
+                    vfx.transform.SetParent(hit.transform);
+                }
+
                 Explode();
-               
                 return;
             }
 
-            PlayImpact(vfxPool.RequestSingle(bounceVfx), hit);
+            var hitVfx = PlayImpact(vfxPool.RequestSinglePoolable(bounceVfx), hit);
+            if (hit.collider.TryGetComponent<IDamageable>(out var other))
+            {
+                other.Hit(hit, damage);
+                hitVfx.transform.SetParent(hit.transform);
+            }
 
             bounceCounter--;
             transform.position = hit.point - direction * radius;
@@ -87,13 +101,14 @@ namespace Chrome
             deactivationTimer = deactivationTime;
         }
 
-        private void PlayImpact(ParticleSystem vfx, RaycastHit hit)
+        private PoolableVfx PlayImpact(PoolableVfx vfx, RaycastHit hit)
         {
             vfx.transform.localScale = Vector3.one * (transform.localScale.x * impactSize);
             vfx.transform.position = hit.point;
             vfx.transform.rotation = Quaternion.LookRotation(hit.normal);
             
-            vfx.Play();
+            vfx.Value.Play();
+            return vfx;
         }
         
         private void Explode()

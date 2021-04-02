@@ -8,6 +8,7 @@ namespace Chrome
 {
     public class Projectile : Bullet
     {
+        [FoldoutGroup("Values"), SerializeField] private float damage;
         [FoldoutGroup("Values"), SerializeField] private float deactivationTime;
         
         [FoldoutGroup("Feedbacks"), SerializeField] private PoolableVfx impactVfx;
@@ -52,13 +53,21 @@ namespace Chrome
         protected override void OnHit(RaycastHit hit)
         {
             if (hasHit) return;
-
-            var vfxPool = Repository.Get<VfxPool>(Pool.Impact);
-            var vfx = vfxPool.RequestSingle(impactVfx);
             
-            vfx.transform.position = hit.point;
-            vfx.transform.rotation = Quaternion.LookRotation(hit.normal);
-            vfx.Play();
+            var vfxPool = Repository.Get<VfxPool>(Pool.Impact);
+            var vfxPoolable = vfxPool.RequestSinglePoolable(impactVfx);
+            
+            vfxPoolable.transform.localScale = Vector3.one;
+            
+            if (hit.collider.TryGetComponent<IDamageable>(out var damageable))
+            {
+                vfxPoolable.transform.SetParent(hit.transform);
+                damageable.Hit(hit, damage);
+            }
+            
+            vfxPoolable.transform.position = hit.point;
+            vfxPoolable.transform.rotation = Quaternion.LookRotation(hit.normal);
+            vfxPoolable.Value.Play();
 
             if (routine != null)
             {
