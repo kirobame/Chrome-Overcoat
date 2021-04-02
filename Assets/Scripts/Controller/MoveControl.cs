@@ -60,6 +60,7 @@ namespace Chrome
                 if (Inputs != Vector3.zero && !IsWalking) IsWalking = SetAnimationState(WALK_STATE, true);
                 else if (Inputs == Vector3.zero && IsWalking) IsWalking = SetAnimationState(WALK_STATE, false);
                 
+                //Debug.Log($"{Input.GetKey(KeyCode.LeftShift)} // {canSprint} // {Inputs.z > 0}");
                 if (Input.GetKey(KeyCode.LeftShift) && canSprint && Inputs.z > 0)
                 {
                     if (!IsSprinting) IsSprinting = SetAnimationState(RUN_STATE, true);

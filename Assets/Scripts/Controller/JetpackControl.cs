@@ -1,6 +1,8 @@
 ﻿using System.Collections;
+using System.Linq;
 using Flux;
 using Flux.Data;
+using Ludiq.PeekCore;
 using Sirenix.OdinInspector;
 using UnityEditor.PackageManager;
 using UnityEngine;
@@ -21,6 +23,8 @@ namespace Chrome
         [FoldoutGroup("Airborne"), SerializeField] private Vector3 controlLosses;
         [FoldoutGroup("Airborne"), SerializeField] private float airTime;
         [FoldoutGroup("Airborne"), SerializeField] private float airForce;
+        [FoldoutGroup("Airborne"), SerializeField] private AnimationCurve airForceMap;
+        [FoldoutGroup("Airborne"), SerializeField] private float moveAirAffect;
 
         [FoldoutGroup("Feedbacks"), SerializeField] private float shakeFactor;
         [FoldoutGroup("Feedbacks"), SerializeField] private float maxShake;
@@ -65,9 +69,14 @@ namespace Chrome
                 {
                     airTimer -= Time.deltaTime;
                     if (airTimer < 0.0f) airTimer = 0.0f;
-
-                    var attraction = gravity.Value;
-                    body.velocity -= attraction.normalized * ((attraction.magnitude + airForce) * Time.deltaTime);
+                    
+                    var attraction = body.velocity.magnitude * Vector3.Dot(body.velocity, gravity.Value);
+                    var input = Mathf.Clamp(attraction, airForceMap.keys[0].time, airForceMap.keys.Last().time);
+                    var airVelocity = gravity.Value.normalized * ((gravity.Value.magnitude + airForceMap.Evaluate(input) * airForce) * Time.deltaTime);
+                    
+                    body.velocity -= airVelocity;
+                    body.velocity += move.Direction * (moveAirAffect * Time.deltaTime);
+                    
                     HUD.IndicateAirTime(airTimer);
                 }
             }
