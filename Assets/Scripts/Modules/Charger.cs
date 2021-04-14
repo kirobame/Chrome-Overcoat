@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using Cinemachine;
 using Flux;
 using Flux.Data;
 using Flux.Event;

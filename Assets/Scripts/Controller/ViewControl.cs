@@ -1,5 +1,4 @@
 ﻿using Sirenix.OdinInspector;
-using Unity.Mathematics;
 using UnityEngine;
 
 namespace Chrome

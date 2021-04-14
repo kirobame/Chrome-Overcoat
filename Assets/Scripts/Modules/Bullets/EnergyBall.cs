@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using Flux;
 using Flux.Data;
 using Sirenix.OdinInspector;

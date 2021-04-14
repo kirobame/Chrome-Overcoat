@@ -3,7 +3,6 @@ using Cinemachine;
 using Flux.Data;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
 namespace Chrome

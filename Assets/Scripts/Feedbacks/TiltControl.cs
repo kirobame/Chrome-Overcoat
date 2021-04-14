@@ -1,5 +1,4 @@
-﻿using System;
-using Flux.Event;
+﻿using Flux.Event;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
