@@ -169,21 +169,33 @@ namespace Chrome
     {
         [SerializeField] private NavMeshAgent navMesh;
         [SerializeField] private LineOfSight lineOfSight;
+        [SerializeField] private Transform aim;
+        [SerializeField] private Transform fireAnchor;
         
         private RootNode behaviourTree;
+        private Blackboard board;
         private Packet packet;
 
         void Awake()
         {
+            board = new Blackboard();
+            board.Set(aim, "aim");
+            board.Set(fireAnchor, "aim.fireAnchor");
+            
             packet = new Packet();
             packet.Set(navMesh);
             packet.Set(lineOfSight);
+            packet.Set(board);
+
+            behaviourTree = new RootNode();
+            var conditionalNode = new CanSeePlayer();
             
-            behaviourTree = new RootNode().Append(
-                new CanSeePlayer().Append(
+            behaviourTree.Append(
+                conditionalNode.Append(
                     new StopMoving().Mask(0b_0001).Append(
-                        new Print("I see you !").Append(
-                            new Delay("TRUE", 1.0f))),
+                        new Delay("TRUE", 1.0f).Append(
+                            new Pulse(behaviourTree, conditionalNode)),
+                        new LookAt()),
                     new MoveTo().Mask(0b_0010).Append(
                         new Delay("FALSE", 1.0f))));
         }
@@ -240,6 +252,86 @@ namespace Chrome
             }
             
             IsDone = true;
+        }
+    }
+
+    // Should not be looping indefinitely
+    // Could be done via another node which runs childs indefinitely 
+    // --> Try implementation with a simple root node. Should naturally loop as soon as the LookAt logic is done
+    public class LookAt : ProxyNode
+    {
+        protected override void OnUpdate(Packet packet)
+        {
+            var board = packet.Get<Blackboard>();
+            if (!board.TryGet<Transform>("aim", out var aim))
+            {
+                IsDone = true;
+                return;
+            }
+            
+            var player = Blackboard.Global.Get<Transform>("player");
+            aim.LookAt(player.transform.position);
+        }
+    }
+
+    public class Pulse : ProxyNode
+    {
+        public Pulse(RootNode root, Node target)
+        {
+            this.root = root;
+            this.target = target;
+        }
+        
+        private RootNode root;
+        private Node target;
+
+        protected override void OnUpdate(Packet packet)
+        {
+            IsDone = true;
+            root.Order(new PulseCommand(target));
+        }
+    }
+    
+    // Implement logic as a Root node
+    // Add behaviour dictating whether a node is a breakpoint or not
+    // --> Defines if control can be passed to children of the node or not
+    public class ClickInput : ProxyNode
+    {
+        public ClickInput(float duration) => this.duration = duration;
+        
+        private float duration;
+        private float timer;
+
+        protected override void OnStart(Packet packet)
+        {
+            timer = duration;
+            output = 0b_0001;
+            
+            this.StartChilds(packet);
+        }
+
+        protected override void OnUpdate(Packet packet)
+        {
+            timer -= Time.deltaTime;
+            if (timer <= 0)
+            {
+                output = 0b_0010;
+                this.UpdateChilds(packet);
+            }
+            else this.UpdateChilds(packet);
+        }
+    }
+
+    public class TimeFilter : ProxyNode
+    {
+        
+    }
+
+    public class ShootAt : ProxyNode
+    {
+        protected override void OnUpdate(Packet packet)
+        {
+            base.OnUpdate(packet);
         }
     }
 }

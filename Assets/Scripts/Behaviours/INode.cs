@@ -36,6 +36,7 @@ namespace Chrome
         
         //--------------------------------------------------------------------------------------------------------------/
 
+        public T Get<T>() => (T)map[typeof(T)];
         public bool TryGet<T>(out T value)
         {
             if (map.TryGetValue(typeof(T), out var rawValue))
@@ -47,6 +48,7 @@ namespace Chrome
             value = default;
             return false;
         }
+        
         public void Set<T>(T value)
         {
             if (map.ContainsKey(typeof(T))) map[typeof(T)] = value;
@@ -68,6 +70,29 @@ namespace Chrome
             }
 
             return false;
+        }
+
+        public static void StartChilds(this Node node, Packet packet)
+        {
+            foreach (var child in node.Childs)
+            {
+                if ((node.Output | child.Input) != node.Output) continue;
+
+                var snapshot = packet.Save();
+                child.Start(packet);
+                packet.Load(snapshot);
+            }
+        }
+        public static void UpdateChilds(this Node node, Packet packet)
+        {
+            foreach (var child in node.Childs)
+            {
+                if ((node.Output | child.Input) != node.Output) continue;
+                
+                var snapshot = packet.Save();
+                child.Update(packet);
+                packet.Load(snapshot);
+            }
         }
 
         public static TNode Append<TNode>(this TNode node, params Node[] nodes) where TNode : Node
