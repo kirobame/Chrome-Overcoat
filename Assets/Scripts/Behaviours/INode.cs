@@ -75,11 +75,9 @@ namespace Chrome
             node.Insert(nodes);
             return node;
         }
-        public static TNode Mask<TNode>(this TNode node, string input) where TNode : Node
+        public static TNode Mask<TNode>(this TNode node, int input) where TNode : Node
         {
-            Regex.Replace(input, "[2-9]", string.Empty);
-            node.Input = Convert.ToInt32(input);
-            
+            node.Input = input;
             return node;
         }
     }
@@ -319,7 +317,7 @@ namespace Chrome
             var selection = new List<Node>();
             foreach (var child in Childs)
             {
-                if ((output | child.Input) != Output) continue;
+                if ((output | child.Input) != output) continue;
                 
                 child.Start(packet);
                 selection.Add(child);
@@ -337,9 +335,9 @@ namespace Chrome
     }
 
     [Serializable]
-    public class DebugNode : ProxyNode
+    public class Print : ProxyNode
     {
-        public DebugNode(string message) => this.message = message;
+        public Print(string message) => this.message = message;
         
         [SerializeField] private string message;
         
@@ -351,12 +349,17 @@ namespace Chrome
     }
 
     [Serializable]
-    public class DelayNode : ProxyNode
+    public class Delay : ProxyNode
     {
-        public DelayNode(float time) => this.time = time;
-        
+        public Delay(string tag, float time)
+        {
+            this.tag = tag;
+            this.time = time;
+        }
+
         [SerializeField] private float time;
 
+        private string tag;
         private float timer;
 
         protected override void OnStart(Packet packet)
@@ -370,7 +373,7 @@ namespace Chrome
             timer -= Time.deltaTime;
             if (timer <= 0)
             {
-                Debug.Log("End of timer.");
+                //Debug.Log($"[{tag}] : End of timer.");
 
                 IsLocked = false;
                 IsDone = true;

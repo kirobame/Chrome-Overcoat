@@ -15,12 +15,12 @@ namespace Chrome
             packet = new Packet();
             
             tree = new RootNode().Append(
-                new DebugNode("Start of delay !").Append(
-                    new DelayNode(2.75f).Append(
-                        new DebugNode("End of delay."),
-                        new DebugNode("And another delay !").Append(
-                            new DelayNode(1.0f).Append(
-                                new DebugNode("End of another delay.")))))
+                new Print("Start of delay !").Append(
+                    new Delay("1", 2.75f).Append(
+                        new Print("End of delay."),
+                        new Print("And another delay !").Append(
+                            new Delay("2", 1.0f).Append(
+                                new Print("End of another delay.")))))
             );
         }
 

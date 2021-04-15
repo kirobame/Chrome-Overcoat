@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Flux;
-using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Chrome
 {
@@ -67,6 +66,8 @@ namespace Chrome
             public Entry GetEntryAt(string path) => GetEntryAt(path.Split('.'), 0);
             private Entry GetEntryAt(string[] path, int advancement)
             {
+                if (advancement == path.Length - 1) return this;
+                
                 foreach (var child in childs)
                 {
                     if (child.Name != path[advancement]) continue;
@@ -82,6 +83,12 @@ namespace Chrome
             public bool TryGetEntryAt(string path, out Entry entry) => TryGetEntryAt(path.Split('.'), 0, out entry);            
             private bool TryGetEntryAt(string[] path, int advancement, out Entry entry)
             {
+                if (advancement == path.Length - 1)
+                {
+                    entry = this;
+                    return true;
+                }
+                
                 foreach (var child in childs)
                 {
                     if (child.Name != path[advancement]) continue;
@@ -157,71 +164,10 @@ namespace Chrome
             return false;
         }
     }
-    
-    public class LineOfSight : MonoBehaviour
-    {
-        [SerializeField] private LayerMask blockingMask;
-        
-        public bool CanSee(Vector3 point)
-        {
-            var direction = point - transform.position;
-            var ray = new Ray(transform.position, direction);
 
-            return Physics.Raycast(ray, direction.magnitude, blockingMask);
-        }
-        public bool CanSee(Collider collider)
-        {
-            var corners = collider.bounds.GetCorners();
-            return corners.Any(CanSee);
-        }
-    }
-
-    public class UnityRegistry : MonoBehaviour, IRegistry
-    {
-        public object RawValue => value;
-        [SerializeField] private Object value;
-        [SerializeField] private new string name;
-        
-        public bool IsSource => isSource;
-        [Space, SerializeField] private bool isSource;
-
-        [SerializeField, ShowIf("isSource")] private bool isGlobal;
-
-        void Awake()
-        {
-            if (!isGlobal) return;
-            Collect(Blackboard.Global, string.Empty);
-        }
-
-        public void Collect(Blackboard board, string path)
-        {
-            if (path != string.Empty) path += $".{name}";
-            else path = name;
-            
-            board.Set(value, path);
-
-            if (isSource)
-            {
-                foreach (var registry in GetComponents<UnityRegistry>())
-                {
-                    if (registry == this) continue;
-                    registry.Collect(board, path);
-                }
-            }
-            
-            for (var i = 0; i < transform.childCount; i++)
-            {
-                var child = transform.GetChild(i);
-                
-                if (!child.TryGetComponent<UnityRegistry>(out var registry) || registry.IsSource) continue;
-                registry.Collect(board, path);
-            }
-        }
-    }
-    
     public class Agent : MonoBehaviour
     {
-        [SerializeField] private PhysicBody body;
+        [SerializeField] private NavMeshAgent navMesh;
         [SerializeField] private LineOfSight lineOfSight;
         
         private RootNode behaviourTree;
@@ -230,26 +176,35 @@ namespace Chrome
         void Awake()
         {
             packet = new Packet();
-            packet.Set(body);
+            packet.Set(navMesh);
             packet.Set(lineOfSight);
             
-            
+            behaviourTree = new RootNode().Append(
+                new CanSeePlayer().Append(
+                    new StopMoving().Mask(0b_0001).Append(
+                        new Print("I see you !").Append(
+                            new Delay("TRUE", 1.0f))),
+                    new MoveTo().Mask(0b_0010).Append(
+                        new Delay("FALSE", 1.0f))));
         }
+
+        void Start() => behaviourTree.Start(packet);
+        void Update() => behaviourTree.Update(packet);
     }
 
     public abstract class ConditionalNode : ProxyNode
     {
         protected override void OnUpdate(Packet packet)
         {
-            if (Check(packet)) output = 1;
-            else output = 0;
+            if (Check(packet)) output = 0b_0001;
+            else output = 0b_0010;
 
             IsDone = true;
         }
         protected abstract bool Check(Packet packet);
     }
 
-    public abstract class CanSeePlayer : ConditionalNode
+    public class CanSeePlayer : ConditionalNode
     {
         protected override bool Check(Packet packet)
         {
@@ -257,6 +212,34 @@ namespace Chrome
 
             var player = Blackboard.Global.Get<PhysicBody>("player.body");
             return lineOfSight.CanSee(player.Controller);
+        }
+    }
+
+    public class StopMoving : ProxyNode
+    {
+        protected override void OnUpdate(Packet packet)
+        {
+            if (packet.TryGet<NavMeshAgent>(out var navMesh)) navMesh.isStopped = true;
+            IsDone = true;
+        }
+    }
+    
+    public class MoveTo : ProxyNode
+    {
+        protected override void OnStart(Packet packet)
+        {
+            if (packet.TryGet<NavMeshAgent>(out var navMesh)) navMesh.isStopped = false;
+        }
+
+        protected override void OnUpdate(Packet packet)
+        {
+            if (packet.TryGet<NavMeshAgent>(out var navMesh))
+            {
+                var player = Blackboard.Global.Get<Transform>("player");
+                navMesh.SetDestination(player.position);
+            }
+            
+            IsDone = true;
         }
     }
 }
