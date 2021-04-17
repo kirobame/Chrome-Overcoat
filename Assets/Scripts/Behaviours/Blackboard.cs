@@ -1,0 +1,140 @@
+﻿using System.Collections.Generic;
+
+namespace Chrome
+{
+    public class Blackboard
+    {
+        public static Blackboard Global
+        {
+            get
+            {
+                if (global == null) global = new Blackboard();
+                return global;
+            }
+        }
+        private static Blackboard global;
+        
+        #region Nested Types
+
+        private class Entry
+        {
+            public Entry(string parent, string name, IRegistry registry)
+            {
+                Registry = registry;
+                
+                Parent = parent;
+                Name = name;
+             
+                childs = new List<Entry>();
+            }
+
+            public IRegistry Registry { get; set; }
+            
+            public string Parent { get; private set; }
+            public string Name { get; private set; }
+
+            public IReadOnlyList<Entry> Childs => childs;
+            private List<Entry> childs;
+
+            public Entry GetEntryAt(string path) => GetEntryAt(path.Split('.'), 0);
+            private Entry GetEntryAt(string[] path, int advancement)
+            {
+                if (advancement == path.Length - 1) return this;
+                
+                foreach (var child in childs)
+                {
+                    if (child.Name != path[advancement]) continue;
+                    return child.GetEntryAt(path, advancement + 1);
+                }
+
+                var relay = new Entry(Name, path[advancement], new NullRegistry());
+                childs.Add(relay);
+
+                return relay.GetEntryAt(path, advancement + 1);
+            }
+
+            public bool TryGetEntryAt(string path, out Entry entry) => TryGetEntryAt(path.Split('.'), 0, out entry);            
+            private bool TryGetEntryAt(string[] path, int advancement, out Entry entry)
+            {
+                if (advancement == path.Length - 1)
+                {
+                    entry = this;
+                    return true;
+                }
+                
+                foreach (var child in childs)
+                {
+                    if (child.Name != path[advancement]) continue;
+                    
+                    var success = child.TryGetEntryAt(path, advancement + 1, out entry);
+                    return success;
+                }
+
+                entry = null;
+                return false;
+            }
+        }
+
+        #endregion
+
+        public Blackboard() => root = new Entry("", "Root", new NullRegistry());
+        
+        private Entry root;
+        
+        public void Set<T>(T value, string path)
+        {
+            var entry = root.GetEntryAt(path);
+            entry.Registry = new WrapperRegistry<T>(value);
+        }
+        public void SetRegistry(IRegistry registry, string path)
+        {
+            var entry = root.GetEntryAt(path);
+            entry.Registry = registry;
+        }
+
+        public T Get<T>(string path)
+        {
+            TryGet<T>(path, out var value);
+            return value;
+        }
+        public TRegistry GetRegistry<TRegistry>(string path)  where TRegistry : IRegistry
+        {
+            TryGetRegistry<TRegistry>(path, out var value);
+            return value;
+        }
+        
+        public bool TryGet<T>(string path, out T value)
+        {
+            if (root.TryGetEntryAt(path, out var entry))
+            {
+                if (entry.Registry is IRegistry<T> registry)
+                {
+                    value = registry.Value;
+                    return true;
+                }
+                else if (entry.Registry.RawValue is T castedValue)
+                {
+                    value = castedValue;
+                    return true;
+                }
+            }
+
+            value = default;
+            return false;
+        }
+        public bool TryGetRegistry<TRegistry>(string path, out TRegistry registry) where TRegistry : IRegistry
+        {
+            if (root.TryGetEntryAt(path, out var entry))
+            {
+                if (entry.Registry is TRegistry castedRegistry)
+                {
+                    registry = castedRegistry;
+                    return true;
+                }
+            }
+
+            registry = default;
+            return false;
+        }
+    }
+}
