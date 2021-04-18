@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Chrome
 {
@@ -39,35 +40,38 @@ namespace Chrome
             public Entry GetEntryAt(string path) => GetEntryAt(path.Split('.'), 0);
             private Entry GetEntryAt(string[] path, int advancement)
             {
-                if (advancement == path.Length - 1) return this;
-                
                 foreach (var child in childs)
                 {
                     if (child.Name != path[advancement]) continue;
-                    return child.GetEntryAt(path, advancement + 1);
+
+                    if (advancement == path.Length - 1) return child;
+                    else return child.GetEntryAt(path, advancement + 1);
                 }
 
                 var relay = new Entry(Name, path[advancement], new NullRegistry());
                 childs.Add(relay);
 
-                return relay.GetEntryAt(path, advancement + 1);
+                if (advancement == path.Length - 1) return relay;
+                else return relay.GetEntryAt(path, advancement + 1);
             }
 
             public bool TryGetEntryAt(string path, out Entry entry) => TryGetEntryAt(path.Split('.'), 0, out entry);            
             private bool TryGetEntryAt(string[] path, int advancement, out Entry entry)
             {
-                if (advancement == path.Length - 1)
-                {
-                    entry = this;
-                    return true;
-                }
-                
                 foreach (var child in childs)
                 {
                     if (child.Name != path[advancement]) continue;
-                    
-                    var success = child.TryGetEntryAt(path, advancement + 1, out entry);
-                    return success;
+
+                    if (advancement == path.Length - 1)
+                    {
+                        entry = child;
+                        return true;
+                    }
+                    else
+                    {
+                        var success = child.TryGetEntryAt(path, advancement + 1, out entry);
+                        return success;
+                    }
                 }
 
                 entry = null;
@@ -77,7 +81,7 @@ namespace Chrome
 
         #endregion
 
-        public Blackboard() => root = new Entry("", "Root", new NullRegistry());
+        public Blackboard() => root = new Entry("", "root", new NullRegistry());
         
         private Entry root;
         

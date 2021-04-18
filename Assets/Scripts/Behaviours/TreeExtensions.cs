@@ -26,5 +26,12 @@
             node.Input = input;
             return node;
         }
+        
+        public static IValue<T> Cache<T>(this T value) => new CachedValue<T>(value);
+        public static IValue<T> Reference<T>(this string path, bool globally = false)
+        {
+            if (globally) return new GloballyReferencedValue<T>(path);
+            else return new LocallyReferencedValue<T>(path);
+        }
     }
 }

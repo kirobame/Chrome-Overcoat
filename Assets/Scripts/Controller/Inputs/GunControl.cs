@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class GunControl : MonoBehaviour
+    public class GunControl : InputControl
     {
         #region Nested Types
 

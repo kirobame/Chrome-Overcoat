@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class ViewControl : MonoBehaviour
+    public class ViewControl : InputControl
     {
         [FoldoutGroup("Yaw"), SerializeField] private Transform yawTarget;
         [FoldoutGroup("Yaw"), SerializeField] private Knob yawKnob;

@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class JetpackControl : MonoBehaviour
+    public class JetpackControl : InputControl
     {
         [BoxGroup("Dependencies"), SerializeField] private PhysicBody body;
         [BoxGroup("Dependencies"), SerializeField] private Gravity gravity;

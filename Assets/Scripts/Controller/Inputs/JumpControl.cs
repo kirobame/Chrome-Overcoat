@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class JumpControl : MonoBehaviour
+    public class JumpControl : InputControl
     {
         [BoxGroup("Dependencies"), SerializeField] private PhysicBody body;
         [BoxGroup("Dependencies"), SerializeField] private Gravity gravity;

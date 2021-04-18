@@ -20,8 +20,6 @@ namespace Chrome
         private Blackboard board;
         private Packet packet;
 
-        // TO DO : Add static extension methods to create IValue<T>
-        
         void Awake()
         {
             board = new Blackboard();
@@ -33,18 +31,21 @@ namespace Chrome
             packet.Set(lineOfSight);
             packet.Set(board);
 
+            var playerBodyReference = "player.body".Reference<PhysicBody>(true);
+            var aimReference = "aim".Reference<Transform>();
+            
             behaviourTree = new RootNode();
-            var conditionalNode = new CanSee();
+            var conditionalNode = new CanSee(playerBodyReference, new PackettedValue<LineOfSight>());
             
             behaviourTree.Append(
                 conditionalNode.Append(
                     new StopMoving().Mask(0b_0001).Append(
                         new RootNode().Append(
-                            new LookAt()), 
+                            new LookAt(playerBodyReference, aimReference)), 
                         new ClickInput(1.0f).Append(
-                            new ShootAt(bulletPrefab, muzzleFlashPrefab).Append(
+                            new ShootAt(playerBodyReference, "aim.fireAnchor".Reference<Transform>(), bulletPrefab, muzzleFlashPrefab).Append(
                                 new Delay(0.33f)))),
-                    new MoveTo().Mask(0b_0010).Append(
+                    new MoveTo(new PackettedValue<NavMeshAgent>(), "player".Reference<Transform>(true), aimReference).Mask(0b_0010).Append(
                         new Delay(0.5f))));
         }
 
