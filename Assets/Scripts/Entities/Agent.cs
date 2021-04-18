@@ -32,6 +32,7 @@ namespace Chrome
             packet.Set(board);
 
             var playerBodyReference = "player.body".Reference<PhysicBody>(true);
+            var fireAnchorReference = "aim.fireAnchor".Reference<Transform>();
             var aimReference = "aim".Reference<Transform>();
             
             behaviourTree = new RootNode();
@@ -42,9 +43,10 @@ namespace Chrome
                     new StopMoving().Mask(0b_0001).Append(
                         new RootNode().Append(
                             new LookAt(playerBodyReference, aimReference)), 
-                        new ClickInput(1.0f).Append(
-                            new ShootAt(playerBodyReference, "aim.fireAnchor".Reference<Transform>(), bulletPrefab, muzzleFlashPrefab).Append(
-                                new Delay(0.33f)))),
+                        new SimulatedClickInput(1.0f).Append(
+                            new ComputeDirectionTo("shootDir", fireAnchorReference, playerBodyReference).Append(
+                                new Shoot("shootDir".Reference<Vector3>(), fireAnchorReference, bulletPrefab, muzzleFlashPrefab).Append(
+                                    new Delay(0.33f))))),
                     new MoveTo(new PackettedValue<NavMeshAgent>(), "player".Reference<Transform>(true), aimReference).Mask(0b_0010).Append(
                         new Delay(0.5f))));
         }

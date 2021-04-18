@@ -1,17 +1,18 @@
 ﻿using System;
 using Flux.Data;
+using Flux.Event;
 using UnityEngine;
 
 namespace Chrome
 {
-    public class ShootAt : ProxyNode
+    public class Shoot : ProxyNode
     {
-        private IValue<PhysicBody> target;
+        private IValue<Vector3> direction;
         private IValue<Transform> fireAnchor;
         
-        public ShootAt(IValue<PhysicBody> target, IValue<Transform> fireAnchor, GenericPoolable bulletPrefab, PoolableVfx muzzleFlashPrefab)
+        public Shoot(IValue<Vector3> direction, IValue<Transform> fireAnchor, GenericPoolable bulletPrefab, PoolableVfx muzzleFlashPrefab)
         {
-            this.target = target;
+            this.direction = direction;
             this.fireAnchor = fireAnchor;
             
             this.bulletPrefab = bulletPrefab;
@@ -23,19 +24,16 @@ namespace Chrome
         
         protected override void OnUpdate(Packet packet)
         {
-            if (target.IsValid(packet) && fireAnchor.IsValid(packet))
+            if (direction.IsValid(packet) && fireAnchor.IsValid(packet))
             {
-                SpawnMuzzleFlash(fireAnchor.Value);
-
-                var point = target.Value.transform.position + target.Value.Controller.center;
-                var direction = Vector3.Normalize(point - fireAnchor.Value.position);
-                ShootBullet(fireAnchor.Value, direction);
+                SpawnMuzzleFlash(packet, fireAnchor.Value);
+                ShootBullet(packet, fireAnchor.Value, direction.Value);
             }
 
             IsDone = true;
         }
 
-        private void SpawnMuzzleFlash(Transform fireAnchor)
+        private void SpawnMuzzleFlash(Packet packet, Transform fireAnchor)
         {
             var muzzleFlashPool = Repository.Get<VfxPool>(Pool.MuzzleFlash);
             var muzzleFlashInstance = muzzleFlashPool.RequestSinglePoolable(muzzleFlashPrefab);
@@ -47,12 +45,18 @@ namespace Chrome
             muzzleFlashInstance.Value.Play();
         }
         
-        private void ShootBullet(Transform fireAnchor, Vector3 direction)
+        private void ShootBullet(Packet packet, Transform fireAnchor, Vector3 direction)
         {
             var bulletPool = Repository.Get<GenericPool>(Pool.Bullet);
             var bulletInstance = bulletPool.CastSingle<Bullet>(bulletPrefab);
+
+            var board = packet.Get<Blackboard>();
+            if (!board.TryGet<float>("charge", out var force)) force = 1.0f;
             
-            bulletInstance.Shoot(new Aim() { direction = direction, firepoint = fireAnchor.position}, EventArgs.Empty);
+            Events.ZipCall(PlayerEvent.OnFire, force);
+            Events.ZipCall<byte,float>(GaugeEvent.OnGunFired, (byte)(bulletPrefab.name.Contains("Energy") ? 1 : 0), force);
+            
+            bulletInstance.Shoot(new Aim() { direction = direction, firepoint = fireAnchor.position}, new WrapperArgs<float>(force));
         }
     }
 }

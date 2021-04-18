@@ -21310,49 +21310,8 @@ MonoBehaviour:
     m_Bits: 64
   raypoint: {fileID: 963194228}
   firepoint: {fileID: 1637747128}
-  parts:
-  - id: 0
-  - id: 1
-  - id: 2
-  otherParts:
-  - id: 3
-  - id: 4
-  - id: 5
-  references:
-    version: 1
-    00000000:
-      type: {class: Charger, ns: Chrome, asm: Assembly-CSharp}
-      data:
-        time: 1
-        threshold: 0.25
-        shakeFactor: 2.5
-        maxShake: 2
-    00000001:
-      type: {class: MuzzleFlash, ns: Chrome, asm: Assembly-CSharp}
-      data:
-        muzzleFlash: {fileID: 3541007952546055489, guid: 094f816bf309dd04bb08458f38cd9655, type: 3}
-    00000002:
-      type: {class: Shooter, ns: Chrome, asm: Assembly-CSharp}
-      data:
-        type: 0
-        animator: {fileID: 196391311799807002}
-        bullet: {fileID: 3084122353275200940, guid: 70109a9cccd352c459294234c986676e, type: 3}
-        force: 10
-    00000003:
-      type: {class: Repeater, ns: Chrome, asm: Assembly-CSharp}
-      data:
-        time: 0.125
-    00000004:
-      type: {class: MuzzleFlash, ns: Chrome, asm: Assembly-CSharp}
-      data:
-        muzzleFlash: {fileID: 6581533253750990063, guid: a3bee71f8ad97b94082b82bcbed23d28, type: 3}
-    00000005:
-      type: {class: Shooter, ns: Chrome, asm: Assembly-CSharp}
-      data:
-        type: 1
-        animator: {fileID: 196391311799807002}
-        bullet: {fileID: 34740033821788151, guid: 1095f378cc57ad54595eae679fdcf637, type: 3}
-        force: 0.75
+  leftWeapon: {fileID: 11400000, guid: 9059a5c35ccf73742a6a3654ce45035c, type: 2}
+  rightWeapon: {fileID: 11400000, guid: 26b49fb14e1d9264aaf1fc6f51d85eea, type: 2}
 --- !u!114 &283606065032798069
 MonoBehaviour:
   m_ObjectHideFlags: 0

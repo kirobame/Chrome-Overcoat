@@ -1,43 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Chrome
 {
-    [Serializable]
+    // TO CORRECT !
     public class ClickInput : RootNode
     {
-        public ClickInput(float duration) => this.duration = duration;
+        private bool previousState;
         
-        [SerializeField] private float duration;
+        protected override void OnStart(Packet packet) => output = 0b_0001;
         
-        private float timer;
-
-        protected override void OnStart(Packet packet)
-        {
-            timer = duration;
-            output = 0b_0001;
-        }
-
         public override IEnumerable<Node> Update(Packet packet)
         {
-            timer -= Time.deltaTime;
-            if (timer <= 0)
+            var state = packet.Get<bool>();
+            if (!state)
             {
+                if (IsDone) return null;
+                
+                if (previousState)
+                {
+                    Shutdown();
+                    previousState = false;
+                }
+
                 output = 0b_0010;
                 
+                Debug.Log("UPDATING OTHER PATH");
                 OnUpdate(packet);
                 UpdateCachedNodes(packet);
                 
-                if (CanBreak())
-                {
-                    Shutdown();
-                    return Array.Empty<Node>();
-                }
+                if (CanBreak()) Shutdown();
             }
-            else base.Update(packet);
-            
+            else
+            {
+                previousState = true;
+                return base.Update(packet);
+            }
+
             return null;
         }
     }

@@ -13,8 +13,8 @@ namespace Chrome
             set => isLocked = value;
         }
         protected bool isLocked;
-        
-        public bool IsDone { get; protected set; }
+
+        public bool IsDone { get; protected set; } = true;
 
         public int Input
         {

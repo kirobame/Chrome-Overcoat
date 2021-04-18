@@ -15,62 +15,53 @@ namespace Chrome
         }
 
         #endregion
-        
-        public GunPart[] Roots { get; private set; }
 
+        public RootNode Current => isLeft ? leftWeapon.Root : rightWeapon.Root;
         public Transform Firepoint => firepoint;
 
         [SerializeField] private LayerMask rayMask;
         [SerializeField] private Transform raypoint;
         [SerializeField] private Transform firepoint;
-        [SerializeReference] private GunPart[] parts = new GunPart[0];
-        [SerializeReference] private GunPart[] otherParts = new GunPart[0];
+        [SerializeField] private RemoteTaskTree leftWeapon;
+        [SerializeField] private RemoteTaskTree rightWeapon;
 
-        private int index;
+        private bool isLeft;
+
+        private Packet packet;
+        private Blackboard blackboard;
         
         private PressState state;
         private float pressTime;
         
         void Awake()
         {
+            blackboard = new Blackboard();
+            blackboard.Set(raypoint, "view");
+            blackboard.Set(firepoint, "view.fireAnchor");
+            
+            packet = new Packet();
+            packet.Set(false);
+            packet.Set(blackboard);
+            
             state = PressState.Released;
             
-            Initialize(parts);
-            Initialize(otherParts);
+            leftWeapon.Bootup();
+            rightWeapon.Bootup();
 
-            index = 0;
-            Roots = new GunPart[] { parts[0], otherParts[0] };
-        }
-
-        private void Initialize(GunPart[] parts)
-        {
-            if (parts.Length <= 1) return;
-
-            var buffer = new GunPart[1];
-            for (var i = 0; i < parts.Length - 1; i++)
-            {
-                buffer[0] = parts[i + 1];
-                
-                parts[i].LinkTo(buffer);
-                parts[i].Bootup(this);
-            }
-            
-            parts[parts.Length - 1].Bootup(this);
+            isLeft = true;
         }
 
         void Update()
         {
             if (state == PressState.Released)
             {
-                if (Input.GetKeyDown(KeyCode.E) && index != 0) ChangeIndex(0);
-                if (Input.GetKeyDown(KeyCode.R) && index != 1) ChangeIndex(1);
+                if (Input.GetKeyDown(KeyCode.E) && !isLeft) ChangeIndex(true);
+                if (Input.GetKeyDown(KeyCode.R) && isLeft) ChangeIndex(false);
                 
                 if (Input.GetMouseButtonDown(0))
                 {
-                    if (!Roots[index].IsActive) return;
-                
                     pressTime = 0.0f;
-                    Roots[index].Start(ComputeAim(), EventArgs.Empty);
+                    Current.Start(packet);
 
                     MoveControl.canSprint = false;
                     state = PressState.Pressed;
@@ -81,17 +72,19 @@ namespace Chrome
                 if (Input.GetMouseButton(0))
                 {
                     pressTime += Time.deltaTime;
-                    Roots[index].Update(ComputeAim(), EventArgs.Empty);
+                    packet.Set(true);
                 }
 
                 if (Input.GetMouseButtonUp(0))
                 {
-                    Roots[index].End(ComputeAim(), EventArgs.Empty);
+                    packet.Set(false);
                     
                     MoveControl.canSprint = true;
                     state = PressState.Released;
                 }
             }
+
+            Current.Update(packet);
         }
 
         void OnApplicationFocus(bool hasFocus)
@@ -100,12 +93,12 @@ namespace Chrome
             state = PressState.Pressed;
         }
 
-        private void ChangeIndex(int value)
+        private void ChangeIndex(bool value)
         {
-            index = value;
+            isLeft = value;
             
             var HUD = Repository.Get<GunHUD>(Interface.Gun);
-            HUD.Select(value);
+            HUD.Select(isLeft ? 0 : 1);
         }
 
         private Aim ComputeAim()
