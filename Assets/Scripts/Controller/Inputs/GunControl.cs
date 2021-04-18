@@ -87,11 +87,17 @@ namespace Chrome
                 if (Input.GetMouseButtonUp(0))
                 {
                     Roots[index].End(ComputeAim(), EventArgs.Empty);
-
+                    
                     MoveControl.canSprint = true;
                     state = PressState.Released;
                 }
             }
+        }
+
+        void OnApplicationFocus(bool hasFocus)
+        {
+            if (hasFocus) return;
+            state = PressState.Pressed;
         }
 
         private void ChangeIndex(int value)

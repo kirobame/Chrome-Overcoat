@@ -7,10 +7,6 @@ namespace Chrome
         [SerializeField] private string path;
         [SerializeField] private Transform[] values;
 
-        void Awake()
-        {
-            Debug.Log($"Setting : {path} - {values[0]}");
-            Blackboard.Global.Set(values, path);
-        }
+        void Awake() => Blackboard.Global.Set(values, path);
     }
 }

@@ -9,6 +9,7 @@ namespace Chrome
     [Serializable]
     public class Shooter : GunPart
     {
+        [SerializeField] private byte type;
         [SerializeField] private Animator animator;
         [SerializeField] private GenericPoolable bullet;
         [SerializeField] private float force;
@@ -22,8 +23,12 @@ namespace Chrome
             
             bulletInstance.Shoot(aim, args);
 
-            if (args is IWrapper<float> forceArgs) Events.ZipCall(PlayerEvent.OnFire, Mathf.Lerp(force * 0.25f, force, forceArgs.Value));
-            else Events.ZipCall(PlayerEvent.OnFire, force);
+            float force;
+            if (args is IWrapper<float> forceArgs) force = Mathf.Lerp(this.force * 0.25f, this.force, forceArgs.Value);
+            else force = this.force;
+            
+            Events.ZipCall(PlayerEvent.OnFire, force);
+            Events.ZipCall<byte,float>(GaugeEvent.OnGunFired, type, force);
             
             return args;
         }

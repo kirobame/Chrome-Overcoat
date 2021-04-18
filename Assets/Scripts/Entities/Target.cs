@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Flux.Data;
+using Flux.Event;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -39,8 +40,13 @@ namespace Chrome
             hitVfxInstance.transform.position = transform.position;
             hitVfxInstance.transform.rotation = Quaternion.LookRotation(hit.normal);
             hitVfxInstance.Play();
-
-            if (health <= 0.0f) StartCoroutine(DeathRoutine());
+            
+            Events.ZipCall<byte,float>(GaugeEvent.OnDamageInflicted, 0, damage);
+            if (health <= 0.0f)
+            {
+                Events.ZipCall<byte>(GaugeEvent.OnKill, 0);
+                StartCoroutine(DeathRoutine());
+            }
         }
 
         private IEnumerator DeathRoutine()

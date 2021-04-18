@@ -1,24 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using Flux.Event;
 using UnityEngine;
 
-public class EventHandler : MonoBehaviour, IEventHandler
+namespace Flux.Event
 {
-    private List<EventToken> tokens = new List<EventToken>();
-
-    public void AddDependency(EventToken token) => tokens.Add(token);
-    public void RemoveDependency(Enum address, object method)
+    public class EventHandler : MonoBehaviour, IEventHandler
     {
-        var hashCode = method.GetHashCode();
-        for (var i = 0; i < tokens.Count; i++)
+        private List<EventToken> tokens = new List<EventToken>();
+
+        public void AddDependency(EventToken token) => tokens.Add(token);
+        public void RemoveDependency(Enum address, object method)
         {
-            if (tokens[i].Method.GetHashCode() != hashCode) continue;
+            var hashCode = method.GetHashCode();
+            for (var i = 0; i < tokens.Count; i++)
+            {
+                if (tokens[i].Method.GetHashCode() != hashCode) continue;
             
-            tokens[i].Dispose();
-            tokens.RemoveAt(i);
+                tokens[i].Dispose();
+                tokens.RemoveAt(i);
+            }
         }
-    }
     
-    void OnDestroy() { foreach(var token in tokens) token.Dispose(); }
+        void OnDestroy() { foreach(var token in tokens) token.Dispose(); }
+    }
 }

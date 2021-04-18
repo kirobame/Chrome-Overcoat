@@ -2,6 +2,7 @@
 using System.Linq;
 using Flux;
 using Flux.Data;
+using Flux.Event;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -65,6 +66,8 @@ namespace Chrome
                 
                 if (Input.GetKey(KeyCode.Space) && airTimer > 0.0f)
                 {
+                    Events.Call(GaugeEvent.OnAirControlUsed);
+                    
                     airTimer -= Time.deltaTime;
                     if (airTimer < 0.0f) airTimer = 0.0f;
                     
@@ -109,6 +112,8 @@ namespace Chrome
 
                 Routines.Start(Routines.DoAfter(() => move.AirFriction.SetTimer(controlLoss), new YieldFrame()));
                 cooldownRoutine = StartCoroutine(CooldownRoutine());
+                
+                Events.ZipCall(GaugeEvent.OnJetpackUsed, launch);
             }
 
             pressTime = 0.0f;

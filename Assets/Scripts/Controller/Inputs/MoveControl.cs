@@ -1,9 +1,11 @@
-﻿using Sirenix.OdinInspector;
+﻿using System;
+using Flux;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Chrome
 {
-    public class MoveControl : MonoBehaviour
+    public class MoveControl : InputControl
     {
         public static bool canSprint;
         public static bool canShowWalk;
@@ -41,17 +43,36 @@ namespace Chrome
         private Vector3 airVelocity;
 
         private bool hardAssign;
+        
+        //--------------------------------------------------------------------------------------------------------------/
 
         void Awake()
         {
-            canSprint = true;
-            canShowWalk = true;
-            speedModifier = 1.0f;
+            Bootup();
 
             hardAssign = false;
             body.onCollision += OnBodyHit;
         }
         void OnDestroy() => body.onCollision -= OnBodyHit;
+
+        public override void Bootup()
+        {
+            canSprint = true;
+            canShowWalk = true;
+            speedModifier = 1.0f;
+            
+            base.Bootup();
+        }
+        
+        //--------------------------------------------------------------------------------------------------------------/
+
+        void OnApplicationFocus(bool hasFocus)
+        {
+            if (hasFocus) return;
+            
+            canSprint = true;
+            canShowWalk = true;
+        }
 
         void Update()
         {
@@ -117,6 +138,8 @@ namespace Chrome
             
             if (!canSprint) animator.SetBool(RUN_STATE, false);
         }
+        
+        //--------------------------------------------------------------------------------------------------------------/
 
         private bool SetAnimationState(string name, bool value)
         {
