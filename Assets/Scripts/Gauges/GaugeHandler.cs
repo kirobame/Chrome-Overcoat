@@ -83,6 +83,11 @@ namespace Chrome
                     
                     firstGauge.ADD(7.5f * amount);
                     break;
+
+                case 2: // On turret hit
+
+                    firstGauge.ADD(7.5f * amount);
+                    break;
             }
         }
 
