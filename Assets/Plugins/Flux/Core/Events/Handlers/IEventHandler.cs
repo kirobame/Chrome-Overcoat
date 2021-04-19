@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
-using Flux.Event;
 
-public interface IEventHandler
+namespace Flux.Event
 {
-    void AddDependency(EventToken token);
-    void RemoveDependency(Enum address, object method);
+    public interface IEventHandler
+    {
+        void AddDependency(EventToken token);
+        void RemoveDependency(Enum address, object method);
+    }
 }

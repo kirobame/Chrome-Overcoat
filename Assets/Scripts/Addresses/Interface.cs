@@ -7,6 +7,7 @@ namespace Chrome
     {
         Jetpack,
         Charge, 
-        Gun
+        Gun,
+        Death,
     }
 }
