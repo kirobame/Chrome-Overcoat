@@ -66,11 +66,11 @@ namespace Chrome
         {
             if (state == PressState.Released)
             {
-                if (Input.GetKeyDown(KeyCode.E) && !isLeft) ChangeIndex(true);
+                if (Input.GetKeyDown(KeyCode.E) && !isLeft) ChangeWeapon(true);
                 if (Input.GetKeyDown(KeyCode.R) && isLeft)
                 {
                     blackboard.Remove("charge");
-                    ChangeIndex(false);
+                    ChangeWeapon(false);
                 }
                 
                 if (Input.GetMouseButtonDown(0))
@@ -108,7 +108,7 @@ namespace Chrome
             state = PressState.Pressed;
         }
 
-        private void ChangeIndex(bool value)
+        private void ChangeWeapon(bool value)
         {
             isLeft = value;
             

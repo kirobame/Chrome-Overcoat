@@ -1,6 +1,8 @@
-﻿using Flux.Data;
+﻿using System;
+using Flux.Data;
 using Flux.Event;
 using UnityEngine;
+using EventHandler = Flux.Event.EventHandler;
 
 namespace Chrome
 {

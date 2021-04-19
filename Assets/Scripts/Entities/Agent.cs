@@ -35,7 +35,7 @@ namespace Chrome
             var playerBodyReference = "player.body".Reference<PhysicBody>(true);
             var fireAnchorReference = "aim.fireAnchor".Reference<Transform>();
             var aimReference = "aim".Reference<Transform>();
-            
+
             behaviourTree = new RootNode();
             var conditionalNode = new CanSee(playerBodyReference, new PackettedValue<LineOfSight>());
             
