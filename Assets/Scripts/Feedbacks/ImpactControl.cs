@@ -81,7 +81,7 @@ namespace Chrome
         void OnFire(float force)
         {
             var direction = new Vector3(0.0f, -transform.forward.y, -1.0f).normalized;
-            Add(direction * (force * knockback));
+            Add(direction * (force * maxLength * knockback));
         }
     }
 }
