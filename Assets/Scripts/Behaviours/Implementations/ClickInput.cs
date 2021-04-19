@@ -5,9 +5,9 @@ namespace Chrome
 {
     public class ClickInput : RootNode
     {
-        public ClickInput() => output = 0b_0010;
-        
-        public override IEnumerable<Node> Update(Packet packet)
+        protected override void Open(Packet packet) => output = 0b_0010;
+
+        public override IEnumerable<INode> Update(Packet packet)
         {
             var state = packet.Get<bool>();
 
@@ -15,7 +15,7 @@ namespace Chrome
             {
                 if (output != 0b_0010)
                 {
-                    output = 0b_0010;
+                    ChangeOutput(packet, 0b_0010);
                     Start(packet);
                 }
 
@@ -24,13 +24,13 @@ namespace Chrome
                 OnUpdate(packet);
                 UpdateCachedNodes(packet);
                 
-                if (CanBreak()) Shutdown();
+                if (CanBreak()) Close(packet);
             }
             else
             {
                 if (output != 0b_0001)
                 {
-                    output = 0b_0001;
+                    ChangeOutput(packet, output = 0b_0001);
                     Start(packet);
                 }
                 

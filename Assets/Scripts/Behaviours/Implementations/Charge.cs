@@ -23,12 +23,14 @@ namespace Chrome
         [SerializeField] private float shakeFactor;
         [SerializeField] private float maxShake;
 
-        private bool hasStarted;
+        private bool canExecute;
         private float timer;
-        
-        protected override void OnStart(Packet packet)
+
+        protected override void Open(Packet packet)
         {
-            hasStarted = false;
+            Debug.Log("Starting charge for the first time");
+            
+            canExecute = false;
             timer = 0.0f;
         }
 
@@ -37,13 +39,13 @@ namespace Chrome
             var board = packet.Get<Blackboard>();
             float charge;
             
-            if (!hasStarted)
+            if (!canExecute)
             {
                 charge = board.Get<float>("charge");
 
                 if (charge <= 0)
                 {
-                    hasStarted = true;
+                    canExecute = true;
                     board.Set(true, "charge.isUsed");
                 }
                 else return;
@@ -58,6 +60,14 @@ namespace Chrome
             
             var HUD = Repository.Get<ChargeHUD>(Interface.Charge);
             HUD.Set(charge);
+
+            IsDone = true;
+        }
+
+        protected override void OnShutdown(Packet packet)
+        {
+            var board = packet.Get<Blackboard>();
+            board.Remove("charge");
         }
     }
 }

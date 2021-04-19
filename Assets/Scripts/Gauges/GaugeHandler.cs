@@ -1,6 +1,8 @@
-﻿using Flux.Data;
+﻿using System;
+using Flux.Data;
 using Flux.Event;
 using UnityEngine;
+using EventHandler = Flux.Event.EventHandler;
 
 namespace Chrome
 {
@@ -31,11 +33,7 @@ namespace Chrome
         {
             var module = new GaugeInRangeModule(new Vector2(0.0f, 0.01f), (value, percentage, state) =>
             {
-                if (state == GaugeInRangeModule.State.EnteredRange)
-                {
-                    Debug.Log("Killing player due to gauge !");
-                    lifetime.End();
-                }
+                if (state == GaugeInRangeModule.State.EnteredRange) lifetime.End();
             });
             
             module.lifetime = new ConstantModuleLifetime();
@@ -81,6 +79,11 @@ namespace Chrome
                 
                 case 1: // On enemy hit
                     
+                    firstGauge.ADD(7.5f * amount);
+                    break;
+
+                case 2: // On turret hit
+
                     firstGauge.ADD(7.5f * amount);
                     break;
             }

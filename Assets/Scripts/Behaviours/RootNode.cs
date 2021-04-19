@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -8,38 +9,39 @@ namespace Chrome
     {
         public override bool IsLocked
         {
-            get => isLocked || updatedNodes.Any(node => node.IsLocked);
+            get => isLocked || UpdatedNodes.Any(node => node.IsLocked);
             set => isLocked = value;
         }
 
-        protected List<Node> updatedNodes = new List<Node>();
+        public IEnumerable<INode> UpdatedNodes => updatedNodes.SelectMany(kvp => kvp.Value);
+
+        protected Dictionary<int, List<INode>> updatedNodes = new Dictionary<int, List<INode>>();
         protected Queue<ICommand> commands = new Queue<ICommand>();
         
         //--------------------------------------------------------------------------------------------------------------/
-        
+
         public override void Start(Packet packet)
         {
-            IsDone = false;
+            base.Start(packet);
             
             updatedNodes.Clear();
-            foreach (var child in Childs)
+            foreach (var child in Children)
             {
                 if ((Output | child.Input) != Output) continue;
                 
                 child.Start(packet);
-                updatedNodes.Add(child);
+                
+                if (updatedNodes.TryGetValue(child.Input, out var list)) list.Add(child);
+                else updatedNodes.Add(child.Input, new List<INode>() {child} );
             }
-            
-            OnStart(packet);
         }
-        protected virtual void OnStart(Packet packet) { }
 
-        public override IEnumerable<Node> Update(Packet packet)
+        public override IEnumerable<INode> Update(Packet packet)
         {
             if (IsDone) Start(packet);
             
-            OnUpdate(packet);
             UpdateCachedNodes(packet);
+            OnUpdate(packet);
 
             if (CanBreak())
             {
@@ -49,20 +51,33 @@ namespace Chrome
 
             return null;
         }
-        protected virtual void OnUpdate(Packet packet) { }
         protected void UpdateCachedNodes(Packet packet)
         {
-            for (var i = 0; i < updatedNodes.Count; i++)
+            foreach (var kvp in updatedNodes)
             {
-                i = UpdateNodeAt(i, packet);
-                if (i == -1) return;
+                for (var i = 0; i < updatedNodes.Count; i++)
+                {
+                    i = UpdateNodeAt(kvp.Key, i, packet);
+                    if (i == -1) return;
+                }
             }
         }
+        protected virtual void OnUpdate(Packet packet) { }
 
-        public override void Shutdown()
+        // Go recursively from the childs rather than using a dictionary
+        // Will allow to shutdown even when no currents are up for a given branch
+        // Need to take into account nodes that have no still been processed once : Use NodeState.Inactive to break
+        public override void OnClose(Packet packet) { foreach (var node in UpdatedNodes) CloseFrom(packet, node); }
+        private void CloseFrom(Packet packet, INode node)
         {
-            IsDone = true;
-            base.Shutdown();
+            var current = node;
+            current.Close(packet);
+
+            while (current.Parent != null && current.Parent != this && current.Parent.State == NodeState.Active)
+            {
+                current = node.Parent;
+                current.Close(packet);
+            }
         }
 
         //--------------------------------------------------------------------------------------------------------------/
@@ -74,7 +89,7 @@ namespace Chrome
             {
                 case PulseCommand pulse:
 
-                    if (updatedNodes.Contains(pulse.Target))
+                    if (IsUpdating(pulse.Target))
                     {
                         pulse.Target.Start(packet);
                         break;
@@ -82,38 +97,61 @@ namespace Chrome
                     
                     if (!pulse.Target.IsChildOf(this)) break;
 
-                    var match = false;
-                    for (var i = 0; i < updatedNodes.Count; i++)
+                    bool foundMatch = false;
+                    KeyValuePair<int, List<INode>> match;
+                    
+                    foreach (var kvp in updatedNodes)
                     {
-                        if (!updatedNodes[i].IsChildOf(pulse.Target)) continue;
+                        var list = kvp.Value;
+                        for (var i = 0; i < list.Count; i++)
+                        {
+                            if (!list[i].IsChildOf(pulse.Target)) continue;
 
-                        match = true;
-                        updatedNodes.RemoveAt(i);
-                        i--;
+                            foundMatch = true;
+                            match = kvp;
+                            
+                            list.RemoveAt(i);
+                            i--;
+                        }
                     }
-
-                    if (match)
+                    
+                    if (foundMatch)
                     {
                         pulse.Target.Start(packet);
-                        updatedNodes.Add(pulse.Target);
+                        updatedNodes[match.Key].Add(pulse.Target);
                     }
                     break;
                 
-                case ShutdownCommand shutdown:
+                case CloseCommand close:
                     
-                    Debug.Log("Delayed shutdown.");
-                    Shutdown();
+                    Close(packet);
                     break;
             }
         }
 
         //--------------------------------------------------------------------------------------------------------------/
 
-        protected bool CanBreak() => updatedNodes.Count == 0 || updatedNodes.All(node => node.IsDone);
-        protected int UpdateNodeAt(int index, Packet packet)
+        protected void ChangeOutput(Packet packet, int value)
+        {
+            var change = output ^ value;
+            var subtraction = output & change;
+            
+            foreach (var kvp in updatedNodes)
+            {
+                if ((subtraction | kvp.Key) != subtraction) continue;
+                foreach (var node in kvp.Value) CloseFrom(packet, node);
+            }
+
+            output = value;
+        }
+        
+        public bool IsUpdating(INode node) => UpdatedNodes.Any(value => value == node);
+        protected bool CanBreak() => updatedNodes.Count == 0 || UpdatedNodes.All(node => node.IsDone);
+
+        protected int UpdateNodeAt(int key, int index, Packet packet)
         {
             var snapshot = packet.Save();
-            var result = updatedNodes[index].Update(packet);
+            var result = updatedNodes[key][index].Update(packet);
             
             if (!IsLocked)
             {
@@ -127,13 +165,17 @@ namespace Chrome
             if (IsDone) return -1;
             
             if (result == null) return index;
-            updatedNodes.RemoveAt(index);
+            updatedNodes[key].RemoveAt(index);
 
             var count = result.Count();
-            if (count == 0) return index - 1;
+            if (count == 0)
+            {
+                if (updatedNodes[key].Count == 0) updatedNodes.Remove(key);
+                return index - 1;
+            }
             
-            updatedNodes.InsertRange(index, result);
-            for (var i = 0; i < count; i++) index = UpdateNodeAt(index + i, packet);
+            updatedNodes[key].InsertRange(index, result);
+            for (var i = 0; i < count; i++) index = UpdateNodeAt(key, index + i, packet);
 
             packet.Load(snapshot);
             return index;
