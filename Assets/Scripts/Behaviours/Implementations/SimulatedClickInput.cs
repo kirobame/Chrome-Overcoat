@@ -14,29 +14,26 @@ namespace Chrome
         
         private float timer;
 
-        protected override void OnStart(Packet packet)
-        {
-            timer = duration;
-            output = 0b_0001;
-        }
+        protected override void Open(Packet packet) => output = 0b_0001;
+        protected override void OnStart(Packet packet) => timer = duration;
 
-        public override IEnumerable<Node> Update(Packet packet)
+        public override IEnumerable<INode> Update(Packet packet)
         {
             timer -= Time.deltaTime;
             if (timer <= 0)
             {
-                if (IsDone) return null;
+                if (output != 0b_0010)
+                {
+                    ChangeOutput(packet, 0b_0010);
+                    Start(packet);
+                }
                 
-                output = 0b_0010;
+                if (IsDone) return null;
                 
                 OnUpdate(packet);
                 UpdateCachedNodes(packet);
                 
-                if (CanBreak())
-                {
-                    Shutdown();
-                    return Array.Empty<Node>();
-                }
+                if (CanBreak()) Close(packet);
             }
             else base.Update(packet);
             

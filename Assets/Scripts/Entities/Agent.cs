@@ -50,8 +50,10 @@ namespace Chrome
                                     new Delay(0.33f))))),
                     new MoveTo(new PackettedValue<NavMeshAgent>(), "player".Reference<Transform>(true), aimReference).Mask(0b_0010).Append(
                         new Delay(0.5f))));
+            
+            behaviourTree.Bootup(packet);
         }
-
+        
         void Start() => behaviourTree.Start(packet);
         void Update() => behaviourTree.Update(packet);
     }

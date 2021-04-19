@@ -33,11 +33,7 @@ namespace Chrome
         {
             var module = new GaugeInRangeModule(new Vector2(0.0f, 0.01f), (value, percentage, state) =>
             {
-                if (state == GaugeInRangeModule.State.EnteredRange)
-                {
-                    Debug.Log("Killing player due to gauge !");
-                    lifetime.End();
-                }
+                if (state == GaugeInRangeModule.State.EnteredRange) lifetime.End();
             });
             
             module.lifetime = new ConstantModuleLifetime();

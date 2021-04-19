@@ -54,6 +54,8 @@ namespace Chrome
             rightWeapon.Bootup();
 
             isLeft = true;
+            
+            Current.Bootup(packet);
         }
 
         public override void Bootup()
@@ -67,11 +69,7 @@ namespace Chrome
             if (state == PressState.Released)
             {
                 if (Input.GetKeyDown(KeyCode.E) && !isLeft) ChangeWeapon(true);
-                if (Input.GetKeyDown(KeyCode.R) && isLeft)
-                {
-                    blackboard.Remove("charge");
-                    ChangeWeapon(false);
-                }
+                if (Input.GetKeyDown(KeyCode.R) && isLeft) ChangeWeapon(false);
                 
                 if (Input.GetMouseButtonDown(0))
                 {
@@ -110,10 +108,13 @@ namespace Chrome
 
         private void ChangeWeapon(bool value)
         {
+            Current.Shutdown(packet);
             isLeft = value;
             
             var HUD = Repository.Get<GunHUD>(Interface.Gun);
             HUD.Select(isLeft ? 0 : 1);
+            
+            Current.Bootup(packet);
         }
     }
 }

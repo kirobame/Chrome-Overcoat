@@ -4,20 +4,13 @@ namespace Chrome
 {
     public abstract class ProxyNode : Node
     {
-        public override void Start(Packet packet)
-        {
-            IsDone = false;
-            OnStart(packet);
-        }
-        protected virtual void OnStart(Packet packet) { }
-        
-        public override IEnumerable<Node> Update(Packet packet)
+        public override IEnumerable<INode> Update(Packet packet)
         {
             OnUpdate(packet);
             if (!IsDone) return null;
 
-            var selection = new List<Node>();
-            foreach (var child in Childs)
+            var selection = new List<INode>();
+            foreach (var child in Children)
             {
                 if ((output | child.Input) != output) continue;
                 
@@ -28,11 +21,5 @@ namespace Chrome
             return selection;
         }
         protected virtual void OnUpdate(Packet packet) { }
-
-        protected void End(int output)
-        {
-            IsDone = true;
-            this.output = output;
-        }
     }
 }

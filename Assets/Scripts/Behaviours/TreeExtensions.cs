@@ -2,7 +2,7 @@
 {
     public static class TreeExtensions
     {
-        public static bool IsChildOf(this Node node, Node supposedParent)
+        public static bool IsChildOf(this INode node, INode supposedParent)
         {
             var parent = node.Parent;
             if (parent == supposedParent) return true;
@@ -16,12 +16,12 @@
             return false;
         }
 
-        public static TNode Append<TNode>(this TNode node, params Node[] nodes) where TNode : Node
+        public static TNode Append<TNode>(this TNode node, params Node[] nodes) where TNode : INode
         {
             node.Insert(nodes);
             return node;
         }
-        public static TNode Mask<TNode>(this TNode node, int input) where TNode : Node
+        public static TNode Mask<TNode>(this TNode node, int input) where TNode : INode
         {
             node.Input = input;
             return node;
