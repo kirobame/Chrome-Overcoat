@@ -52,7 +52,7 @@ namespace Chrome
             var impacts = modules.Where(module => module is IGaugeImpact).Cast<IGaugeImpact>();
 
             foreach (var affect in affects) { foreach (var impact in impacts) affect.Affect(impact); }
-            foreach (var impact in impacts) { goal = impact.ComputeImpact(goal); }
+            foreach (var impact in impacts) goal = impact.ComputeImpact(goal);
 
             goal = Mathf.Clamp(goal, 0, max);
             modules.RemoveAll(module => module.IsDone);

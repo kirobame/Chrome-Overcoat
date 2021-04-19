@@ -23,53 +23,41 @@ namespace Chrome
         [SerializeField] private float shakeFactor;
         [SerializeField] private float maxShake;
 
-        private Coroutine cooldownRoutine;
+        private bool hasStarted;
         private float timer;
-
+        
         protected override void OnStart(Packet packet)
         {
-            if (cooldownRoutine != null)
-            {
-                Routines.Stop(cooldownRoutine);
-                cooldownRoutine = null;
-            }
-            
-            timer = duration;
+            hasStarted = false;
+            timer = 0.0f;
         }
 
         protected override void OnUpdate(Packet packet)
         {
+            var board = packet.Get<Blackboard>();
+            float charge;
+            
+            if (!hasStarted)
+            {
+                charge = board.Get<float>("charge");
+
+                if (charge <= 0)
+                {
+                    hasStarted = true;
+                    board.Set(true, "charge.isUsed");
+                }
+                else return;
+            }
+            
             timer += Time.deltaTime;
             timer = Mathf.Clamp(timer, 0.0f, duration);
-            var charge = timer / duration;
+            charge = timer / duration;
 
-            var board = packet.Get<Blackboard>();
-            board.Set(timer / duration, "charge");
-            
+            board.Set(charge, "charge");
             Events.ZipCall(PlayerEvent.OnShake, shakeFactor * charge, maxShake);
             
             var HUD = Repository.Get<ChargeHUD>(Interface.Charge);
             HUD.Set(charge);
-        }
-
-        protected override void OnShutdown() => Routines.Start(CooldownRoutine());
-        
-        private IEnumerator CooldownRoutine()
-        {
-            var HUD = Repository.Get<ChargeHUD>(Interface.Charge);
-            
-            while (timer > 0.0f)
-            {
-                timer -= Time.deltaTime;
-                HUD.Set(timer / duration);
-                
-                yield return new WaitForEndOfFrame();
-            }
-
-            timer = 0.0f;
-            HUD.Set(0.0f);
-
-            cooldownRoutine = null;
         }
     }
 }

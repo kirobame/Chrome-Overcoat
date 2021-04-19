@@ -19,7 +19,7 @@ namespace Chrome
         
         private IValue<NavMeshAgent> navMesh;
         private IValue<Transform> target;
-        private IValue<Transform> aim;
+        private IValue<Transform> aim = new EmptyValue<Transform>();
         
         protected override void OnUpdate(Packet packet)
         {

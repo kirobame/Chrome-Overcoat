@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -15,20 +16,26 @@ namespace Chrome
         protected float actualSpeed;
         protected Vector3 direction = Vector3.forward;
 
+        private HashSet<Collider> ignores = new HashSet<Collider>();
+
         void Awake() => actualSpeed = speed;
         
         public virtual void Shoot(Aim aim, EventArgs args)
         {
+            ignores.Clear();
+            
             transform.position = aim.firepoint;
             direction = aim.direction.normalized;
         }
+
+        public void Ignore(Collider collider) => ignores.Add(collider);
 
         protected virtual void Update()
         {
             var length = actualSpeed * Time.deltaTime;
             var ray = new Ray(transform.position + direction * radius, direction);
 
-            if (Physics.Raycast(ray, out var hit, length, hitMask)) OnHit(hit);
+            if (Physics.Raycast(ray, out var hit, length, hitMask) && !ignores.Contains(hit.collider)) OnHit(hit);
             else
             {
                 var delta = direction * length;

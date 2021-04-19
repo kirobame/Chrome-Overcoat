@@ -7,6 +7,7 @@ namespace Chrome
 {
     public class Shoot : ProxyNode
     {
+        private IValue<Collider> collider = new EmptyValue<Collider>();
         private IValue<Vector3> direction;
         private IValue<Transform> fireAnchor;
         
@@ -14,6 +15,15 @@ namespace Chrome
         {
             this.direction = direction;
             this.fireAnchor = fireAnchor;
+            
+            this.bulletPrefab = bulletPrefab;
+            this.muzzleFlashPrefab = muzzleFlashPrefab;
+        }
+        public Shoot(IValue<Vector3> direction, IValue<Transform> fireAnchor, IValue<Collider> collider, GenericPoolable bulletPrefab, PoolableVfx muzzleFlashPrefab)
+        {
+            this.direction = direction;
+            this.fireAnchor = fireAnchor;
+            this.collider = collider;
             
             this.bulletPrefab = bulletPrefab;
             this.muzzleFlashPrefab = muzzleFlashPrefab;
@@ -51,12 +61,21 @@ namespace Chrome
             var bulletInstance = bulletPool.CastSingle<Bullet>(bulletPrefab);
 
             var board = packet.Get<Blackboard>();
-            if (!board.TryGet<float>("charge", out var force)) force = 1.0f;
-            
-            Events.ZipCall(PlayerEvent.OnFire, force);
-            Events.ZipCall<byte,float>(GaugeEvent.OnGunFired, (byte)(bulletPrefab.name.Contains("Energy") ? 1 : 0), force);
+            float force;
+
+            if (!board.TryGet<bool>("charge.isUsed", out var isUsed) || !isUsed) force = 0.25f;
+            else force = board.Get<float>("charge");
+
+            var type = board.Get<byte>("type");
+            if (type == 10)
+            {
+                Events.ZipCall(PlayerEvent.OnFire, force);
+                Events.ZipCall<byte,float>(GaugeEvent.OnGunFired, (byte)(bulletPrefab.name.Contains("Energy") ? 0 : 1), force);
+            }
             
             bulletInstance.Shoot(new Aim() { direction = direction, firepoint = fireAnchor.position}, new WrapperArgs<float>(force));
+            
+            if (collider.IsValid(packet)) bulletInstance.Ignore(collider.Value);
         }
     }
 }

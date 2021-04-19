@@ -7,7 +7,7 @@
             this.target = target;
             this.lineOfSight = lineOfSight;
         }
-        
+
         private IValue<PhysicBody> target;
         private IValue<LineOfSight> lineOfSight;
         

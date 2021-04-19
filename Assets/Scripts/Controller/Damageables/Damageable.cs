@@ -28,7 +28,7 @@ namespace Chrome
         public void Hit(RaycastHit hit, float damage)
         {
             if (type == 10) Events.ZipCall<float>(GaugeEvent.OnDamageReceived, damage);
-            else Events.ZipCall<byte,float>(GaugeEvent.OnDamageReceived, type, damage);
+            else Events.ZipCall<byte,float>(GaugeEvent.OnDamageInflicted, type, damage);
             
             implementation.Hit(hit, damage);
         }

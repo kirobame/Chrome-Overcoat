@@ -81,14 +81,12 @@ namespace Chrome
                 
                 case 1: // On enemy hit
                     
+                    firstGauge.ADD(7.5f * amount);
                     break;
             }
         }
 
-        void OnDamageReceived(float amount)
-        {
-            
-        }
+        void OnDamageReceived(float amount) => firstGauge.ADD(-amount);
 
         void OnKill(byte type)
         {

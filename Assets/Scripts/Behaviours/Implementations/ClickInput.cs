@@ -3,29 +3,24 @@ using UnityEngine;
 
 namespace Chrome
 {
-    // TO CORRECT !
     public class ClickInput : RootNode
     {
-        private bool previousState;
-        
-        protected override void OnStart(Packet packet) => output = 0b_0001;
+        public ClickInput() => output = 0b_0010;
         
         public override IEnumerable<Node> Update(Packet packet)
         {
             var state = packet.Get<bool>();
+
             if (!state)
             {
-                if (IsDone) return null;
-                
-                if (previousState)
+                if (output != 0b_0010)
                 {
-                    Shutdown();
-                    previousState = false;
+                    output = 0b_0010;
+                    Start(packet);
                 }
 
-                output = 0b_0010;
+                if (IsDone) return null;
                 
-                Debug.Log("UPDATING OTHER PATH");
                 OnUpdate(packet);
                 UpdateCachedNodes(packet);
                 
@@ -33,8 +28,13 @@ namespace Chrome
             }
             else
             {
-                previousState = true;
-                return base.Update(packet);
+                if (output != 0b_0001)
+                {
+                    output = 0b_0001;
+                    Start(packet);
+                }
+                
+                base.Update(packet);
             }
 
             return null;

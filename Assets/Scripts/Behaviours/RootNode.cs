@@ -24,7 +24,9 @@ namespace Chrome
             updatedNodes.Clear();
             foreach (var child in Childs)
             {
-                if ((output | child.Input) != Output) continue;
+                if ((Output | child.Input) != Output) continue;
+                
+                child.Start(packet);
                 updatedNodes.Add(child);
             }
             

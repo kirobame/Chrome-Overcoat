@@ -19,10 +19,12 @@ namespace Chrome
         public RootNode Current => isLeft ? leftWeapon.Root : rightWeapon.Root;
         public Transform Firepoint => firepoint;
 
-        [SerializeField] private LayerMask rayMask;
-        [SerializeField] private Transform raypoint;
+        [SerializeField] private Collider self;
+        
+        [Space, SerializeField] private Transform raypoint;
         [SerializeField] private Transform firepoint;
-        [SerializeField] private RemoteTaskTree leftWeapon;
+        
+        [Space, SerializeField] private RemoteTaskTree leftWeapon;
         [SerializeField] private RemoteTaskTree rightWeapon;
 
         private bool isLeft;
@@ -36,9 +38,12 @@ namespace Chrome
         void Awake()
         {
             blackboard = new Blackboard();
+            blackboard.Set((byte)10, "type");
             blackboard.Set(raypoint, "view");
             blackboard.Set(firepoint, "view.fireAnchor");
-            
+            blackboard.Set(self.transform, "self");
+            blackboard.Set(self, "self.collider");
+
             packet = new Packet();
             packet.Set(false);
             packet.Set(blackboard);
@@ -51,17 +56,27 @@ namespace Chrome
             isLeft = true;
         }
 
+        public override void Bootup()
+        {
+            packet.Set(false);
+            base.Bootup();
+        }
+
         void Update()
         {
             if (state == PressState.Released)
             {
                 if (Input.GetKeyDown(KeyCode.E) && !isLeft) ChangeIndex(true);
-                if (Input.GetKeyDown(KeyCode.R) && isLeft) ChangeIndex(false);
+                if (Input.GetKeyDown(KeyCode.R) && isLeft)
+                {
+                    blackboard.Remove("charge");
+                    ChangeIndex(false);
+                }
                 
                 if (Input.GetMouseButtonDown(0))
                 {
                     pressTime = 0.0f;
-                    Current.Start(packet);
+                    packet.Set(true);
 
                     MoveControl.canSprint = false;
                     state = PressState.Pressed;
@@ -99,26 +114,6 @@ namespace Chrome
             
             var HUD = Repository.Get<GunHUD>(Interface.Gun);
             HUD.Select(isLeft ? 0 : 1);
-        }
-
-        private Aim ComputeAim()
-        {
-            var length = 450.0f;
-            var ray = new Ray(raypoint.position, raypoint.forward);
-
-            Vector3 endPoint;
-            if (Physics.Raycast(ray, out var hit, length, rayMask)) endPoint = hit.point;
-            else endPoint = ray.origin + ray.direction * length;
-            
-            return new Aim()
-            {
-                direction = Vector3.Normalize(endPoint - firepoint.position),
-                
-                firepoint = firepoint.position,
-                firingDirection = firepoint.forward,
-                
-                pressTime = pressTime
-            };
         }
     }
 }

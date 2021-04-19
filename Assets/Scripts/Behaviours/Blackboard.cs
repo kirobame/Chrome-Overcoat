@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Chrome
@@ -36,6 +37,8 @@ namespace Chrome
 
             public IReadOnlyList<Entry> Childs => childs;
             private List<Entry> childs;
+
+            public void Remove(string childName) => childs.RemoveAll(child => child.Name == childName);
 
             public Entry GetEntryAt(string path) => GetEntryAt(path.Split('.'), 0);
             private Entry GetEntryAt(string[] path, int advancement)
@@ -84,6 +87,19 @@ namespace Chrome
         public Blackboard() => root = new Entry("", "root", new NullRegistry());
         
         private Entry root;
+
+        public void Remove(string path)
+        {
+            if (path.Count(letter => letter == '.') > 0)
+            {
+                var splitIndex = path.LastIndexOf('.');
+                var parentPath = path.Substring(0, splitIndex);
+                var childName = path.Substring(splitIndex + 1, path.Length - parentPath.Length - 1);
+                
+                if (root.TryGetEntryAt(path, out var entry)) entry.Remove(childName);
+            }
+            else root.Remove(path);
+        }
         
         public void Set<T>(T value, string path)
         {

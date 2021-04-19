@@ -23,6 +23,7 @@ namespace Chrome
         void Awake()
         {
             board = new Blackboard();
+            board.Set((byte)1, "type");
             board.Set(aim, "aim");
             board.Set(fireAnchor, "aim.fireAnchor");
             
