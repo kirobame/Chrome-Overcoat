@@ -1,4 +1,6 @@
-﻿namespace Chrome
+﻿using UnityEngine;
+
+namespace Chrome
 {
     public abstract class ConditionalNode : ProxyNode
     {
@@ -7,7 +9,7 @@
             if (Check(packet)) output = 0b_0001;
             else output = 0b_0010;
 
-            IsDone = true;
+            isDone = true;
         }
         protected abstract bool Check(Packet packet);
     }

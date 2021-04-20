@@ -4,44 +4,6 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public enum NodeState
-    {
-        Shutdown,
-        Inactive,
-        Active,
-    }
-    
-    public interface INode : IComparable<INode>
-    {
-        bool IsDone { get; }
-        bool IsLocked { get; }
-        NodeState State { get; }
-        
-        int Priority { get; }
-        int Input { get; set; }
-        int Output { get; }
-        
-        //--------------------------------------------------------------------------------------------------------------/
-        
-        INode Parent { get; set; }
-        IReadOnlyList<INode> Children { get; }
-
-        void Bootup(Packet packet);
-
-        void Start(Packet packet);
-        IEnumerable<INode> Update(Packet packet);
-
-        void Close(Packet packet);
-        void Shutdown(Packet packet);
-        
-        //--------------------------------------------------------------------------------------------------------------/
-
-        void Insert(IEnumerable<INode> nodes);
-        
-        void Cut(IEnumerable<INode> nodes);
-        void Cut(Predicate<INode> predicate);
-    }
-    
     [Serializable]
     public abstract class Node : INode
     {
@@ -52,7 +14,7 @@ namespace Chrome
         }
         protected bool isLocked;
 
-        public bool IsDone { get; protected set; }
+        public abstract bool IsDone { get; }
         public NodeState State { get; protected set; }
 
         public int Input
@@ -77,7 +39,6 @@ namespace Chrome
 
         public virtual void Bootup(Packet packet)
         {
-            IsDone = true;
             IsLocked = false;
             State = NodeState.Inactive;
             
@@ -90,8 +51,6 @@ namespace Chrome
 
         public virtual void Start(Packet packet)
         {
-            IsDone = false;
-            
             if (State == NodeState.Inactive)
             {
                 Open(packet);
@@ -106,9 +65,10 @@ namespace Chrome
 
         public virtual void Close(Packet packet)
         {
-            IsDone = true;
+            IsLocked = false;
             State = NodeState.Inactive;
             
+            if (Parent != null && Parent.State == NodeState.Active) Parent.Close(packet);
             OnClose(packet);
         }
         public virtual void OnClose(Packet packet) { }

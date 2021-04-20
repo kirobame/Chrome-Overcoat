@@ -17,12 +17,12 @@ namespace Chrome
         public void Bootup() => health = maxHealth;
         public void Inject(Damageable damageable) => this.damageable = damageable;
         
-        public void Hit(RaycastHit hit, float damage)
+        public void Hit(byte ownerType, RaycastHit hit, float damage)
         {
             health -= damage;
             if (health <= 0)
             {
-                if (damageable != null && damageable.Type != 10) Events.ZipCall<byte>(GaugeEvent.OnKill, damageable.Type);
+                if (damageable != null && ownerType == 10 && damageable.Type != 10) Events.ZipCall<byte>(GaugeEvent.OnKill, damageable.Type);
                 link.End();
             }
         }

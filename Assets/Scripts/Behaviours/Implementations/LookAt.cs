@@ -21,7 +21,7 @@ namespace Chrome
                 aim.Value.LookAt(point);
             }
             
-            IsDone = true;
+            isDone = true;
         }
     }
 }

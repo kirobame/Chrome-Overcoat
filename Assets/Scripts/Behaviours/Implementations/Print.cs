@@ -13,7 +13,7 @@ namespace Chrome
         protected override void OnUpdate(Packet packet)
         {
             Debug.Log(message);
-            IsDone = true;
+            isDone = true;
         }
     }
 }

@@ -2,6 +2,8 @@
 {
     public static class TreeExtensions
     {
+        public static bool HasChannel(this int mask, int channel) => (mask | channel) == mask;
+        
         public static bool IsChildOf(this INode node, INode supposedParent)
         {
             var parent = node.Parent;

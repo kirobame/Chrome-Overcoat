@@ -13,6 +13,8 @@ namespace Chrome
         [FoldoutGroup("Values"), SerializeField] protected float speed;
         [FoldoutGroup("Values"), SerializeField] protected LayerMask hitMask;
 
+        protected byte ownerType;
+        
         protected float actualSpeed;
         protected Vector3 direction = Vector3.forward;
 

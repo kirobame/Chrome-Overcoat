@@ -15,7 +15,7 @@ namespace Chrome
         [Space, SerializeField] private GenericPoolable bulletPrefab;
         [SerializeField] private PoolableVfx muzzleFlashPrefab;
         
-        private RootNode behaviourTree;
+        private ITaskTree taskTree;
         private Blackboard board;
         private Packet packet;
 
@@ -34,22 +34,21 @@ namespace Chrome
             var fireAnchorReference = "aim.fireAnchor".Reference<Transform>();
             var aimReference = "aim".Reference<Transform>();
             
-            behaviourTree = new RootNode();
+            taskTree = new RootNode();
             var conditionalNode = new CanSee(playerBodyReference, new PackettedValue<LineOfSight>());
             
-            behaviourTree.Append(
+            taskTree.Append(
                 conditionalNode.Append(
-                        new RootNode().Append(
-                            new LookAt(playerBodyReference, aimReference)), 
-                        new SimulatedClickInput(1.0f).Append(
-                            new ComputeDirectionTo("shootDir", fireAnchorReference, playerBodyReference).Append(
-                                new Shoot("shootDir".Reference<Vector3>(), fireAnchorReference, bulletPrefab, muzzleFlashPrefab).Append(
-                                    new Delay(0.33f))))),
-                    new MoveTo(new PackettedValue<NavMeshAgent>(), "player".Reference<Transform>(true), aimReference).Mask(0b_0010).Append(
-                        new Delay(0.5f)));
+                    new RootNode().Mask(0b_0001).Append(
+                        new LookAt(playerBodyReference, aimReference)), 
+                    new SimulatedClickInput(1.0f).Mask(0b_0001).Append(
+                        new ComputeDirectionTo("shootDir", fireAnchorReference, playerBodyReference).Append(
+                            new Shoot("shootDir".Reference<Vector3>(), fireAnchorReference, bulletPrefab, muzzleFlashPrefab).Append(
+                                new Delay(0.33f))))),
+                    new Delay(0.5f).Mask(0b_0010));
         }
 
-        void Start() => behaviourTree.Start(packet);
-        void Update() => behaviourTree.Update(packet);
+        void Start() => taskTree.Start(packet);
+        void Update() => taskTree.Update(packet);
     }
 }

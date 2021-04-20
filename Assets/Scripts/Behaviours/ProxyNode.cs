@@ -4,6 +4,15 @@ namespace Chrome
 {
     public abstract class ProxyNode : Node
     {
+        public override bool IsDone => isDone;
+        protected bool isDone;
+
+        public override void Start(Packet packet)
+        {
+            isDone = false;
+            base.Start(packet);
+        }
+
         public override IEnumerable<INode> Update(Packet packet)
         {
             OnUpdate(packet);

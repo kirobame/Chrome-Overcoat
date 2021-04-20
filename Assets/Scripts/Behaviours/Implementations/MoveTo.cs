@@ -33,7 +33,7 @@ namespace Chrome
                 if (aim.IsValid(packet)) aim.Value.localRotation = Quaternion.identity;
             }
             
-            IsDone = true;
+            isDone = true;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using Flux;
 using Flux.Data;
+using Flux.Event;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -22,6 +23,9 @@ namespace Chrome
 
         public override void Shoot(Aim aim, EventArgs args)
         {
+            var castedArgs = (WrapperArgs<byte, float>)args;
+            ownerType = castedArgs.ArgOne;
+            
             deactivationTimer = deactivationTime;
             hasHit = false;
             
@@ -62,7 +66,7 @@ namespace Chrome
             if (hit.collider.TryGetComponent<IDamageable>(out var damageable))
             {
                 vfxPoolable.transform.SetParent(hit.transform);
-                damageable.Hit(hit, damage);
+                damageable.Hit(ownerType, hit, damage);
             }
             
             vfxPoolable.transform.position = hit.point;

@@ -11,7 +11,7 @@ namespace Chrome
         [SerializeField] private PoolableVfx muzzleFlashPrefab;
         [SerializeField] private float delay;
         
-        public RootNode Build()
+        public ITaskTree Build()
         {
             var fireAnchorReference = "view.fireAnchor".Reference<Transform>();
             var colliderReference = "self.collider".Reference<Collider>();
