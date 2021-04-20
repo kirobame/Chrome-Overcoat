@@ -1,184 +1,135 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 namespace Chrome
 {
-    public class RootNode : Node
+    public class RootNode : Node, ITaskTree
     {
+        #region Nested Types
+
+        #endregion
+        
         public override bool IsLocked
         {
             get => isLocked || UpdatedNodes.Any(node => node.IsLocked);
             set => isLocked = value;
         }
+        public override bool IsDone => Branches.All(branch => branch.IsDone);
 
-        public IEnumerable<INode> UpdatedNodes => updatedNodes.SelectMany(kvp => kvp.Value);
+        public IEnumerable<INode> UpdatedNodes => branchRegistry.SelectMany(kvp => kvp.Value.Nodes);
+        public IEnumerable<Branch> Branches => branchRegistry.Values;
 
-        protected Dictionary<int, List<INode>> updatedNodes = new Dictionary<int, List<INode>>();
-        protected Queue<ICommand> commands = new Queue<ICommand>();
+        public IReadOnlyDictionary<int, Branch> BranchRegistry => branchRegistry;
+        protected Dictionary<int, Branch> branchRegistry = new Dictionary<int, Branch>();
+        
+        protected List<ICommand> commands = new List<ICommand>();
         
         //--------------------------------------------------------------------------------------------------------------/
 
         public override void Start(Packet packet)
         {
             base.Start(packet);
+
+            var keys = new List<int>();
+            foreach (var branch in Branches)
+            {
+                keys.Add(branch.Key);
+                branch.Reset();
+            }
             
-            updatedNodes.Clear();
             foreach (var child in Children)
             {
                 if ((Output | child.Input) != Output) continue;
                 
                 child.Start(packet);
-                
-                if (updatedNodes.TryGetValue(child.Input, out var list)) list.Add(child);
-                else updatedNodes.Add(child.Input, new List<INode>() {child} );
+                keys.Remove(child.Input);
+
+                if (!branchRegistry.ContainsKey(child.Input)) branchRegistry.Add(child.Input, new Branch(this, child.Input));
+                branchRegistry[child.Input].Add(child);
             }
+
+            foreach (var key in keys) branchRegistry.Remove(key);
         }
 
         public override IEnumerable<INode> Update(Packet packet)
         {
             if (IsDone) Start(packet);
             
-            UpdateCachedNodes(packet);
+            foreach (var branch in Branches) branch.Update(packet);
             OnUpdate(packet);
-
-            if (CanBreak())
-            {
-                IsLocked = false;
-                IsDone = true;
-            }
 
             return null;
         }
-        protected void UpdateCachedNodes(Packet packet)
+        protected virtual void OnUpdate(Packet packet) { }
+
+        public override void Shutdown(Packet packet)
         {
-            foreach (var kvp in updatedNodes)
+            foreach (var branch in Branches)
             {
-                for (var i = 0; i < updatedNodes.Count; i++)
+                foreach (var node in branch.All) node.Close(packet);
+                branch.Reset();
+            }
+            
+            base.Shutdown(packet);
+        }
+        
+        //--------------------------------------------------------------------------------------------------------------/
+
+        public bool IsUpdating(INode node) => UpdatedNodes.Any(value => value == node);
+        
+        public void Command(Packet packet, ICommand command)
+        {
+            var state = command.IsReady(packet, this);
+            
+            if (state == null) return;
+            else if (state == true) command.Execute(packet, this);
+            else commands.Add(command);
+        }
+
+        void ITaskTree.ActualizeCommands(Packet packet) => ActualizeCommands(packet);
+        protected void ActualizeCommands(Packet packet)
+        {
+            for (var i = 0; i < commands.Count; i++)
+            {
+                var state = commands[i].IsReady(packet, this);
+                if (state == null)
                 {
-                    i = UpdateNodeAt(kvp.Key, i, packet);
-                    if (i == -1) return;
+                    commands.RemoveAt(i);
+                    i--;
+                }
+                else if (state == true)
+                {
+                    commands[i].Execute(packet, this);
+                    commands.RemoveAt(i);
+                    i--;
                 }
             }
         }
-        protected virtual void OnUpdate(Packet packet) { }
-
-        // Go recursively from the childs rather than using a dictionary
-        // Will allow to shutdown even when no currents are up for a given branch
-        // Need to take into account nodes that have no still been processed once : Use NodeState.Inactive to break
-        public override void OnClose(Packet packet) { foreach (var node in UpdatedNodes) CloseFrom(packet, node); }
-        private void CloseFrom(Packet packet, INode node)
-        {
-            var current = node;
-            current.Close(packet);
-
-            while (current.Parent != null && current.Parent != this && current.Parent.State == NodeState.Active)
-            {
-                current = node.Parent;
-                current.Close(packet);
-            }
-        }
-
-        //--------------------------------------------------------------------------------------------------------------/
         
-        public void Order(ICommand command) => commands.Enqueue(command);
-        protected void HandleCommand(ICommand command, Packet packet)
-        {
-            switch (command)
-            {
-                case PulseCommand pulse:
+        void ITaskTree.AddOutputChannel(Packet packet, int value) => AddOutputChannel(packet, value);
+        protected void AddOutputChannel(Packet packet, int value) => ChangeOutputMask(packet, output | value);
+        
+        void ITaskTree.RemoveOutputChannel(Packet packet, int value) => RemoveOutputChannel(packet, value);
+        protected void RemoveOutputChannel(Packet packet, int value) => ChangeOutputMask(packet, output ^ value);
 
-                    if (IsUpdating(pulse.Target))
-                    {
-                        pulse.Target.Start(packet);
-                        break;
-                    }
-                    
-                    if (!pulse.Target.IsChildOf(this)) break;
-
-                    bool foundMatch = false;
-                    KeyValuePair<int, List<INode>> match;
-                    
-                    foreach (var kvp in updatedNodes)
-                    {
-                        var list = kvp.Value;
-                        for (var i = 0; i < list.Count; i++)
-                        {
-                            if (!list[i].IsChildOf(pulse.Target)) continue;
-
-                            foundMatch = true;
-                            match = kvp;
-                            
-                            list.RemoveAt(i);
-                            i--;
-                        }
-                    }
-                    
-                    if (foundMatch)
-                    {
-                        pulse.Target.Start(packet);
-                        updatedNodes[match.Key].Add(pulse.Target);
-                    }
-                    break;
-                
-                case CloseCommand close:
-                    
-                    Close(packet);
-                    break;
-            }
-        }
-
-        //--------------------------------------------------------------------------------------------------------------/
-
-        protected void ChangeOutput(Packet packet, int value)
+        void ITaskTree.ChangeOutputMask(Packet packet, int value) => ChangeOutputMask(packet, value);
+        protected void ChangeOutputMask(Packet packet, int value)
         {
             var change = output ^ value;
             var subtraction = output & change;
-            
-            foreach (var kvp in updatedNodes)
+
+            foreach (var branch in Branches)
             {
-                if ((subtraction | kvp.Key) != subtraction) continue;
-                foreach (var node in kvp.Value) CloseFrom(packet, node);
+                if ((subtraction | branch.Key) != subtraction) continue;
+                
+                foreach (var node in branch.All) node.Close(packet);
+                branch.Reset();
             }
 
             output = value;
-        }
-        
-        public bool IsUpdating(INode node) => UpdatedNodes.Any(value => value == node);
-        protected bool CanBreak() => updatedNodes.Count == 0 || UpdatedNodes.All(node => node.IsDone);
-
-        protected int UpdateNodeAt(int key, int index, Packet packet)
-        {
-            var snapshot = packet.Save();
-            var result = updatedNodes[key][index].Update(packet);
-            
-            if (!IsLocked)
-            {
-                while (commands.Count > 0)
-                {
-                    var command = commands.Dequeue();
-                    HandleCommand(command, packet);
-                }
-            }
-
-            if (IsDone) return -1;
-            
-            if (result == null) return index;
-            updatedNodes[key].RemoveAt(index);
-
-            var count = result.Count();
-            if (count == 0)
-            {
-                if (updatedNodes[key].Count == 0) updatedNodes.Remove(key);
-                return index - 1;
-            }
-            
-            updatedNodes[key].InsertRange(index, result);
-            for (var i = 0; i < count; i++) index = UpdateNodeAt(key, index + i, packet);
-
-            packet.Load(snapshot);
-            return index;
         }
     }
 }

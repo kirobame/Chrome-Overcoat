@@ -40,7 +40,7 @@ namespace Chrome
                 ShootBullet(packet, fireAnchor.Value, direction.Value);
             }
 
-            IsDone = true;
+            isDone = true;
         }
 
         private void SpawnMuzzleFlash(Packet packet, Transform fireAnchor)
@@ -73,7 +73,7 @@ namespace Chrome
                 Events.ZipCall<byte,float>(GaugeEvent.OnGunFired, (byte)(bulletPrefab.name.Contains("Energy") ? 0 : 1), force);
             }
             
-            bulletInstance.Shoot(new Aim() { direction = direction, firepoint = fireAnchor.position}, new WrapperArgs<float>(force));
+            bulletInstance.Shoot(new Aim() { direction = direction, firepoint = fireAnchor.position}, new WrapperArgs<byte, float>(type, force));
             
             if (collider.IsValid(packet)) bulletInstance.Ignore(collider.Value);
         }

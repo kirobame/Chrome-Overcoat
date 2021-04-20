@@ -24,7 +24,7 @@ namespace Chrome
             if (timer <= 0)
             {
                 IsLocked = false;
-                IsDone = true;
+                isDone = true;
             }
         }
     }

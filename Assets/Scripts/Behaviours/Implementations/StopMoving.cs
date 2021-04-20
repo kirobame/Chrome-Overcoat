@@ -12,7 +12,7 @@ namespace Chrome
                 navMesh.isStopped = true;
             }
             
-            IsDone = true;
+            isDone = true;
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Chrome
         [Space, SerializeField] private GenericPoolable bulletPrefab;
         [SerializeField] private PoolableVfx muzzleFlashPrefab;
         
-        private RootNode behaviourTree;
+        private ITaskTree taskTree;
         private Blackboard board;
         private Packet packet;
 
@@ -36,10 +36,10 @@ namespace Chrome
             var fireAnchorReference = "aim.fireAnchor".Reference<Transform>();
             var aimReference = "aim".Reference<Transform>();
 
-            behaviourTree = new RootNode();
+            taskTree = new RootNode();
             var conditionalNode = new CanSee(playerBodyReference, new PackettedValue<LineOfSight>());
             
-            behaviourTree.Append(
+            taskTree.Append(
                 conditionalNode.Append(
                     new StopMoving().Mask(0b_0001).Append(
                         new RootNode().Append(
@@ -51,10 +51,10 @@ namespace Chrome
                     new MoveTo(new PackettedValue<NavMeshAgent>(), "player".Reference<Transform>(true), aimReference).Mask(0b_0010).Append(
                         new Delay(0.5f))));
             
-            behaviourTree.Bootup(packet);
+            taskTree.Bootup(packet);
         }
         
-        void Start() => behaviourTree.Start(packet);
-        void Update() => behaviourTree.Update(packet);
+        void Start() => taskTree.Start(packet);
+        void Update() => taskTree.Update(packet);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using Flux;
 using Flux.Data;
+using Flux.Event;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -31,7 +32,10 @@ namespace Chrome
 
         public override void Shoot(Aim aim, EventArgs args)
         {
-            var ratio = ((IWrapper<float>) args).Value;
+            var castedArgs = (WrapperArgs<byte, float>)args;
+            ownerType = castedArgs.ArgOne;
+            
+            var ratio = castedArgs.ArgTwo;
             damage = Mathf.Lerp(damages.x, damages.y, ratio);
             
             actualSpeed = Mathf.Lerp(speed, maxSpeed, ratio);
@@ -76,7 +80,7 @@ namespace Chrome
                 var vfx = PlayImpact(vfxPool.RequestSinglePoolable(impactVfx), hit);
                 if (hit.collider.TryGetComponent<IDamageable>(out var damageable))
                 {
-                    damageable.Hit(hit, damage);
+                    damageable.Hit(ownerType, hit, damage);
                     vfx.transform.SetParent(hit.transform);
                 }
 
@@ -87,7 +91,7 @@ namespace Chrome
             var hitVfx = PlayImpact(vfxPool.RequestSinglePoolable(bounceVfx), hit);
             if (hit.collider.TryGetComponent<IDamageable>(out var other))
             {
-                other.Hit(hit, damage);
+                other.Hit(ownerType, hit, damage);
                 hitVfx.transform.SetParent(hit.transform);
             }
 

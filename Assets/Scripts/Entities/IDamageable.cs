@@ -4,6 +4,6 @@ namespace Chrome
 {
     public interface IDamageable
     {
-        void Hit(RaycastHit hit, float damage);
+        void Hit(byte ownerType, RaycastHit hit, float damage);
     }
 }

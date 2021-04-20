@@ -57,7 +57,7 @@ namespace Chrome
                 board.Set(point - from.Value.position, path);
             }
 
-            IsDone = true;
+            isDone = true;
         }
     }
 }

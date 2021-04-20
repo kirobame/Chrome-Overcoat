@@ -5,38 +5,44 @@ namespace Chrome
 {
     public class ClickInput : RootNode
     {
-        protected override void Open(Packet packet) => output = 0b_0010;
-
+        private bool previousState;
+        
+        protected override void OnBootup(Packet packet) => output = 0b_0010;
+        
         public override IEnumerable<INode> Update(Packet packet)
         {
             var state = packet.Get<bool>();
 
             if (!state)
             {
-                if (output != 0b_0010)
+                if (previousState)
                 {
-                    ChangeOutput(packet, 0b_0010);
+                    Command(packet, new ChannelRemovalCommand(0b_0001));
+                    AddOutputChannel(packet, 0b_0010);
+                    
                     Start(packet);
                 }
-
+                previousState = false;
+                
                 if (IsDone) return null;
                 
+                foreach (var branch in Branches) branch.Update(packet);
                 OnUpdate(packet);
-                UpdateCachedNodes(packet);
                 
-                if (CanBreak()) Close(packet);
+                if (IsDone) Close(packet);
             }
             else
             {
-                if (output != 0b_0001)
+                if (!previousState)
                 {
-                    ChangeOutput(packet, output = 0b_0001);
+                    ChangeOutputMask(packet, output = 0b_0001);
                     Start(packet);
                 }
+                previousState = true;
                 
                 base.Update(packet);
             }
-
+            
             return null;
         }
     }

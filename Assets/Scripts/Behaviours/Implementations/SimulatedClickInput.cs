@@ -22,18 +22,20 @@ namespace Chrome
             timer -= Time.deltaTime;
             if (timer <= 0)
             {
-                if (output != 0b_0010)
+                if (!output.HasChannel(0b_0010))
                 {
-                    ChangeOutput(packet, 0b_0010);
+                    Command(packet, new ChannelRemovalCommand(0b_0001));
+                    AddOutputChannel(packet, 0b_0010);
+                    
                     Start(packet);
                 }
                 
                 if (IsDone) return null;
                 
+                foreach (var branch in Branches) branch.Update(packet);
                 OnUpdate(packet);
-                UpdateCachedNodes(packet);
                 
-                if (CanBreak()) Close(packet);
+                if (IsDone) Close(packet);
             }
             else base.Update(packet);
             

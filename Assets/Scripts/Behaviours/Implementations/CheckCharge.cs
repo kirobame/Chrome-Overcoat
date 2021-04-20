@@ -22,20 +22,12 @@ namespace Chrome
         [SerializeField] private float decrease;
         
         private Coroutine cooldownRoutine;
-
-        protected override void OnStart(Packet packet)
-        {
-            if (cooldownRoutine != null)
-            {
-                Routines.Stop(cooldownRoutine);
-                cooldownRoutine = null;
-            }
-        }
-
+        
         protected override bool Check(Packet packet)
         {
-            var board = packet.Get<Blackboard>();
+            if (cooldownRoutine != null) return false;
             
+            var board = packet.Get<Blackboard>();
             board.Set(false, "charge.isUsed");
             var charge = board.Get<float>("charge");
             

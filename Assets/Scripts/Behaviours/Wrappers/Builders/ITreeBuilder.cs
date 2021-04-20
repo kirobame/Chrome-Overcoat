@@ -2,6 +2,6 @@
 {
     public interface ITreeBuilder
     {
-        RootNode Build();
+        ITaskTree Build();
     }
 }

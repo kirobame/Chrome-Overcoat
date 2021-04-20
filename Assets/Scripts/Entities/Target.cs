@@ -25,7 +25,7 @@ namespace Chrome
 
         void Awake() => health = maxHealth;
         
-        public void Hit(RaycastHit hit, float damage)
+        public void Hit(byte ownerType, RaycastHit hit, float damage)
         {
             health -= damage;
             
@@ -40,11 +40,12 @@ namespace Chrome
             hitVfxInstance.transform.position = transform.position;
             hitVfxInstance.transform.rotation = Quaternion.LookRotation(hit.normal);
             hitVfxInstance.Play();
+
+            if (ownerType == 10) Events.ZipCall<byte,float>(GaugeEvent.OnDamageInflicted, 0, damage);
             
-            Events.ZipCall<byte,float>(GaugeEvent.OnDamageInflicted, 0, damage);
             if (health <= 0.0f)
             {
-                Events.ZipCall<byte>(GaugeEvent.OnKill, 0);
+                if (ownerType == 10) Events.ZipCall<byte>(GaugeEvent.OnKill, 0);
                 StartCoroutine(DeathRoutine());
             }
         }

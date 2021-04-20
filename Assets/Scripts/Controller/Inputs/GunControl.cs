@@ -16,7 +16,7 @@ namespace Chrome
 
         #endregion
 
-        public RootNode Current => isLeft ? leftWeapon.Root : rightWeapon.Root;
+        public ITaskTree Current => isLeft ? leftWeapon : rightWeapon;
         public Transform Firepoint => firepoint;
 
         [SerializeField] private Collider self;

@@ -10,7 +10,7 @@ namespace Chrome
         [SerializeField] private GenericPoolable bulletPrefab;
         [SerializeField] private PoolableVfx muzzleFlashPrefab;
         
-        public RootNode Build()
+        public ITaskTree Build()
         {
             var fireAnchorReference = "view.fireAnchor".Reference<Transform>();
             var colliderReference = "self.collider".Reference<Collider>();

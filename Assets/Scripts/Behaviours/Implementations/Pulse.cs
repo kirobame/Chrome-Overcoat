@@ -13,8 +13,8 @@
 
         protected override void OnUpdate(Packet packet)
         {
-            IsDone = true;
-            root.Order(new PulseCommand(target));
+            root.Command(packet, new PulseCommand(target));
+            isDone = true;
         }
     }
 }

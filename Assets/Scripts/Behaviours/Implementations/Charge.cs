@@ -28,8 +28,6 @@ namespace Chrome
 
         protected override void Open(Packet packet)
         {
-            Debug.Log("Starting charge for the first time");
-            
             canExecute = false;
             timer = 0.0f;
         }
@@ -61,7 +59,7 @@ namespace Chrome
             var HUD = Repository.Get<ChargeHUD>(Interface.Charge);
             HUD.Set(charge);
 
-            IsDone = true;
+            isDone = true;
         }
 
         protected override void OnShutdown(Packet packet)
