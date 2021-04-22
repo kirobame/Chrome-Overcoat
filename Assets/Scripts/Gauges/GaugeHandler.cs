@@ -21,10 +21,14 @@ namespace Chrome
             
             handler.AddDependency(Events.Subscribe<byte,float>(GaugeEvent.OnGunFired, OnGunFired));
             handler.AddDependency(Events.Subscribe<Vector3>(GaugeEvent.OnJetpackUsed, OnJetpackUsed));
-            handler.AddDependency(Events.Subscribe(GaugeEvent.OnAirControlUsed, OnAirControlUsed));
+            handler.AddDependency(Events.Subscribe<byte>(GaugeEvent.OnThrusterUsed, OnAirControlUsed));
             handler.AddDependency(Events.Subscribe<byte,float>(GaugeEvent.OnDamageInflicted, OnDamageInflicted));
             handler.AddDependency(Events.Subscribe<float>(GaugeEvent.OnDamageReceived, OnDamageReceived));
             handler.AddDependency(Events.Subscribe<byte>(GaugeEvent.OnKill, OnKill));
+            handler.AddDependency(Events.Subscribe(GaugeEvent.OnJump, OnJump));
+            handler.AddDependency(Events.Subscribe<byte>(GaugeEvent.OnSprint, OnSprint));
+            handler.AddDependency(Events.Subscribe<byte>(GaugeEvent.OnGroundMove, OnGroundMove));
+            handler.AddDependency(Events.Subscribe<byte>(GaugeEvent.OnAirMove, OnAirMove));
             
             Bootup();
         }
@@ -63,9 +67,22 @@ namespace Chrome
 
         }
 
-        void OnAirControlUsed()
+        void OnAirControlUsed(byte state)
         {
-            
+            switch (state)
+            {
+                case 0: // On start of use
+                    
+                    break;
+                
+                case 1: // On use
+                    
+                    break;
+                
+                case 2: // On end or out of time
+                    
+                    break;
+            }
         }
 
         void OnDamageInflicted(byte type, float amount)
@@ -100,6 +117,65 @@ namespace Chrome
                     break;
                 
                 case 1: // On enemy killed
+                    
+                    break;
+            }
+        }
+
+        void OnJump()
+        {
+            
+        }
+
+        void OnSprint(byte state)
+        {
+            switch (state)
+            {
+                case 0: // On start of use
+                    
+                    break;
+                
+                case 1: // On use
+                    
+                    break;
+                
+                case 2: // On end or out of time
+                    
+                    break;
+            }
+        }
+        
+        void OnGroundMove(byte state)
+        {
+            switch (state)
+            {
+                case 0: // On start of use
+                    
+                    break;
+                
+                case 1: // On use
+                    
+                    break;
+                
+                case 2: // On end or out of time
+                    
+                    break;
+            }
+        }
+        
+        void OnAirMove(byte state)
+        {
+            switch (state)
+            {
+                case 0: // On start of use
+                    
+                    break;
+                
+                case 1: // On use
+                    
+                    break;
+                
+                case 2: // On end or out of time
                     
                     break;
             }

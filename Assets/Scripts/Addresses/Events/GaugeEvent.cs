@@ -7,9 +7,13 @@ namespace Chrome
     {
         OnGunFired,
         OnJetpackUsed,
-        OnAirControlUsed,
+        OnThrusterUsed,
         OnDamageInflicted,
         OnDamageReceived,
-        OnKill
+        OnKill,
+        OnJump,
+        OnSprint,
+        OnGroundMove,
+        OnAirMove
     }
 }
