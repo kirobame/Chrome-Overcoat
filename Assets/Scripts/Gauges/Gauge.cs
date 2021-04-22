@@ -31,11 +31,7 @@ namespace Chrome
         
         void Awake()
         {
-            goal = Mathf.Clamp01(slider.value) * max;
-            value = goal;
-            
             slider.maxValue = max;
-            
             Repository.Register(address, this);
         }
         void OnDestroy() => Repository.Unregister(address);

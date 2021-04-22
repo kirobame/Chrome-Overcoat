@@ -1,5 +1,6 @@
 ﻿using System;
 using Flux.Data;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Chrome
@@ -17,36 +18,24 @@ namespace Chrome
         #endregion
 
         public ITaskTree Current => isLeft ? leftWeapon : rightWeapon;
-        public Transform Firepoint => firepoint;
 
-        [SerializeField] private Collider self;
+        [BoxGroup("Dependencies"), SerializeField] private PlayerBoard board;
         
-        [Space, SerializeField] private Transform raypoint;
-        [SerializeField] private Transform firepoint;
-        
-        [Space, SerializeField] private RemoteTaskTree leftWeapon;
-        [SerializeField] private RemoteTaskTree rightWeapon;
-
-        private bool isLeft;
+        [FoldoutGroup("Values"), SerializeField] private RemoteTaskTree leftWeapon;
+        [FoldoutGroup("Values"), SerializeField] private RemoteTaskTree rightWeapon;
 
         private Packet packet;
-        private IBlackboard blackboard;
         
+        private bool isLeft;
         private PressState state;
-        private float pressTime;
         
+        //--------------------------------------------------------------------------------------------------------------/
+
         void Awake()
         {
-            blackboard = new Blackboard();
-            blackboard.Set("type", (byte)10);
-            blackboard.Set("view", raypoint);
-            blackboard.Set("view.fireAnchor", firepoint);
-            blackboard.Set("self", self.transform);
-            blackboard.Set("self.collider", self);
-
             packet = new Packet();
             packet.Set(false);
-            packet.Set(blackboard);
+            packet.Set<IBlackboard>(board);
             
             state = PressState.Released;
             
@@ -63,7 +52,20 @@ namespace Chrome
             packet.Set(false);
             base.Bootup();
         }
+        public override void Shutdown()
+        {
+            base.Shutdown();
+            if (state == PressState.Pressed) OnMouseUp();
+        }
 
+        //--------------------------------------------------------------------------------------------------------------/
+
+        void OnApplicationFocus(bool hasFocus)
+        {
+            if (hasFocus) return;
+            OnMouseDown();
+        }
+        
         void Update()
         {
             if (state == PressState.Released)
@@ -73,38 +75,36 @@ namespace Chrome
                 
                 if (Input.GetMouseButtonDown(0))
                 {
-                    pressTime = 0.0f;
                     packet.Set(true);
-
-                    //MoveControl.canSprint = false;
-                    state = PressState.Pressed;
+                    OnMouseDown();
                 }
             }
             else if (state == PressState.Pressed)
             {
-                if (Input.GetMouseButton(0))
-                {
-                    pressTime += Time.deltaTime;
-                    packet.Set(true);
-                }
+                if (Input.GetMouseButton(0)) packet.Set(true);
 
                 if (Input.GetMouseButtonUp(0))
                 {
                     packet.Set(false);
-                    
-                    //MoveControl.canSprint = true;
-                    state = PressState.Released;
+                    OnMouseUp();
                 }
             }
 
             Current.Update(packet);
         }
 
-        void OnApplicationFocus(bool hasFocus)
+        private void OnMouseDown()
         {
-            if (hasFocus) return;
+            board.Get<BusyBool>("canSprint").business++;
             state = PressState.Pressed;
         }
+        private void OnMouseUp()
+        {
+            board.Get<BusyBool>("canSprint").business--;
+            state = PressState.Released;
+        }
+        
+        //--------------------------------------------------------------------------------------------------------------/
 
         private void ChangeWeapon(bool value)
         {

@@ -17,7 +17,7 @@ namespace Chrome
 
         public bool IsValid(Packet packet)
         {
-            var board = packet.Get<Blackboard>();
+            var board = packet.Get<IBlackboard>();
             return board.TryGet<T>(path, out value);
         }
     }

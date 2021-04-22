@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Chrome
 {
@@ -7,17 +8,20 @@ namespace Chrome
     {
         private Dictionary<Type, object> map = new Dictionary<Type, object>();
 
-        public PacketSnapshot Save() => new PacketSnapshot(map.Values);
+        public PacketSnapshot Save() => new PacketSnapshot(map);
         public void Load(PacketSnapshot snapshot)
         {
             var keys = new HashSet<Type>(map.Keys);
-            foreach (var value in snapshot.Values)
+            foreach (var kvp in snapshot.Values)
             {
-                var type = value.GetType();
-                if (!map.ContainsKey(type)) continue;
+                if (!keys.Contains(kvp.Key))
+                {
+                    map.Add(kvp.Key, kvp.Value);
+                    continue;
+                }
 
-                map[type] = value;
-                keys.Remove(type);
+                map[kvp.Key] = kvp.Value;
+                keys.Remove(kvp.Key);
             }
 
             foreach (var key in keys) map.Remove(key);

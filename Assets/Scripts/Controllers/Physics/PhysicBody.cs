@@ -6,13 +6,15 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public abstract class PhysicBody : MonoBehaviour
+    public abstract class PhysicBody : MonoBehaviour, ILifebound
     {
         public event Action<CollisionHit> onCollision;
         
         public abstract Collider Collider { get; }
 
         public float Mass => mass;
+        
+        public Vector3 Velocity { get; private set; }
         public Vector3 Delta { get; private set; }
 
         [BoxGroup("Values"), SerializeField] private float mass;
@@ -20,6 +22,18 @@ namespace Chrome
         [HideInInspector] public Vector3 force;
         [HideInInspector] public Vector3 velocity;
 
+        //--------------------------------------------------------------------------------------------------------------/
+
+        public void Bootup()
+        {
+            Velocity = Vector3.zero;
+            Delta = Vector3.zero;
+
+            force = Vector3.zero;
+            velocity = Vector3.zero;
+        }
+        public void Shutdown() { }
+        
         void Update()
         {
             velocity += force * Time.deltaTime / mass;
@@ -28,49 +42,11 @@ namespace Chrome
             var hit = HandleCollisions();
             if (hit != null) onCollision?.Invoke(hit);
 
+            Velocity = velocity;
             force = Vector3.zero;
         }
 
         protected abstract Vector3 Move(Vector3 delta);
         protected abstract CollisionHit HandleCollisions();
-
-        /*public event Action<ControllerColliderHit> onCollision;
-        public event Action<Vector3> onMove;
-        
-        public bool IsGrounded => controller.isGrounded;
-        public CharacterController Controller => controller;
-        
-        [BoxGroup("Dependencies"), SerializeField] private CharacterController controller;
-        
-        [HideInInspector] public Vector3 intent;
-        [HideInInspector] public Vector3 velocity;
-
-        void Update()
-        {
-            var delta = ComputeDelta();
-            controller.Move(delta);
-            onMove?.Invoke(delta);
-            
-            intent = Vector3.zero;
-            if (IsGrounded) velocity = Vector3.zero;
-        }
-        
-        public Vector3 ComputeDelta() => (intent + velocity) * Time.deltaTime;
-        
-        void OnControllerColliderHit(ControllerColliderHit hit)
-        {
-            var velocityDelta = velocity * Time.deltaTime;
-            
-            if (velocityDelta.y > 0 && hit.normal.y < 0)
-            {
-                var length = velocityDelta.magnitude;
-                velocity += hit.normal * length;
-                
-                intent = Vector3.zero;
-                velocity.y = 0;
-            }
-
-            onCollision?.Invoke(hit);
-        }*/
     }
 }

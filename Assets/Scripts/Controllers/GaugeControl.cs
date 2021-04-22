@@ -20,8 +20,12 @@ namespace Chrome
 
         [SerializeField] private GaugeResetInfo[] resetInfos;
          
+        void Start() => ResetGauges();
+        
         public void Bootup() { }
-        public void Shutdown()
+        public void Shutdown() => ResetGauges();
+
+        private void ResetGauges()
         {
             foreach (var resetInfo in resetInfos)
             {

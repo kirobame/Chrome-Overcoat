@@ -25,8 +25,8 @@ namespace Chrome
             yield return new WaitForSeconds(halfDuration);
             
             if (!TryGetRespawnAnchor(out var anchor)) yield break;
-
-            transform.position = anchor.position;
+            
+            transform.root.position = anchor.position;
             transform.root.gameObject.SetActive(true);
 
             var goal = 0.25f;

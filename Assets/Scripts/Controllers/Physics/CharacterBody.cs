@@ -11,7 +11,7 @@ namespace Chrome
         public CharacterController Controller => controller;
         
         [BoxGroup("Dependencies", Order = -1), SerializeField] private CharacterController controller;
-
+        
         private ControllerColliderHit hit;
         
         protected override Vector3 Move(Vector3 delta)
@@ -26,11 +26,17 @@ namespace Chrome
         {
             if (hit == null) return null;
 
-            if (IsGrounded)
+            if (IsGrounded) velocity = Vector3.zero;
+            else
             {
-                velocity = Vector3.zero;
-                //Debug.Log("GROUNDED");
+                var penetration = velocity;
+                if (Vector3.Dot(penetration.normalized, -hit.normal) > 0)
+                {
+                    var projection = Vector3.ProjectOnPlane(penetration, hit.normal);
+                    velocity += projection - penetration;
+                }
             }
+            
             return new CollisionHit(this, hit.collider, hit.point, hit.normal, Delta);
         }
 

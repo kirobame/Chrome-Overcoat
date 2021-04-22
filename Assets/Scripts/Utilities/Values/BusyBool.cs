@@ -1,6 +1,6 @@
 ﻿namespace Chrome
 {
-    public struct BusyBool
+    public class BusyBool
     {
         public bool Value => business <= 0;
 

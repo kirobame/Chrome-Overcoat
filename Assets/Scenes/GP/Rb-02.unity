@@ -8806,7 +8806,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1116115623}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d848effe79924799a8b4773de1b42632, type: 3}
   m_Name: 
@@ -9095,6 +9095,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46b266a0d62dda64b92c90ba50ddc8cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  self: {fileID: 1116115625}
+  raypoint: {fileID: 963194228}
+  firepoint: {fileID: 1637747128}
 --- !u!1001 &1132056810
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11298,32 +11301,6 @@ MonoBehaviour:
     value: 5
   sprint: 2
   smoothing: 0.075
-  airMap:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0.003273398
-      outSlope: 0.003273398
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.09502262
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  airTime: 0.3
-  airRates: {x: 1, y: 2}
   animator: {fileID: 196391311799807002}
 --- !u!114 &1317599171
 MonoBehaviour:
@@ -11338,7 +11315,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   body: {fileID: 1116115626}
-  speed: 2.5
+  maxSpeed: 3
+  speed: 0.2
   smoothing: 0.075
 --- !u!1001 &1325306745
 PrefabInstance:
@@ -15389,6 +15367,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1770030522}
+  - component: {fileID: 1770030524}
   - component: {fileID: 1770030523}
   m_Layer: 7
   m_Name: Jetpack
@@ -15418,7 +15397,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1770030521}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 401ac10fcb424f419627ca503d2dec33, type: 3}
   m_Name: 
@@ -15430,54 +15409,67 @@ MonoBehaviour:
   pressRange: {x: 0.15, y: 0.6}
   heightRange: {x: 2.5, y: 4}
   forwards: {x: 3, y: 6}
-  controlLosses: {x: 0.25, y: 0.5, z: 0.75}
+  shakeFactor: 2
+  maxShake: 0.75
+--- !u!114 &1770030524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1770030521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65d84b3d2b04470aa77ebf837b240694, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  body: {fileID: 1116115626}
+  gravity: {fileID: 1116115630}
   airTime: 1
-  airForce: 4
-  airForceMap:
+  map:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: -4
-      value: 0.1
-      inSlope: 0.21910031
-      outSlope: 0.21910031
+      time: -1
+      value: 1
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.17709923
-    - serializedVersion: 3
-      time: -0.5560394
-      value: 0.50257814
-      inSlope: 0.012595236
-      outSlope: 0.27361816
-      tangentMode: 1
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.95059854
+      outWeight: 0.19693796
     - serializedVersion: 3
-      time: 0.1638057
-      value: 1.1408361
-      inSlope: 2.5994294
-      outSlope: 3.7519176
-      tangentMode: 1
-      weightedMode: 0
-      inWeight: 0.32087636
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 4
-      value: 6
-      inSlope: -0.002723751
-      outSlope: -0.002723751
+      time: -0.17285672
+      value: 0.4039041
+      inSlope: -2.283987
+      outSlope: -2.283987
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.31862077
+      inWeight: 0.038222548
+      outWeight: 0.11870441
+    - serializedVersion: 3
+      time: 0
+      value: 0.2
+      inSlope: -0.2535973
+      outSlope: -0.2535973
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.25188538
+      outWeight: 0.2523699
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -0.6774523
+      outSlope: -0.6774523
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.08806008
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  moveAirAffect: 2.5
-  shakeFactor: 2
-  maxShake: 0.75
+  input: {x: -6, y: 4}
+  speed: 10
 --- !u!1001 &1771242940
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19577,7 +19569,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   body: {fileID: 1116115626}
-  move: {fileID: 0}
+  move: {fileID: 1317599170}
   knockback: 0.4
   factor: 0.2
   maxLength: 2
@@ -20130,9 +20122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 099f626bd3504c9195f1a13c402f20e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  self: {fileID: 1116115625}
-  raypoint: {fileID: 963194228}
-  firepoint: {fileID: 1637747128}
+  board: {fileID: 1126607510}
   leftWeapon: {fileID: 11400000, guid: 9059a5c35ccf73742a6a3654ce45035c, type: 2}
   rightWeapon: {fileID: 11400000, guid: 26b49fb14e1d9264aaf1fc6f51d85eea, type: 2}
 --- !u!114 &283606065032798069

@@ -1,4 +1,5 @@
-﻿using Sirenix.OdinInspector;
+﻿using Flux.Event;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Chrome
@@ -26,6 +27,8 @@ namespace Chrome
 
             if (error <= margin && pressTime <= pressThreshold)
             {
+                Events.Call(GaugeEvent.OnJump);
+                
                 var attraction = gravity.Value;
                 var length = -Mathf.Sqrt(height * 2.0f * attraction.magnitude);
                 
