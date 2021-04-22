@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Flux.Data;
 using Flux.Event;
 using Sirenix.OdinInspector;
@@ -6,10 +7,11 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class Target : MonoBehaviour, IDamageable
+    public class Target : MonoBehaviour, IHittable
     {
+        public IExtendedIdentity Identity { get; private set; }
         public bool IsAlive => health > 0.0f;
-
+        
         [BoxGroup("Dependencies"), SerializeField] private new Collider collider;
         
         [FoldoutGroup("Values"), SerializeField] private float maxHealth;
@@ -23,11 +25,17 @@ namespace Chrome
 
         private float health;
 
-        void Awake() => health = maxHealth;
-        
-        public void Hit(byte ownerType, RaycastHit hit, float damage)
+        void Awake()
         {
-            health -= damage;
+            Identity = new PackedIdentity(Faction.Enemy, transform);
+            health = maxHealth;
+        }
+
+        public void Hit(IIdentity identity, HitMotive motive, EventArgs args)
+        {
+            if (motive != HitMotive.Damage || !(args is PointDamageArgs damageArgs)) return;
+            
+            health -= damageArgs.Amount;
             
             var vfxPool = Repository.Get<VfxPool>(Pool.Impact);
             var hitVfxInstance = vfxPool.RequestSingle(hitVfx);
@@ -38,16 +46,16 @@ namespace Chrome
             module.startColor = gradient;
 
             hitVfxInstance.transform.position = transform.position;
-            hitVfxInstance.transform.rotation = Quaternion.LookRotation(hit.normal);
+            hitVfxInstance.transform.rotation = Quaternion.LookRotation(damageArgs.Hit.normal);
             hitVfxInstance.Play();
 
-            if (ownerType == 10) Events.ZipCall<byte,float>(GaugeEvent.OnDamageInflicted, 0, damage);
-            
-            if (health <= 0.0f)
+            if (identity.Faction == Faction.Player)
             {
-                if (ownerType == 10) Events.ZipCall<byte>(GaugeEvent.OnKill, 0);
-                StartCoroutine(DeathRoutine());
+                Events.ZipCall<byte,float>(GaugeEvent.OnDamageInflicted, 0, damageArgs.Amount);
+                if (health <= 0.0f) Events.ZipCall<byte>(GaugeEvent.OnKill, 0);
             }
+            
+            if (health <= 0.0f) StartCoroutine(DeathRoutine());
         }
 
         private IEnumerator DeathRoutine()

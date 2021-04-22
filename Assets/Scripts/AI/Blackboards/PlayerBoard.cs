@@ -3,28 +3,18 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class PlayerBoard : MonoBehaviour, IBlackboard
+    public abstract class ConcreteBoard : IBlackboard
     {
-        [FoldoutGroup("Values"), SerializeField] private Collider self;
-        [FoldoutGroup("Values"), SerializeField] private Transform raypoint;
-        [FoldoutGroup("Values"), SerializeField] private Transform firepoint;
-        
-        private Blackboard blackboard;
+        protected Blackboard blackboard;
 
         void Awake()
         {
             blackboard = new Blackboard();
-            blackboard.Set("type", (byte)10);
-            
-            blackboard.Set("canSprint", new BusyBool());
-
-            blackboard.Set("view", raypoint);
-            blackboard.Set("view.fireAnchor", firepoint);
-            
-            blackboard.Set("self", self.transform);
-            blackboard.Set("self.collider", self);
+            BuildBoard();
         }
-        
+
+        protected abstract void BuildBoard();
+
         //--------------------------------------------------------------------------------------------------------------/
         
         public void Remove(string path) => blackboard.Remove(path);
@@ -37,5 +27,25 @@ namespace Chrome
 
         public TRegistry GetRegistry<TRegistry>(string path) where TRegistry : IRegistry => blackboard.Get<TRegistry>(path);
         public bool TryGetRegistry<TRegistry>(string path, out TRegistry registry) where TRegistry : IRegistry => blackboard.TryGetRegistry<TRegistry>(path, out registry);
+    }
+    
+    public class PlayerBoard : ConcreteBoard
+    {
+        [FoldoutGroup("Values"), SerializeField] private Collider self;
+        [FoldoutGroup("Values"), SerializeField] private Transform raypoint;
+        [FoldoutGroup("Values"), SerializeField] private Transform firepoint;
+
+        protected override void BuildBoard()
+        {
+            blackboard.Set("type", (byte)10);
+            
+            blackboard.Set("canSprint", new BusyBool());
+
+            blackboard.Set("view", raypoint);
+            blackboard.Set("view.fireAnchor", firepoint);
+            
+            blackboard.Set("self", self.transform);
+            blackboard.Set("self.collider", self);
+        }
     }
 }

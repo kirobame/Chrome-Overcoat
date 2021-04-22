@@ -63,7 +63,7 @@ namespace Chrome
             
             vfxPoolable.transform.localScale = Vector3.one;
             
-            if (hit.collider.TryGetComponent<IDamageable>(out var damageable))
+            if (hit.collider.TryGetComponent<IHittable>(out var damageable))
             {
                 vfxPoolable.transform.SetParent(hit.transform);
                 damageable.Hit(ownerType, hit, damage);

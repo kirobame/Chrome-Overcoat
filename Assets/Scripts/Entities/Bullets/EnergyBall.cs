@@ -78,7 +78,7 @@ namespace Chrome
             if (bounceCounter <= 0)
             {
                 var vfx = PlayImpact(vfxPool.RequestSinglePoolable(impactVfx), hit);
-                if (hit.collider.TryGetComponent<IDamageable>(out var damageable))
+                if (hit.collider.TryGetComponent<IHittable>(out var damageable))
                 {
                     damageable.Hit(ownerType, hit, damage);
                     vfx.transform.SetParent(hit.transform);
@@ -89,7 +89,7 @@ namespace Chrome
             }
 
             var hitVfx = PlayImpact(vfxPool.RequestSinglePoolable(bounceVfx), hit);
-            if (hit.collider.TryGetComponent<IDamageable>(out var other))
+            if (hit.collider.TryGetComponent<IHittable>(out var other))
             {
                 other.Hit(ownerType, hit, damage);
                 hitVfx.transform.SetParent(hit.transform);

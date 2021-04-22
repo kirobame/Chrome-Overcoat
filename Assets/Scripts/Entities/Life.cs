@@ -6,25 +6,36 @@ using UnityEngine;
 namespace Chrome
 {
     [Serializable]
-    public class Life : IDamageable, IBootable, IInjectable<Damageable>
+    public class Life : IHittable, IBootable
     {
+        public IExtendedIdentity Identity => owner;
+        
+        [SerializeField] private Entity owner;
         [SerializeField] private Lifetime link;
         [SerializeField] private float maxHealth;
-
-        private Damageable damageable;
+        
         private float health;
 
         public void Bootup() => health = maxHealth;
-        public void Inject(Damageable damageable) => this.damageable = damageable;
         
-        public void Hit(byte ownerType, RaycastHit hit, float damage)
+        public void Hit(IIdentity identity, HitMotive motive, EventArgs args)
         {
+            if (motive != HitMotive.Damage || !(args is IWrapper<float> damageArgs)) return;
+
+            var difference = health - damageArgs.Value;
+            var damage = difference < 0 ? damageArgs.Value + difference : damageArgs.Value;
             health -= damage;
-            if (health <= 0)
+            
+            if (owner.Faction == Faction.Player) Events.ZipCall<float>(GaugeEvent.OnDamageReceived, damage);
+            else if (identity.Faction == Faction.Player)
             {
-                if (damageable != null && ownerType == 10 && damageable.Type != 10) Events.ZipCall<byte>(GaugeEvent.OnKill, damageable.Type);
-                link.End();
+                var type = owner.Board.Get<byte>("type");
+                
+                Events.ZipCall<byte, float>(GaugeEvent.OnDamageInflicted, type, damage);
+                if (health <= 0) Events.ZipCall<byte>(GaugeEvent.OnKill, type);
             }
+            
+            if (health <= 0) link.End();
         }
     }
 }
