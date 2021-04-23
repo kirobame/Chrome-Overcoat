@@ -62,7 +62,7 @@ namespace Chrome
 
             var board = packet.Get<IBlackboard>();
             float force;
-
+            
             if (!board.TryGet<bool>("charge.isUsed", out var isUsed) || !isUsed) force = 0.25f;
             else force = board.Get<float>("charge");
 
@@ -73,8 +73,9 @@ namespace Chrome
                 Events.ZipCall<byte,float>(GaugeEvent.OnGunFired, (byte)(bulletPrefab.name.Contains("Energy") ? 0 : 1), force);
             }
             
-            bulletInstance.Shoot(new Aim() { direction = direction, firepoint = fireAnchor.position}, new WrapperArgs<byte, float>(type, force));
-            
+            packet.Set(force);
+            bulletInstance.Shoot(packet.Get<IIdentity>(), fireAnchor.position, direction.normalized, packet);
+
             if (collider.IsValid(packet)) bulletInstance.Ignore(collider.Value);
         }
     }

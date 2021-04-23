@@ -53,8 +53,8 @@ namespace Chrome
                         var attraction = force.magnitude * -Vector3.Dot(force.normalized, normalizedGravity);
                     
                         float ratio;
-                        if (attraction < 0) ratio = map.Evaluate(Mathf.InverseLerp(input.x, 0, attraction) - 1.0f);
-                        else ratio = map.Evaluate(Mathf.InverseLerp(0, input.y, attraction));
+                        if (attraction < 0) ratio = map.Evaluate(Mathf.InverseLerp(input.x, 0.0f, attraction) - 1.0f);
+                        else ratio = map.Evaluate(Mathf.InverseLerp(0.0f, input.y, attraction));
 
                         var delta = -gravity.Value.normalized * (gravity.Value.magnitude + speed * ratio);
                         body.force += delta;

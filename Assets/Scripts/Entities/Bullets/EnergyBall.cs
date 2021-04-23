@@ -30,16 +30,23 @@ namespace Chrome
 
         private float damage;
 
-        public override void Shoot(Aim aim, EventArgs args)
+        public override void Shoot(IIdentity source, Vector3 fireAnchor, Vector3 direction, Packet packet)
         {
-            var castedArgs = (WrapperArgs<byte, float>)args;
-            ownerType = castedArgs.ArgOne;
-            
-            var ratio = castedArgs.ArgTwo;
-            damage = Mathf.Lerp(damages.x, damages.y, ratio);
-            
-            actualSpeed = Mathf.Lerp(speed, maxSpeed, ratio);
-            var size = Mathf.Lerp(range.x, range.y, ratio);
+            identity.Copy(source);
+
+            float size;
+            if (packet.TryGet<float>(out var charge))
+            {
+                damage = Mathf.Lerp(damages.x, damages.y, charge);
+                actualSpeed = Mathf.Lerp(speed, maxSpeed, charge);
+                size = Mathf.Lerp(range.x, range.y, charge);
+            }
+            else
+            {
+                damage = damages.x;
+                actualSpeed = speed;
+                size = range.x;
+            }
             
             sizeTarget.localScale = Vector3.one * range.x;
 
@@ -56,7 +63,7 @@ namespace Chrome
             bounceCounter = bounceCount;
             deactivationTimer = deactivationTime;
             
-            base.Shoot(aim, args);
+            base.Shoot(source, fireAnchor, direction, packet);
         }
 
         protected override void Update()
@@ -78,22 +85,14 @@ namespace Chrome
             if (bounceCounter <= 0)
             {
                 var vfx = PlayImpact(vfxPool.RequestSinglePoolable(impactVfx), hit);
-                if (hit.collider.TryGetComponent<IDamageable>(out var damageable))
-                {
-                    damageable.Hit(ownerType, hit, damage);
-                    vfx.transform.SetParent(hit.transform);
-                }
+                TryHit(vfx, hit);
 
                 Explode();
                 return;
             }
 
             var hitVfx = PlayImpact(vfxPool.RequestSinglePoolable(bounceVfx), hit);
-            if (hit.collider.TryGetComponent<IDamageable>(out var other))
-            {
-                other.Hit(ownerType, hit, damage);
-                hitVfx.transform.SetParent(hit.transform);
-            }
+            TryHit(hitVfx, hit);
 
             bounceCounter--;
             transform.position = hit.point - direction * radius;
@@ -113,10 +112,22 @@ namespace Chrome
             vfx.Value.Play();
             return vfx;
         }
-        
-        private void Explode()
+
+        private void TryHit(PoolableVfx vfx, RaycastHit hit)
         {
-            gameObject.SetActive(false);
+            if (hit.collider.TryGetComponent<InteractionHub>(out var hub))
+            {
+                identity.Packet.Set(hit);
+                    
+                hub.Relay<IDamageable>(damageable =>
+                {
+                    if (damageable.Identity.Faction == identity.Faction) return;
+                    damageable.Hit(identity, damage, identity.Packet);
+                });
+                    
+                vfx.transform.SetParent(hit.transform);
+            }
         }
+        private void Explode() => gameObject.SetActive(false);
     }
 }

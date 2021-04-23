@@ -28,7 +28,6 @@ namespace Chrome
             if (cooldownRoutine != null) return false;
             
             var board = packet.Get<IBlackboard>();
-            board.Set("charge.isUsed", false);
             var charge = board.Get<float>("charge");
             
             if (charge >= minimum)
@@ -38,6 +37,7 @@ namespace Chrome
             }
             else
             {
+                board.Set("charge.isUsed", false);
                 board.Set("charge", 0.0f);
                 
                 var HUD = Repository.Get<ChargeHUD>(Interface.Charge);

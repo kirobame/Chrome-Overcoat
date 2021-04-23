@@ -5,16 +5,20 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public abstract class Bullet : MonoBehaviour
+    public abstract class Bullet : MonoBehaviour, ILink<IIdentity>
     {
+        IIdentity ILink<IIdentity>.Link
+        {
+            set => identity = value;
+        }
+        protected IIdentity identity;
+        
         public Vector3 Advance => transform.position + direction * radius;
         
         [FoldoutGroup("Values"), SerializeField] protected float radius;
         [FoldoutGroup("Values"), SerializeField] protected float speed;
         [FoldoutGroup("Values"), SerializeField] protected LayerMask hitMask;
 
-        protected byte ownerType;
-        
         protected float actualSpeed;
         protected Vector3 direction = Vector3.forward;
 
@@ -22,12 +26,12 @@ namespace Chrome
 
         void Awake() => actualSpeed = speed;
         
-        public virtual void Shoot(Aim aim, EventArgs args)
+        public virtual void Shoot(IIdentity source, Vector3 fireAnchor, Vector3 direction, Packet packet)
         {
             ignores.Clear();
             
-            transform.position = aim.firepoint;
-            direction = aim.direction.normalized;
+            transform.position = fireAnchor;
+            this.direction = direction;
         }
 
         public void Ignore(Collider collider) => ignores.Add(collider);
@@ -41,7 +45,7 @@ namespace Chrome
             else
             {
                 var delta = direction * length;
-                
+
                 transform.position += delta;
                 transform.rotation = Quaternion.LookRotation(direction);
             }

@@ -5,8 +5,14 @@ using UnityEngine.AI;
 
 namespace Chrome
 {
-    public class Agent : MonoBehaviour
+    public class Agent : MonoBehaviour, ILink<IIdentity>
     {
+        IIdentity ILink<IIdentity>.Link
+        {
+            set => identity = value;
+        }
+        private IIdentity identity;
+        
         [SerializeField] private NavMeshAgent navMesh;
         [SerializeField] private LineOfSight lineOfSight;
         
@@ -17,20 +23,15 @@ namespace Chrome
         [SerializeField] private PoolableVfx muzzleFlashPrefab;
         
         private ITaskTree taskTree;
-        private IBlackboard board;
-        private Packet packet;
 
-        void Awake()
+        void Start()
         {
-            board = new Blackboard();
-            board.Set("type", (byte)1);
+            var board = identity.Packet.Get<IBlackboard>();
             board.Set("aim", aim);
             board.Set("aim.fireAnchor", fireAnchor);
-            
-            packet = new Packet();
-            packet.Set(navMesh);
-            packet.Set(lineOfSight);
-            packet.Set(board);
+
+            identity.Packet.Set(navMesh);
+            identity.Packet.Set(lineOfSight);
 
             var playerColReference = "player.collider".Reference<Collider>(true);
             var fireAnchorReference = "aim.fireAnchor".Reference<Transform>();
@@ -51,10 +52,10 @@ namespace Chrome
                     new MoveTo(new PackettedValue<NavMeshAgent>(), "player".Reference<Transform>(true), aimReference).Mask(0b_0010).Append(
                         new Delay(0.5f))));
             
-            taskTree.Bootup(packet);
+            taskTree.Bootup(identity.Packet);
+            taskTree.Start(identity.Packet);
         }
         
-        void Start() => taskTree.Start(packet);
-        void Update() => taskTree.Update(packet);
+        void Update() => taskTree.Update(identity.Packet);
     }
 }

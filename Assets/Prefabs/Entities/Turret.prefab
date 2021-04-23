@@ -313,8 +313,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4907586404706003726}
-  - component: {fileID: 4907586404706003727}
+  - component: {fileID: 2613044749173208124}
+  - component: {fileID: 8670945122770404802}
+  - component: {fileID: 5246802779438273032}
+  - component: {fileID: 4998488461976405488}
   - component: {fileID: 4907586404706003712}
+  - component: {fileID: 5602852875550400689}
   - component: {fileID: 4907586404706003713}
   - component: {fileID: 4907586404706003714}
   - component: {fileID: 4907586404706003716}
@@ -342,7 +346,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -63.347, z: 0}
---- !u!114 &4907586404706003727
+--- !u!114 &2613044749173208124
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -351,19 +355,47 @@ MonoBehaviour:
   m_GameObject: {fileID: 4907586404706003717}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 824155ed99d24c7c9dbe563e46e076f2, type: 3}
+  m_Script: {fileID: 11500000, guid: af7e0dec68e94c0b9a47e20508c1a4bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 2
-  implementation:
-    id: 0
-  references:
-    version: 1
-    00000000:
-      type: {class: Life, ns: Chrome, asm: Assembly-CSharp}
-      data:
-        link: {fileID: 4907586404706003712}
-        maxHealth: 8
+  faction: 1
+--- !u!114 &8670945122770404802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4907586404706003717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4a48388d45a43cf899cfaa03a6fe63f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5246802779438273032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4907586404706003717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bc174b47cee46af8038db962bd64994, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4998488461976405488
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4907586404706003717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3283f335286465388e567b7e228e180, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  value: 2
 --- !u!114 &4907586404706003712
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -425,6 +457,20 @@ MonoBehaviour:
         linkIndices: 00000000
         source: {fileID: 4907586404706003726}
         offset: 1
+--- !u!114 &5602852875550400689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4907586404706003717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68e99121213d46cc98968f134d52eb25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  link: {fileID: 4907586404706003712}
+  maxHealth: 6
 --- !u!114 &4907586404706003713
 MonoBehaviour:
   m_ObjectHideFlags: 0

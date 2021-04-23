@@ -4,12 +4,18 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class MoveControl : InputControl
+    public class MoveControl : InputControl, ILink<IIdentity>
     {
         private const string WALK_STATE = "Walk";
         private const string SPRINT_STATE = "Run";
         
         //--------------------------------------------------------------------------------------------------------------/
+        
+        IIdentity ILink<IIdentity>.Link
+        {
+            set => identity = value;
+        }
+        protected IIdentity identity;
         
         public ModifiableFloat Speed => speed;
 
@@ -44,7 +50,6 @@ namespace Chrome
         public Vector3 Direction { get; private set; }
         public Vector3 Inputs { get; private set; }
         
-        [BoxGroup("Dependencies"), SerializeField] private PlayerBoard board;
         [BoxGroup("Dependencies"), SerializeField] private CharacterBody body;
         
         [FoldoutGroup("Values"), SerializeField] private ModifiableFloat speed;
@@ -91,7 +96,7 @@ namespace Chrome
             if (Inputs != Vector3.zero && !IsWalking) IsWalking = true;
             else if (Inputs == Vector3.zero && IsWalking) IsWalking = false;
             
-            if (Input.GetKey(KeyCode.LeftShift) && board.Get<BusyBool>("canSprint").Value && Inputs.z > 0)
+            if (Input.GetKey(KeyCode.LeftShift) && CanSprint() && Inputs.z > 0)
             {
                 if (!IsSprinting) IsSprinting = true;
                 speed += sprint;
@@ -118,6 +123,12 @@ namespace Chrome
         {
             if (!body.IsGrounded) return;
             planeNormal = hit.Normal;
+        }
+
+        private bool CanSprint()
+        {
+            var board = identity.Packet.Get<IBlackboard>();
+            return board.Get<BusyBool>("canSprint").Value;
         }
     }
 }

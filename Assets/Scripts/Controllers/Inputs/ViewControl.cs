@@ -5,6 +5,8 @@ namespace Chrome
 {
     public class ViewControl : InputControl
     {
+        public Vector2 Delta => new Vector2(yawKnob.Value, pitchKnob.Value);
+        
         [FoldoutGroup("Yaw"), SerializeField] private Transform yawTarget;
         [FoldoutGroup("Yaw"), SerializeField] private Knob yawKnob;
         [FoldoutGroup("Yaw"), SerializeField] private Acceleration yawAcceleration;

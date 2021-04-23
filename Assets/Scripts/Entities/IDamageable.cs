@@ -1,9 +1,11 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
 
 namespace Chrome
 {
-    public interface IDamageable
+    public interface IDamageable : IInteraction
     {
-        void Hit(byte ownerType, RaycastHit hit, float damage);
+        IIdentity Identity { get; }
+        
+        void Hit(IIdentity source, float amount, Packet packet);
     }
 }

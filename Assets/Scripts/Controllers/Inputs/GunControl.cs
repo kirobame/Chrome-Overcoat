@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class GunControl : InputControl
+    public class GunControl : InputControl, ILink<IIdentity>
     {
         #region Nested Types
 
@@ -16,15 +16,17 @@ namespace Chrome
         }
 
         #endregion
+        
+        IIdentity ILink<IIdentity>.Link
+        {
+            set => identity = value;
+        }
+        private IIdentity identity;
 
         public ITaskTree Current => isLeft ? leftWeapon : rightWeapon;
 
-        [BoxGroup("Dependencies"), SerializeField] private PlayerBoard board;
-        
         [FoldoutGroup("Values"), SerializeField] private RemoteTaskTree leftWeapon;
         [FoldoutGroup("Values"), SerializeField] private RemoteTaskTree rightWeapon;
-
-        private Packet packet;
         
         private bool isLeft;
         private PressState state;
@@ -33,10 +35,8 @@ namespace Chrome
 
         void Awake()
         {
-            packet = new Packet();
-            packet.Set(false);
-            packet.Set<IBlackboard>(board);
-            
+            identity.Packet.Set(false);
+
             state = PressState.Released;
             
             leftWeapon.Bootup();
@@ -44,12 +44,12 @@ namespace Chrome
 
             isLeft = true;
             
-            Current.Bootup(packet);
+            Current.Bootup(identity.Packet);
         }
 
         public override void Bootup()
         {
-            packet.Set(false);
+            identity.Packet.Set(false);
             base.Bootup();
         }
         public override void Shutdown()
@@ -75,32 +75,36 @@ namespace Chrome
                 
                 if (Input.GetMouseButtonDown(0))
                 {
-                    packet.Set(true);
+                    identity.Packet.Set(true);
                     OnMouseDown();
                 }
             }
             else if (state == PressState.Pressed)
             {
-                if (Input.GetMouseButton(0)) packet.Set(true);
+                if (Input.GetMouseButton(0)) identity.Packet.Set(true);
 
                 if (Input.GetMouseButtonUp(0))
                 {
-                    packet.Set(false);
+                    identity.Packet.Set(false);
                     OnMouseUp();
                 }
             }
 
-            Current.Update(packet);
+            Current.Update(identity.Packet);
         }
 
         private void OnMouseDown()
         {
+            var board = identity.Packet.Get<IBlackboard>();
             board.Get<BusyBool>("canSprint").business++;
+            
             state = PressState.Pressed;
         }
         private void OnMouseUp()
         {
+            var board = identity.Packet.Get<IBlackboard>();
             board.Get<BusyBool>("canSprint").business--;
+            
             state = PressState.Released;
         }
         
@@ -108,13 +112,13 @@ namespace Chrome
 
         private void ChangeWeapon(bool value)
         {
-            Current.Shutdown(packet);
+            Current.Shutdown(identity.Packet);
             isLeft = value;
             
             var HUD = Repository.Get<GunHUD>(Interface.Gun);
             HUD.Select(isLeft ? 0 : 1);
             
-            Current.Bootup(packet);
+            Current.Bootup(identity.Packet);
         }
     }
 }

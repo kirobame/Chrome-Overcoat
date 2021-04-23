@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Flux.Data;
 using Flux.Event;
 using Sirenix.OdinInspector;
@@ -6,10 +7,17 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class Target : MonoBehaviour, IDamageable
+    public class Target : MonoBehaviour, IDamageable, ILink<IIdentity>
     {
+        public IIdentity Identity => identity;
+        IIdentity ILink<IIdentity>.Link
+        {
+            set => identity = value;
+        }
+        private IIdentity identity;
+        
         public bool IsAlive => health > 0.0f;
-
+        
         [BoxGroup("Dependencies"), SerializeField] private new Collider collider;
         
         [FoldoutGroup("Values"), SerializeField] private float maxHealth;
@@ -23,31 +31,38 @@ namespace Chrome
 
         private float health;
 
-        void Awake() => health = maxHealth;
+        //--------------------------------------------------------------------------------------------------------------/
         
-        public void Hit(byte ownerType, RaycastHit hit, float damage)
+        void Awake() => health = maxHealth;
+
+        public void Hit(IIdentity source, float damage, Packet packet)
         {
             health -= damage;
-            
-            var vfxPool = Repository.Get<VfxPool>(Pool.Impact);
-            var hitVfxInstance = vfxPool.RequestSingle(hitVfx);
-            
-            var module = hitVfxInstance.main;
-            var gradient = module.startColor;
-            gradient.color =  Color.Lerp(maxColor, minColor, Mathf.Clamp01(health / maxHealth));
-            module.startColor = gradient;
 
-            hitVfxInstance.transform.position = transform.position;
-            hitVfxInstance.transform.rotation = Quaternion.LookRotation(hit.normal);
-            hitVfxInstance.Play();
-
-            if (ownerType == 10) Events.ZipCall<byte,float>(GaugeEvent.OnDamageInflicted, 0, damage);
-            
-            if (health <= 0.0f)
+            if (packet.TryGet<RaycastHit>(out var hit))
             {
-                if (ownerType == 10) Events.ZipCall<byte>(GaugeEvent.OnKill, 0);
-                StartCoroutine(DeathRoutine());
+                var vfxPool = Repository.Get<VfxPool>(Pool.Impact);
+                var hitVfxInstance = vfxPool.RequestSingle(hitVfx);
+            
+                var module = hitVfxInstance.main;
+                var gradient = module.startColor;
+                gradient.color =  Color.Lerp(maxColor, minColor, Mathf.Clamp01(health / maxHealth));
+                module.startColor = gradient;
+
+                hitVfxInstance.transform.position = transform.position;
+                hitVfxInstance.transform.rotation = Quaternion.LookRotation(hit.normal);
+                hitVfxInstance.Play();
             }
+            
+            if (source.Faction == Faction.Player)
+            {
+                var type = identity.Packet.Get<byte>();
+                
+                Events.ZipCall<byte,float>(GaugeEvent.OnDamageInflicted, type, damage);
+                if (health <= 0.0f) Events.ZipCall<byte>(GaugeEvent.OnKill, type);
+            }
+            
+            if (health <= 0.0f) StartCoroutine(DeathRoutine());
         }
 
         private IEnumerator DeathRoutine()
