@@ -4,5 +4,6 @@
     {
         Player,
         Enemy,
+        Neutral
     }
 }

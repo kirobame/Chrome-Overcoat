@@ -8733,6 +8733,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1116115624}
+  - component: {fileID: 1116115629}
+  - component: {fileID: 1116115631}
+  - component: {fileID: 1116115628}
   - component: {fileID: 1116115625}
   - component: {fileID: 1116115626}
   - component: {fileID: 1116115630}
@@ -8818,6 +8821,34 @@ MonoBehaviour:
   minAirColor: {r: 0.62963533, g: 0.34242615, b: 0.764151, a: 1}
   maxAirColor: {r: 0.8396226, g: 0.42259273, b: 0.36040404, a: 1}
   airRange: {x: 0, y: 17.5}
+--- !u!114 &1116115628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1116115623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46b266a0d62dda64b92c90ba50ddc8cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  self: {fileID: 1116115625}
+  raypoint: {fileID: 963194228}
+  firepoint: {fileID: 1637747128}
+--- !u!114 &1116115629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1116115623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af7e0dec68e94c0b9a47e20508c1a4bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  faction: 0
 --- !u!114 &1116115630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8834,6 +8865,18 @@ MonoBehaviour:
   affect: 1
   bypass: 0
   overridingForce: {x: 0, y: 0, z: 0}
+--- !u!114 &1116115631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1116115623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4a48388d45a43cf899cfaa03a6fe63f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1117347372
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9027,7 +9070,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1126607507}
-  - component: {fileID: 1126607510}
   - component: {fileID: 1126607509}
   - component: {fileID: 1126607508}
   m_Layer: 7
@@ -9083,21 +9125,6 @@ MonoBehaviour:
   name: player
   isSource: 1
   isGlobal: 1
---- !u!114 &1126607510
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1126607506}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46b266a0d62dda64b92c90ba50ddc8cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  self: {fileID: 1116115625}
-  raypoint: {fileID: 963194228}
-  firepoint: {fileID: 1637747128}
 --- !u!1001 &1132056810
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11295,7 +11322,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5cec9ca08c84b058f22822e1c94bc97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  board: {fileID: 1126607510}
   body: {fileID: 1116115626}
   speed:
     value: 5
@@ -13226,7 +13252,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4907586404706003717, guid: da402d1bfdec783429f68c7a10887a7f, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4907586404706003726, guid: da402d1bfdec783429f68c7a10887a7f, type: 3}
       propertyPath: m_RootOrder
@@ -15236,19 +15262,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1757387377}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 824155ed99d24c7c9dbe563e46e076f2, type: 3}
+  m_Script: {fileID: 11500000, guid: 68e99121213d46cc98968f134d52eb25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 10
-  implementation:
-    id: 0
-  references:
-    version: 1
-    00000000:
-      type: {class: Life, ns: Chrome, asm: Assembly-CSharp}
-      data:
-        link: {fileID: 1757387381}
-        maxHealth: 99999
+  link: {fileID: 1757387381}
+  maxHealth: 9999
 --- !u!114 &1757387381
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20122,7 +20140,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 099f626bd3504c9195f1a13c402f20e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  board: {fileID: 1126607510}
   leftWeapon: {fileID: 11400000, guid: 9059a5c35ccf73742a6a3654ce45035c, type: 2}
   rightWeapon: {fileID: 11400000, guid: 26b49fb14e1d9264aaf1fc6f51d85eea, type: 2}
 --- !u!114 &283606065032798069
@@ -20512,7 +20529,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4713308752608471008, guid: 0f7541d9ed949584eb0995af2635d64d, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4713308752608471011, guid: 0f7541d9ed949584eb0995af2635d64d, type: 3}
       propertyPath: m_RootOrder

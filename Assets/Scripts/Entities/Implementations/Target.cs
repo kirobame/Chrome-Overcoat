@@ -7,9 +7,15 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class Target : MonoBehaviour, IHittable
+    public class Target : MonoBehaviour, IDamageable, ILink<IIdentity>
     {
-        public IExtendedIdentity Identity { get; private set; }
+        public IIdentity Identity => identity;
+        IIdentity ILink<IIdentity>.Link
+        {
+            set => identity = value;
+        }
+        private IIdentity identity;
+        
         public bool IsAlive => health > 0.0f;
         
         [BoxGroup("Dependencies"), SerializeField] private new Collider collider;
@@ -25,34 +31,35 @@ namespace Chrome
 
         private float health;
 
-        void Awake()
+        //--------------------------------------------------------------------------------------------------------------/
+        
+        void Awake() => health = maxHealth;
+
+        public void Hit(IIdentity source, float damage, Packet packet)
         {
-            Identity = new PackedIdentity(Faction.Enemy, transform);
-            health = maxHealth;
-        }
+            health -= damage;
 
-        public void Hit(IIdentity identity, HitMotive motive, EventArgs args)
-        {
-            if (motive != HitMotive.Damage || !(args is PointDamageArgs damageArgs)) return;
-            
-            health -= damageArgs.Amount;
-            
-            var vfxPool = Repository.Get<VfxPool>(Pool.Impact);
-            var hitVfxInstance = vfxPool.RequestSingle(hitVfx);
-            
-            var module = hitVfxInstance.main;
-            var gradient = module.startColor;
-            gradient.color =  Color.Lerp(maxColor, minColor, Mathf.Clamp01(health / maxHealth));
-            module.startColor = gradient;
-
-            hitVfxInstance.transform.position = transform.position;
-            hitVfxInstance.transform.rotation = Quaternion.LookRotation(damageArgs.Hit.normal);
-            hitVfxInstance.Play();
-
-            if (identity.Faction == Faction.Player)
+            if (packet.TryGet<RaycastHit>(out var hit))
             {
-                Events.ZipCall<byte,float>(GaugeEvent.OnDamageInflicted, 0, damageArgs.Amount);
-                if (health <= 0.0f) Events.ZipCall<byte>(GaugeEvent.OnKill, 0);
+                var vfxPool = Repository.Get<VfxPool>(Pool.Impact);
+                var hitVfxInstance = vfxPool.RequestSingle(hitVfx);
+            
+                var module = hitVfxInstance.main;
+                var gradient = module.startColor;
+                gradient.color =  Color.Lerp(maxColor, minColor, Mathf.Clamp01(health / maxHealth));
+                module.startColor = gradient;
+
+                hitVfxInstance.transform.position = transform.position;
+                hitVfxInstance.transform.rotation = Quaternion.LookRotation(hit.normal);
+                hitVfxInstance.Play();
+            }
+            
+            if (source.Faction == Faction.Player)
+            {
+                var type = identity.Packet.Get<byte>();
+                
+                Events.ZipCall<byte,float>(GaugeEvent.OnDamageInflicted, type, damage);
+                if (health <= 0.0f) Events.ZipCall<byte>(GaugeEvent.OnKill, type);
             }
             
             if (health <= 0.0f) StartCoroutine(DeathRoutine());

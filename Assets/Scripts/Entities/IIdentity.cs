@@ -6,6 +6,7 @@ namespace Chrome
     {
         Faction Faction { get; }
         Transform Root { get; }
+        Packet Packet { get; }
         
         void Copy(IIdentity identity);
     }

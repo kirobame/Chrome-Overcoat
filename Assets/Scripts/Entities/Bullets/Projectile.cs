@@ -21,15 +21,14 @@ namespace Chrome
         private bool hasHit;
         private float deactivationTimer;
 
-        public override void Shoot(Aim aim, EventArgs args)
+        public override void Shoot(IIdentity source, Vector3 fireAnchor, Vector3 direction, Packet packet)
         {
-            var castedArgs = (WrapperArgs<byte, float>)args;
-            ownerType = castedArgs.ArgOne;
+            identity.Copy(source);
             
             deactivationTimer = deactivationTime;
             hasHit = false;
             
-            base.Shoot(aim, args);
+            base.Shoot(source, fireAnchor, direction, packet);
 
             trail.enabled = true;
             routine = StartCoroutine(Routines.DoAfter(() =>
@@ -63,12 +62,19 @@ namespace Chrome
             
             vfxPoolable.transform.localScale = Vector3.one;
             
-            if (hit.collider.TryGetComponent<IHittable>(out var damageable))
+            if (hit.collider.TryGetComponent<InteractionHub>(out var hub))
             {
+                identity.Packet.Set(hit);
+                    
+                hub.Relay<IDamageable>(damageable =>
+                {
+                    if (damageable.Identity.Faction == identity.Faction) return;
+                    damageable.Hit(identity, damage, identity.Packet);
+                });
+                    
                 vfxPoolable.transform.SetParent(hit.transform);
-                damageable.Hit(ownerType, hit, damage);
             }
-            
+
             vfxPoolable.transform.position = hit.point;
             vfxPoolable.transform.rotation = Quaternion.LookRotation(hit.normal);
             vfxPoolable.Value.Play();
