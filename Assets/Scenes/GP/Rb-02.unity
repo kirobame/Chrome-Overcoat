@@ -13252,7 +13252,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4907586404706003717, guid: da402d1bfdec783429f68c7a10887a7f, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4907586404706003726, guid: da402d1bfdec783429f68c7a10887a7f, type: 3}
       propertyPath: m_RootOrder
@@ -17649,93 +17649,77 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   body: {fileID: 1116115626}
   camera: {fileID: 2007891214}
-  velocityMap:
+  smoothing: 0.175
+  input: {x: -4, y: 6.5}
+  FOVMap:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: -10
-      value: -1
-      inSlope: 0
-      outSlope: 0
+      time: -1
+      value: -0.5
+      inSlope: 1.3586926
+      outSlope: 1.3586926
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0
+      outWeight: 0.072398186
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0.17229052
-      outSlope: 0.17229052
+      inSlope: -0.004120911
+      outSlope: -0.004120911
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.072687194
+      outWeight: 0.3686604
     - serializedVersion: 3
-      time: 17.5
+      time: 1
       value: 1
-      inSlope: 0
-      outSlope: 0
+      inSlope: 2.735624
+      outSlope: 2.735624
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0
+      inWeight: 0.059164584
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  fieldConverter:
-    map:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    midPoint: 48.5
-    range: {x: 44, y: 50.5}
-  distortionConverter:
-    map:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    midPoint: 0
-    range: {x: -0.15, y: 0.1}
+  FOVMidpoint: 48.5
+  FOVFactor: 4.25
+  distortionMap:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: -1
+      value: -0.75
+      inSlope: 2.0453975
+      outSlope: 2.0453975
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.069381595
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: -0.004120911
+      outSlope: -0.004120911
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.3686604
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2.735624
+      outSlope: 2.735624
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.059164584
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  distortionFactor: 0.25
 --- !u!114 &2007891217
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19587,36 +19571,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   body: {fileID: 1116115626}
-  move: {fileID: 1317599170}
   knockback: 0.4
   factor: 0.2
   maxLength: 2
   smoothing: 0.125
   reduction: 0.075
-  speedLossMap:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0.5
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.5
-      value: 1
-      inSlope: 3.180496
-      outSlope: 3.180496
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.051908374
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!1 &282949757574130850
 GameObject:
   m_ObjectHideFlags: 0
@@ -20065,7 +20024,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 283606065032798066}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a70b3fc4f4b1485a9ae56ae5c66eb0e2, type: 3}
+  m_Script: {fileID: 11500000, guid: 059a278b7ffd4e73bfd1f5d5ce68a9a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   body: {fileID: 1116115626}
@@ -20094,11 +20053,11 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    limit: 15
-    factor: 12.5
-    smoothing: 0.05
-  groundPitchSmoothing: 0.05
-  knockback: 3
+    limit: 13.25
+    factor: 11.5
+    smoothing: 0.1
+  groundPitchSmoothing: 0.1
+  knockback: 0.59
   pitchSettling: 0.1
   rollKnob:
     map:
@@ -20128,6 +20087,37 @@ MonoBehaviour:
     limit: 7.5
     factor: -9.25
     smoothing: 0.15
+  view: {fileID: 560282138}
+  pitchViewAffect: -0.035
+  yawKnob:
+    map:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    limit: 5.5
+    factor: 6
+    smoothing: 0.1
+  yawViewAffect: -0.0125
 --- !u!114 &283606065032798068
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20529,7 +20519,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4713308752608471008, guid: 0f7541d9ed949584eb0995af2635d64d, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4713308752608471011, guid: 0f7541d9ed949584eb0995af2635d64d, type: 3}
       propertyPath: m_RootOrder

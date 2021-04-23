@@ -32,12 +32,21 @@ namespace Chrome
             var delta = body.transform.InverseTransformVector(body.Delta);
 
             pitchKnob.Smoothing = body.IsGrounded ? groundPitchSmoothing : airPitchSmoothing;
-            var pitch = pitchKnob.Process(delta.y + pitchAdd);
-            var roll = rollKnob.Process(delta.x);
+            var pitch = ComputePitch(delta);
+            var yaw = ComputeYaw(delta);
+            var roll = ComputeRoll(delta);
             
-            transform.localEulerAngles = new Vector3(pitch, 0.0f, roll);
+            transform.localEulerAngles = new Vector3(pitch, yaw, roll);
             pitchAdd = Mathf.SmoothDamp(pitchAdd, 0.0f, ref reduction, pitchSettling);
         }
+
+        protected virtual float ComputePitch(Vector3 bodyDelta)
+        {
+            pitchKnob.Smoothing = body.IsGrounded ? groundPitchSmoothing : airPitchSmoothing;
+            return pitchKnob.Process(bodyDelta.y + pitchAdd);
+        }
+        protected virtual float ComputeYaw(Vector3 bodyDelta) => 0.0f;
+        protected virtual float ComputeRoll(Vector3 bodyDelta) => rollKnob.Process(bodyDelta.x);
 
         void OnFire(float force) => pitchAdd = force * -knockback;
     }
