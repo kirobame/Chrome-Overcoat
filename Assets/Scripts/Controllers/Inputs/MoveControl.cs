@@ -119,7 +119,7 @@ namespace Chrome
             body.velocity += delta;
         }
 
-        void OnBodyCollision(CollisionHit hit)
+        void OnBodyCollision(CollisionHit<PhysicBody> hit)
         {
             if (!body.IsGrounded) return;
             planeNormal = hit.Normal;

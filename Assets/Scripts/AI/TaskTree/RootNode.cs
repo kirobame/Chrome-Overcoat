@@ -113,7 +113,7 @@ namespace Chrome
         protected void AddOutputChannel(Packet packet, int value) => ChangeOutputMask(packet, output | value);
         
         void ITaskTree.RemoveOutputChannel(Packet packet, int value) => RemoveOutputChannel(packet, value);
-        protected void RemoveOutputChannel(Packet packet, int value) => ChangeOutputMask(packet, output ^ value);
+        protected void RemoveOutputChannel(Packet packet, int value) => ChangeOutputMask(packet, output ^ (output & value));
 
         void ITaskTree.ChangeOutputMask(Packet packet, int value) => ChangeOutputMask(packet, value);
         protected void ChangeOutputMask(Packet packet, int value)

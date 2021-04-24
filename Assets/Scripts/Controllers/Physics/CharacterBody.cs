@@ -22,7 +22,7 @@ namespace Chrome
             return controller.velocity;
         }
 
-        protected override CollisionHit HandleCollisions()
+        protected override CollisionHit<PhysicBody> HandleCollisions()
         {
             if (hit == null) return null;
 
@@ -37,7 +37,7 @@ namespace Chrome
                 }
             }
             
-            return new CollisionHit(this, hit.collider, hit.point, hit.normal, Delta);
+            return new CollisionHit<PhysicBody>(this, hit.collider, hit.point, hit.normal, Delta);
         }
 
         void OnControllerColliderHit(ControllerColliderHit hit) => this.hit = hit;

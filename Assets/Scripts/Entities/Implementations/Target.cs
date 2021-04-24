@@ -39,7 +39,7 @@ namespace Chrome
         {
             health -= damage;
 
-            if (packet.TryGet<RaycastHit>(out var hit))
+            if (packet.TryGet<CollisionHit<Transform>>(out var hit))
             {
                 var vfxPool = Repository.Get<VfxPool>(Pool.Impact);
                 var hitVfxInstance = vfxPool.RequestSingle(hitVfx);
@@ -50,7 +50,7 @@ namespace Chrome
                 module.startColor = gradient;
 
                 hitVfxInstance.transform.position = transform.position;
-                hitVfxInstance.transform.rotation = Quaternion.LookRotation(hit.normal);
+                hitVfxInstance.transform.rotation = Quaternion.LookRotation(hit.Normal);
                 hitVfxInstance.Play();
             }
             

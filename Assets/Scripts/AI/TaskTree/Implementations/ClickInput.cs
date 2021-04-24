@@ -7,8 +7,12 @@ namespace Chrome
     {
         private bool previousState;
         
-        protected override void OnBootup(Packet packet) => output = 0b_0010;
-        
+        protected override void OnBootup(Packet packet)
+        {
+            previousState = false;
+            output = 0b_0010;
+        }
+
         public override IEnumerable<INode> Update(Packet packet)
         {
             var state = packet.Get<bool>();
@@ -17,9 +21,7 @@ namespace Chrome
             {
                 if (previousState)
                 {
-                    Command(packet, new ChannelRemovalCommand(0b_0001));
-                    AddOutputChannel(packet, 0b_0010);
-                    
+                    ChangeOutputMask(packet, 0b_0010);
                     Start(packet);
                 }
                 previousState = false;

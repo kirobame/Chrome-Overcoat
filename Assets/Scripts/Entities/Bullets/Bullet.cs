@@ -22,7 +22,7 @@ namespace Chrome
         protected float actualSpeed;
         protected Vector3 direction = Vector3.forward;
 
-        private HashSet<Collider> ignores = new HashSet<Collider>();
+        protected HashSet<Collider> ignores = new HashSet<Collider>();
 
         void Awake() => actualSpeed = speed;
         

@@ -2,9 +2,9 @@
 
 namespace Chrome
 {
-    public class CollisionHit
+    public class CollisionHit<T>
     {
-        public CollisionHit(PhysicBody source, Collider collider, Vector3 point, Vector3 normal, Vector3 delta)
+        public CollisionHit(T source, Collider collider, Vector3 point, Vector3 normal, Vector3 delta)
         {
             Source = source;
             Collider = collider;
@@ -15,7 +15,7 @@ namespace Chrome
             Delta = delta;
         }
         
-        public PhysicBody Source { get; private set; }
+        public T Source { get; private set; }
         public Collider Collider { get; private set; }
         
         public Vector3 Point { get; private set; }

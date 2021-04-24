@@ -12,7 +12,7 @@ namespace Chrome
             this.source = source;
         }
 
-        public bool IsDone => actives.Count == 0 || actives.All(node => node.IsDone);
+        public bool IsDone => actives.Count == 0 || actives.All(node => node is RootNode && node.IsDone);
             
         public int Key { get; private set; }
         public IEnumerable<INode> All => actives.Concat(leaves);

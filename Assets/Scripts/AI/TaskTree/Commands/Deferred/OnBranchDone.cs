@@ -1,4 +1,6 @@
-﻿namespace Chrome
+﻿using UnityEngine;
+
+namespace Chrome
 {
     public struct OnBranchDone : IDeferred
     {
@@ -8,19 +10,18 @@
 
         public bool? IsReady(Packet packet, ITaskTree source)
         {
-            bool? check = null;
+            bool? check = true;
             foreach (var branch in source.Branches)
             {
                 if ((key | branch.Key) != key) continue;
-
-                check = true;
+                
                 if (!branch.IsDone)
                 {
                     check = false;
                     break;
                 }
             }
-
+            
             return check;
         }
     }

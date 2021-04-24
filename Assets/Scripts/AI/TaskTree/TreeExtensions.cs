@@ -3,6 +3,19 @@
     public static class TreeExtensions
     {
         public static bool HasChannel(this int mask, int channel) => (mask | channel) == mask;
+        public static string ToBinary(this int value, int length = 4)
+        {
+            var buffer = new char[length];
+ 
+            for (int i = length - 1; i >= 0 ; i--)
+            {
+                var mask = 1 << i;
+                buffer[length - 1 - i] = (value & mask) != 0 ? '1' : '0';
+            }
+ 
+            return new string(buffer);
+        }
+
         
         public static bool IsChildOf(this INode node, INode supposedParent)
         {

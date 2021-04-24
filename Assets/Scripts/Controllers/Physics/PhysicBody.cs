@@ -8,7 +8,7 @@ namespace Chrome
 {
     public abstract class PhysicBody : MonoBehaviour, ILifebound
     {
-        public event Action<CollisionHit> onCollision;
+        public event Action<CollisionHit<PhysicBody>> onCollision;
         
         public abstract Collider Collider { get; }
 
@@ -47,6 +47,6 @@ namespace Chrome
         }
 
         protected abstract Vector3 Move(Vector3 delta);
-        protected abstract CollisionHit HandleCollisions();
+        protected abstract CollisionHit<PhysicBody> HandleCollisions();
     }
 }

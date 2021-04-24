@@ -119,6 +119,10 @@ namespace Chrome
                 case 1: // On enemy killed
                     
                     break;
+                
+                case 2: // On turret killed
+
+                    break;
             }
         }
 
