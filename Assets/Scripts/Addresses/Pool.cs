@@ -5,7 +5,7 @@ namespace Chrome
     [Address]
     public enum Pool : byte
     {
-        Bullet,
+        Projectile,
         MuzzleFlash,
         Impact,
         Death

@@ -209,12 +209,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 217e818463ac416fa4ac25fbfa9d4551, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weapon: {fileID: 11400000, guid: 26b49fb14e1d9264aaf1fc6f51d85eea, type: 2}
   navMesh: {fileID: 4713308752608471010}
   lineOfSight: {fileID: 4713308752608471013}
   aim: {fileID: 4713308752803333474}
   fireAnchor: {fileID: 4713308753768355048}
-  bulletPrefab: {fileID: 34740033821788151, guid: 1095f378cc57ad54595eae679fdcf637, type: 3}
-  muzzleFlashPrefab: {fileID: 6581533253750990063, guid: a3bee71f8ad97b94082b82bcbed23d28, type: 3}
 --- !u!114 &4713308752608471013
 MonoBehaviour:
   m_ObjectHideFlags: 0
