@@ -2,8 +2,16 @@
 {
     public struct EmptyValue<T> : IValue<T>
     {
-        public object RawValue => null;
-        public T Value => default;
+        public object RawValue
+        {
+            get => null;
+            set { }
+        }
+        public T Value
+        {
+            get => default;
+            set { }
+        }
 
         public bool IsValid(Packet packet) => false;
     }

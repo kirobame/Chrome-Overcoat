@@ -25,8 +25,7 @@ namespace Chrome
         public override void Shoot(IIdentity source, Vector3 fireAnchor, Vector3 direction, Packet packet)
         {
             identity.Copy(source);
-            identity.Packet.Set(direction.normalized);
-            
+
             if (!init) TempInit();
             taskTree.Bootup(identity.Packet);
             taskTree.Start(identity.Packet);

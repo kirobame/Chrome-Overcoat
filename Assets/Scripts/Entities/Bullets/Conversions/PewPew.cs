@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Flux;
 using UnityEngine;
 
@@ -20,7 +21,7 @@ namespace Chrome
 
         private Step step;
         private bool init;
-        
+
         protected override void OnBootup(Packet packet)
         {
             var board = packet.Get<IBlackboard>();
@@ -29,7 +30,7 @@ namespace Chrome
             
             output = 0b_0011;
             init = false;
-            
+
             step = Step.Move;
         }
 
@@ -48,7 +49,7 @@ namespace Chrome
             switch (step)
             {
                 case Step.Move:
-                    
+
                     foreach (var branch in Branches) branch.Update(packet);
                     OnUpdate(packet);
 
@@ -72,12 +73,12 @@ namespace Chrome
                     
                     foreach (var branch in Branches) branch.Update(packet);
                     OnUpdate(packet);
-
+                    
                     if (IsDone)
                     {
                         var board = packet.Get<IBlackboard>();
                         var end = board.Get<bool>("end");
-                        
+
                         RemoveOutputChannel(packet, 0b_0100);
                         if (end)
                         {
