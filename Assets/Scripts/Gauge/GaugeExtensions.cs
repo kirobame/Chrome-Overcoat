@@ -27,5 +27,27 @@ namespace Chrome
             
             gauge.AddModule(module);
         }
+
+        public static void DIE(this Gauge gauge, Vector2 range, Lifetime lifetime)
+        {
+            var module = new GaugeInRangeModule(range, (value, percentage, state) =>
+            {
+                if (state == GaugeInRangeModule.State.EnteredRange) lifetime.End();
+            });
+
+            module.lifetime = new ConstantModuleLifetime();
+            gauge.AddModule(module);
+        }
+
+        public static void PASSIVE(this Gauge gauge, float constant, Gauge other, float otherFactor)
+        {
+            var module = new GaugeInRangeModule(new Vector2(0.0f, 1.0f), (value, percentage, state) =>
+            {
+                if (state == GaugeInRangeModule.State.InRange) gauge.ADD((constant + other.Value / other.Max * otherFactor) * Time.deltaTime);
+            });
+
+            module.lifetime = new ConstantModuleLifetime();
+            gauge.AddModule(module);
+        }
     }
 }
