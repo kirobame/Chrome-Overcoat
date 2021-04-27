@@ -126,6 +126,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pivot: {fileID: 682882}
   smoothing: 0.1
+--- !u!1 &1254133302
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1254133303}
+  m_Layer: 7
+  m_Name: FireAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1254133303
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1254133302}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7714797917413176326}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1447148723
 GameObject:
   m_ObjectHideFlags: 0
@@ -136,6 +166,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1447148724}
   - component: {fileID: 1447148728}
+  - component: {fileID: 8423516828294127222}
   - component: {fileID: 1447148727}
   - component: {fileID: 1447148726}
   - component: {fileID: 1447148725}
@@ -176,6 +207,22 @@ MonoBehaviour:
   aim: {fileID: 5291411985101480143}
   gun: {fileID: 11400000, guid: ceeca1bb7c1481b4d927228dadb9c8f4, type: 2}
   smoothing: 0.075
+--- !u!114 &8423516828294127222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1447148723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 887794000ab240ed9f56da9ef0314f98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fireAnchor: {fileID: 1254133303}
+  projectilePrefab: {fileID: 3278294482387087007, guid: 48d19aea30ef1f54c8eb3d8ef6f9c4cd, type: 3}
+  cost: 10
+  muzzleFlashPrefab: {fileID: 2017965796941768161, guid: 33ac8d8aac6693b47b52575e2f38f151, type: 3}
 --- !u!114 &1447148727
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -460,7 +507,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   body: {fileID: 4350635848823481836}
   aim: {fileID: 5291411985101480143}
-  fireAnchor: {fileID: 7714797917413176326}
+  fireAnchor: {fileID: 1254133303}
+  life: {fileID: 4350635848183393587}
+  detection: {fileID: 1447148727}
 --- !u!114 &4350635848823481833
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -632,7 +681,8 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0.75}
   m_LocalScale: {x: 0.25, y: 0.24999999, z: 0.25}
-  m_Children: []
+  m_Children:
+  - {fileID: 1254133303}
   m_Father: {fileID: 5291411985101480143}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

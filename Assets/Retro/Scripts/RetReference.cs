@@ -5,6 +5,8 @@ namespace Chrome.Retro
     [Address]
     public enum RetReference : byte
     {
-        Targets,
+        Gauge,
+        WaveSpawns,
+        EnemyPool
     }
 }
