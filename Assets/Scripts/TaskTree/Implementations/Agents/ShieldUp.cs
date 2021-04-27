@@ -4,9 +4,21 @@ namespace Chrome
 {
     public class ShieldUp : ProxyNode
     {
+        public ShieldUp(IValue<GameObject> shield)
+        {
+            this.shield = shield;
+        }
+
+        private IValue<GameObject> shield;
+
         protected override void OnUpdate(Packet packet)
         {
-            Debug.Log("ShieldUp");
+            if (shield.IsValid(packet))
+            {
+                if (!shield.Value.activeSelf)
+                    shield.Value.SetActive(true);
+            }
+
             isDone = true;
         }
     }

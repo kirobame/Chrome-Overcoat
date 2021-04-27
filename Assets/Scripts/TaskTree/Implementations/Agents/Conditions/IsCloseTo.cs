@@ -23,7 +23,7 @@ namespace Chrome
 
             var distance = Vector3.Distance(transform.Value.position, target.Value.position);
 
-            Debug.Log("Distance from target : " + distance);
+            //Debug.Log("Distance from target : " + distance);
 
             if (distance < distanceMin)
                 return true;

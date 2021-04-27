@@ -18,6 +18,7 @@ namespace Chrome
 
         [Space, SerializeField] private NavMeshAgent navMesh;
         [SerializeField] private Transform aim;
+        [SerializeField] private GameObject shield;
 
         private ITaskTree taskTree;
 
@@ -27,12 +28,14 @@ namespace Chrome
             board.Set("collider", col);
             board.Set("transform", tr);
             board.Set("aim", aim);
+            board.Set("shield", shield);
 
             identity.Packet.Set(navMesh);
 
             var ColReference = "collider".Reference<Collider>();
-            var aimReference = "aim".Reference<Transform>();
             var trReference = "transform".Reference<Transform>();
+            var aimReference = "aim".Reference<Transform>();
+            var shieldReference = "shield".Reference<GameObject>();
 
             var player = "player".Reference<Transform>(true);
             var playerColReference = "player.collider".Reference<Collider>(true);
@@ -40,27 +43,28 @@ namespace Chrome
 
             taskTree = new RootNode();
 
-            var IsSeen = new CanSee(ColReference, TargetLineOfSight);
+            var lookAt = new RootNode().Append(new LookAt(playerColReference, aimReference));
 
             taskTree.Append(
-                IsSeen.Append(
+                new IsSeen(ColReference, TargetLineOfSight, aimReference).Append(
                     //Seen
                     new StopMoving().Mask(0b_0001).Append(
-                        new ShieldUp(),
-                        new RootNode().Append(
-                            new LookAt(playerColReference, aimReference))),
+                        new ShieldUp(shieldReference),
+                        lookAt
+                        ),
                     //Not seen
                     new IsCloseTo(trReference, player, 3f).Mask(0b_0010).Append(
                         //At range
-                        new AttackCac().Mask(0b_0001).Append(
-                            new Delay(0.5f)),
-                        new RootNode().Mask(0b_0001).Append(
-                            new LookAt(playerColReference, aimReference)),
+                        lookAt,
+                        new AttackCac(identity, aimReference, 5).Mask(0b_0001).Append(
+                            new Delay(0.5f),
+                            new ShieldDown(shieldReference)),
                         //Not at range
                         new MoveTo(new PackettedValue<NavMeshAgent>(), player).Mask(0b_0010).Append(
-                            new Delay(0.5f)),
+                            new Delay(0.5f),
+                            new ShieldDown(shieldReference))
                         //Both
-                        new ShieldDown().Mask(0b_0011)
+                        //new ShieldDown().Mask(0b_0011)
                         )
                     )
                 );
