@@ -9883,7 +9883,7 @@ MonoBehaviour:
   hitMask:
     serializedVersion: 2
     m_Bits: 192
-  damage: 1
+  damage: 2
   deactivationTime: 7.5
   impactVfx: {fileID: 3183420789188184947, guid: 66e5059132311884482d84c5ce0d3f37, type: 3}
   graph: {fileID: 5212214593583665140}
