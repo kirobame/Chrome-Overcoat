@@ -49,5 +49,16 @@ namespace Chrome
             module.lifetime = new ConstantModuleLifetime();
             gauge.AddModule(module);
         }
+        
+        public static void PASSIVE(this Gauge gauge, Vector2 range, float constant, Gauge other, float otherFactor)
+        {
+            var module = new GaugeInRangeModule(range, (value, percentage, state) =>
+            {
+                if (state == GaugeInRangeModule.State.InRange) gauge.ADD((constant + other.Value / other.Max * otherFactor) * Time.deltaTime);
+            });
+
+            module.lifetime = new ConstantModuleLifetime();
+            gauge.AddModule(module);
+        }
     }
 }

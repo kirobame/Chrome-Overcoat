@@ -13,9 +13,8 @@ namespace Chrome
         [SerializeField] private Lifetime lifetime;
         
         [FoldoutGroup("Heat Gauge Settings"), SerializeField] private bool heatDieOnMax = true; 
-        [FoldoutGroup("Heat Gauge Settings"), SerializeField] private bool heatDieOnMin = false; 
-        [FoldoutGroup("Heat Gauge Settings"), SerializeField] private float heatConstantPassive = 0.0f; 
-        [FoldoutGroup("Heat Gauge Settings"), SerializeField] private float heatEnergyPercentPassive = 0.0f; 
+        [FoldoutGroup("Heat Gauge Settings"), SerializeField] private bool heatDieOnMin = false;
+        [FoldoutGroup("Heat Gauge Settings"), SerializeField] private Vector4[] heatPassiveBehaviours = default;
         [FoldoutGroup("Heat Gauge Settings"), SerializeField] private float heatOnGunFired1 = 0.0f; 
         [FoldoutGroup("Heat Gauge Settings"), SerializeField] private float heatOnGunFired2 = 0.0f; 
         [FoldoutGroup("Heat Gauge Settings"), SerializeField] private float heatOnJetpackUsed = 0.0f; 
@@ -30,9 +29,8 @@ namespace Chrome
         [FoldoutGroup("Heat Gauge Settings"), SerializeField] private float heatOnMove = 0.0f; 
         
         [FoldoutGroup("Energy Gauge Settings"), SerializeField] private bool energyDieOnMax = false; 
-        [FoldoutGroup("Energy Gauge Settings"), SerializeField] private bool energyDieOnMin = true; 
-        [FoldoutGroup("Energy Gauge Settings"), SerializeField] private float energyConstantPassive = 0.0f; 
-        [FoldoutGroup("Energy Gauge Settings"), SerializeField] private float energyHeatPercentPassive = 0.0f; 
+        [FoldoutGroup("Energy Gauge Settings"), SerializeField] private bool energyDieOnMin = true;
+        [FoldoutGroup("Energy Gauge Settings"), SerializeField] private Vector4[] energyPassiveBehaviours = default;
         [FoldoutGroup("Energy Gauge Settings"), SerializeField] private float energyOnGunFired1 = 0.0f; 
         [FoldoutGroup("Energy Gauge Settings"), SerializeField] private float energyOnGunFired2 = 0.0f; 
         [FoldoutGroup("Energy Gauge Settings"), SerializeField] private float energyOnJetpackUsed = 0.0f; 
@@ -84,16 +82,20 @@ namespace Chrome
 
                 heatGauge.DIE(new Vector2(0.99f, 1.0f), lifetime);
             }
-            
+
             if (energyDieOnMax) energyGauge.DIE(new Vector2(0.99f, 1.0f), lifetime);
 
             if (heatDieOnMin) heatGauge.DIE(new Vector2(0.0f, 0.01f), lifetime);
 
             if (energyDieOnMin) energyGauge.DIE(new Vector2(0.0f, 0.01f), lifetime);
 
-            heatGauge.PASSIVE(heatConstantPassive, energyGauge, heatEnergyPercentPassive);
-            energyGauge.PASSIVE(energyConstantPassive, heatGauge, energyHeatPercentPassive);
+            foreach (var passive in heatPassiveBehaviours)
+                heatGauge.PASSIVE(new Vector2(passive.x, passive.y), passive.z, energyGauge, passive.w);
+
+            foreach (var passive in energyPassiveBehaviours)
+                energyGauge.PASSIVE(new Vector2(passive.x, passive.y), passive.z, heatGauge, passive.w);
         }
+
         public void Shutdown() { }
         
         //--------------------------------------------------------------------------------------------------------------/
