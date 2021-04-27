@@ -17,7 +17,7 @@ namespace Chrome
 
         protected override void OnUpdate(Packet packet)
         {
-            var length = 2f;
+            var length = 3f;
             var ray = new Ray(origin.Value.position, origin.Value.forward);
 
             if (Physics.Raycast(ray, out var hit, length)) OnHit(hit);
