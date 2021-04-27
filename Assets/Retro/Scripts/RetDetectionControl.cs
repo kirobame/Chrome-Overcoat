@@ -10,10 +10,11 @@ namespace Chrome.Retro
 {
     public class RetDetectionControl : MonoBehaviour
     {
-        public event Action<IEnumerable<RetTarget>, RetTarget> onTargetEntry;
-        public event Action<IEnumerable<RetTarget>, RetTarget> onTargetLeft;
+        
+        public event Action<Collider> onTargetEntry;
+        public event Action<Collider> onTargetLeft;
 
-        public IEnumerable<RetTarget> Targets => inRange;
+        public IEnumerable<Collider> Targets => inRange;
         
         [FoldoutGroup("Dependencies"), SerializeField] private CharacterBody body;
         [FoldoutGroup("Dependencies"), SerializeField] private MeshFilter filter;
@@ -24,8 +25,8 @@ namespace Chrome.Retro
         [FoldoutGroup("Values"), SerializeField] private float radius;
         [FoldoutGroup("Values"), Min(3), SerializeField] private int definition;
 
-        private HashSet<RetTarget> inRange;
-        private HashSet<RetTarget> outOfRange;
+        private HashSet<Collider> inRange;
+        private HashSet<Collider> cache;
         
         private Vector3[] vertices;
         private Vector2[] UVs;
@@ -36,6 +37,9 @@ namespace Chrome.Retro
         
         void Awake()
         {
+            inRange = new HashSet<Collider>();
+            cache = new HashSet<Collider>();
+            
             var length = definition + 1;
             vertices = new Vector3[length];
             vertices[0] = Vector3.zero;
@@ -51,22 +55,6 @@ namespace Chrome.Retro
             var mesh = new Mesh();
             filter.mesh = mesh;
         }
-        void Start()
-        {
-            inRange = new HashSet<RetTarget>();
-            outOfRange = new HashSet<RetTarget>();
-
-            foreach (var target in Repository.GetAll<RetTarget>(RetReference.Targets)) outOfRange.Add(target);
-
-            Events.Subscribe<RetTarget>(RetEvent.OnTargetSpawn, OnTargetSpawn);
-            Events.Subscribe<RetTarget>(RetEvent.OnTargetDeath, OnTargetDeath);
-        }
-        
-        void OnDestroy()
-        {
-            Events.Unsubscribe<RetTarget>(RetEvent.OnTargetSpawn, OnTargetSpawn);
-            Events.Unsubscribe<RetTarget>(RetEvent.OnTargetDeath, OnTargetDeath);
-        }
 
         //--------------------------------------------------------------------------------------------------------------/
         
@@ -76,11 +64,7 @@ namespace Chrome.Retro
             {
                 if (inRange.Any())
                 {
-                    foreach (var target in inRange)
-                    {
-                        outOfRange.Add(target);
-                        onTargetLeft?.Invoke(inRange, target);
-                    }
+                    foreach (var target in inRange) onTargetLeft?.Invoke(target);
                     inRange.Clear();
                 }
                 
@@ -89,6 +73,8 @@ namespace Chrome.Retro
             }
             else renderer.enabled = true;
             
+            cache.Clear();
+
             var baseAngle = -spread * 0.5f + 90.0f;
             var step = spread / definition;
             for (var i = 0; i < definition; i++)
@@ -109,14 +95,31 @@ namespace Chrome.Retro
                 var direction = transform.TransformDirection(new Vector3(x, 0.0f, y));
                 var ray = new Ray(transform.position, direction);
 
-                if (Physics.Raycast(ray, out var hit, radius, mask)) point = transform.InverseTransformPoint(hit.point);
-                else point = new Vector3(x * radius, 0.0f, y * radius);
+                if (Physics.Raycast(ray, out var hit, radius, LayerMask.GetMask("Environment", "Entity")))
+                {
+                    if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Entity"))
+                    {
+                        if (inRange.Add(hit.collider)) onTargetEntry?.Invoke(hit.collider);
+                        cache.Add(hit.collider);
 
+                        point = new Vector3(x * radius, 0.0f, y * radius);
+                    }
+                    else point = transform.InverseTransformPoint(hit.point);
+                }
+                else point = new Vector3(x * radius, 0.0f, y * radius);
+                
                 var index = i + 1;
                 vertices[index] = point;
                 UVs[index] = new Vector2(x,y);
                 normals[index] = Vector3.up;
             }
+            
+            foreach (var target in inRange)
+            {
+                if (cache.Contains(target)) continue;
+                onTargetLeft?.Invoke(target);
+            }
+            inRange.IntersectWith(cache);
 
             var mesh = filter.mesh;
             mesh.Clear();
@@ -125,54 +128,6 @@ namespace Chrome.Retro
             mesh.normals = normals;
             mesh.uv = UVs;
             mesh.triangles = triangles;
-
-            foreach (var target in Repository.GetAll<RetTarget>(RetReference.Targets))
-            {
-                // TO DO -> Add angle check !
-                var distance = Vector3.Distance(transform.position, target.transform.position);
-                if (distance < radius)
-                {
-                    var center = target.Collider.bounds.center;
-                    var displacement = center - transform.position;
-                    var ray = new Ray(center, displacement.normalized);
-
-                    if (!Physics.Raycast(ray, displacement.magnitude, mask)) HandleInRangeTarget(target);
-                    else HandleOutOfRangeTarget(target);
-                }
-                else HandleOutOfRangeTarget(target);
-            }
-        }
-
-        //--------------------------------------------------------------------------------------------------------------/
-        
-        private void HandleInRangeTarget(RetTarget target)
-        {
-            if (outOfRange.Contains(target))
-            {
-                outOfRange.Remove(target);
-                inRange.Add(target);
-                
-                onTargetEntry?.Invoke(inRange, target);
-            }
-        }
-        private void HandleOutOfRangeTarget(RetTarget target)
-        {
-            if (inRange.Contains(target))
-            {
-                inRange.Remove(target);
-                outOfRange.Add(target);
-                        
-                onTargetLeft?.Invoke(inRange, target);
-            }
-        }
-
-        //--------------------------------------------------------------------------------------------------------------/
-        
-        void OnTargetSpawn(RetTarget target) => outOfRange.Add(target);
-        void OnTargetDeath(RetTarget target)
-        {
-            if (inRange.Remove(target)) onTargetLeft?.Invoke(inRange, target);
-            else outOfRange.Remove(target);
         }
     }
 }
