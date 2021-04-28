@@ -103,6 +103,11 @@ namespace Chrome
 
                     firstGauge.ADD(7.5f * amount);
                     break;
+
+                case 3: // On shield hit
+
+                    firstGauge.ADD(-5f * amount);
+                    break;
             }
         }
 

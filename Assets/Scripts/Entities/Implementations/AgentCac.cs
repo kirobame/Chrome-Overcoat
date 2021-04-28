@@ -1,5 +1,6 @@
 using Flux;
 using Flux.Data;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -13,12 +14,11 @@ namespace Chrome
         }
         private IIdentity identity;
 
-        [SerializeField] private Transform tr;
-        [SerializeField] private Collider col;
-
-        [Space, SerializeField] private NavMeshAgent navMesh;
-        [SerializeField] private Transform aim;
-        [SerializeField] private GameObject shield;
+        [FoldoutGroup("References"), SerializeField] private Transform tr;
+        [FoldoutGroup("References"), SerializeField] private Collider col;
+        [FoldoutGroup("References"), SerializeField] private NavMeshAgent navMesh;
+        [FoldoutGroup("References"), SerializeField] private Transform aim;
+        [FoldoutGroup("References"), SerializeField] private GameObject shield;
 
         private ITaskTree taskTree;
 

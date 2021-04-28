@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class Health : MonoBehaviour, IDamageable, ILink<IIdentity>
+    public class Health : MonoBehaviour, IDamageable, ILink<IIdentity>, ILifebound
     {
         public IIdentity Identity => identity;
         IIdentity ILink<IIdentity>.Link
@@ -20,11 +20,11 @@ namespace Chrome
         [FoldoutGroup("Values"), SerializeField] private float maxHealth;
         
         private float health;
-        
+
         //--------------------------------------------------------------------------------------------------------------/
 
-        void Awake() => health = maxHealth;
-        
+        void Awake() => Bootup();
+
         public void Hit(IIdentity source, float amount, Packet packet)
         {
             var difference = health - amount;
@@ -41,6 +41,15 @@ namespace Chrome
             }
             
             if (health <= 0) link.End();
+        }
+
+        public void Bootup()
+        {
+            health = maxHealth;
+        }
+
+        public void Shutdown()
+        {
         }
     }
 }

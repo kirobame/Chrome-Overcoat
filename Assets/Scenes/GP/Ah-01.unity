@@ -17853,6 +17853,9 @@ GameObject:
   - component: {fileID: 2035674762}
   - component: {fileID: 2035674765}
   - component: {fileID: 2035674766}
+  - component: {fileID: 2035674768}
+  - component: {fileID: 2035674767}
+  - component: {fileID: 2035674769}
   m_Layer: 7
   m_Name: Shield
   m_TagString: Untagged
@@ -17961,6 +17964,71 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec72a05a2cd19942bf4db4700c99668, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  link: {fileID: 2035674769}
+  mesh: {fileID: 2035674763}
+  col: {fileID: 2035674762}
+  maxHealth: 8
+--- !u!114 &2035674767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2035674760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3283f335286465388e567b7e228e180, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  value: 3
+--- !u!114 &2035674768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2035674760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af7e0dec68e94c0b9a47e20508c1a4bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  faction: 1
+--- !u!114 &2035674769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2035674760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e51d9c2dbd4044929178ac620989459d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sequence:
+    root:
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 100
+        width: 73.600006
+        height: 71.2
+      linkIndices: 00000000
+    effects:
+    - id: 0
+  references:
+    version: 1
+    00000000:
+      type: {class: End, ns: Flux.Feedbacks, asm: Flux.Feedbacks}
+      data:
+        rect:
+          serializedVersion: 2
+          x: 230.4
+          y: 94.4
+          width: 102.399994
+          height: 71.200005
+        linkIndices: 
 --- !u!1001 &2037637259
 PrefabInstance:
   m_ObjectHideFlags: 0
