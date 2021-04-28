@@ -14,7 +14,7 @@ namespace Chrome
         
         //--------------------------------------------------------------------------------------------------------------/
 
-        void Awake() => Speed = speed;
+        protected virtual void Awake() => Speed = speed;
 
         protected virtual void Update()
         {

@@ -7,7 +7,7 @@ namespace Chrome.Retro
 {
     public class RetPickupControl : MonoBehaviour
     {
-        public event Action onLeftPickup;
+        public event Action onPickupLost;
         public event Action<RetGunPickup> onPickupFound;
         
         [FoldoutGroup("Values"), SerializeField] private float radius;
@@ -24,8 +24,11 @@ namespace Chrome.Retro
             
             gun.SwitchTo(pickup.Gun);
 
+            onPickupLost?.Invoke();
+            OnPickupLost();
             hasPickup = false;
-            Destroy(pickup.gameObject);
+            
+            pickup.gameObject.SetActive(false);
         }
         
         void FixedUpdate()
@@ -37,9 +40,8 @@ namespace Chrome.Retro
             {
                 if (!hasPickup) return;
                 
-                indicator.SetActive(false);
-                onLeftPickup?.Invoke();
-
+                onPickupLost?.Invoke();
+                OnPickupLost();
                 hasPickup = false;
             }
             else
@@ -71,8 +73,7 @@ namespace Chrome.Retro
                     else
                     {
                         onPickupFound?.Invoke(newPickup);
-                        
-                        indicator.SetActive(true);
+                        OnPickupFound();
                         hasPickup = true;
                     }
 
@@ -80,5 +81,8 @@ namespace Chrome.Retro
                 }
             }
         }
+
+        private void OnPickupLost() =>  indicator.SetActive(false);
+        private void OnPickupFound() =>  indicator.SetActive(true);
     }
 }

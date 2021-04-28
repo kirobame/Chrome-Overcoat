@@ -1,6 +1,7 @@
 ﻿using System;
 using Flux;
 using Flux.Data;
+using Flux.Event;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -30,6 +31,9 @@ namespace Chrome.Retro
                 }).Chain(Routines.Do(() =>
                 {
                     group.alpha = 1.0f;
+                    group.interactable = true;
+                    group.blocksRaycasts = true;
+                    
                     onShowComplete?.Invoke();
                     
                 })));
@@ -44,6 +48,9 @@ namespace Chrome.Retro
                 }).Chain(Routines.Do(() =>
                 {
                     group.alpha = 0.0f;
+                    group.interactable = false;
+                    group.blocksRaycasts = false;
+                    
                     onHideComplete?.Invoke();
 
                 })));
@@ -96,8 +103,8 @@ namespace Chrome.Retro
             var life = playerBoard.Get<Lifetime>(RetPlayerBoard.REF_LIFE);
             life.End();
             
+            Events.Call(RetEvent.OnGameEnd);
             game.Reboot();
-            
         }
     }
 }

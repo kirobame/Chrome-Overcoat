@@ -9,5 +9,6 @@ namespace Chrome.Retro
         WaveSpawns,
         EnemyPool,
         Game,
+        PickupPool
     }
 }

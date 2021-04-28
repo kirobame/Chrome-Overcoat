@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   infos:
   - enemyPrefab: {fileID: 7999712477629756169, guid: c63d99bd6d3bf834fbfc3d9ae7d8fa95, type: 3}
-    count: 1
+    count: 2
     address: 7
   completion: 1

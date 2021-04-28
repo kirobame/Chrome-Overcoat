@@ -22,6 +22,8 @@ namespace Chrome.Retro
 
         [FoldoutGroup("Values"), SerializeField] private int quality;
 
+        private bool hasBeenBootedUp;
+        
         private HashSet<Collider> inRange;
         private HashSet<Collider> cache;
         
@@ -37,6 +39,12 @@ namespace Chrome.Retro
             inRange = new HashSet<Collider>();
             cache = new HashSet<Collider>();
             
+            gun.onGunSwitch += Bootup;
+        }
+        void OnDestroy() => gun.onGunSwitch -= Bootup;
+
+        void Bootup(RetGun gun)
+        {
             var definition = ComputeDefinition();
             var length = definition + 1;
             
@@ -53,12 +61,16 @@ namespace Chrome.Retro
             
             var mesh = new Mesh();
             filter.mesh = mesh;
+
+            hasBeenBootedUp = true;
         }
 
         //--------------------------------------------------------------------------------------------------------------/
         
         void Update()
         {
+            if (!hasBeenBootedUp) return;
+            
             if (!body.IsGrounded)
             {
                 if (inRange.Any())

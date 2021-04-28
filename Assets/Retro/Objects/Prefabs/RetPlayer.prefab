@@ -458,7 +458,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4350635848183393588}
-  - component: {fileID: 4350635848183393587}
   - component: {fileID: 1496621942}
   m_Layer: 7
   m_Name: Life
@@ -481,41 +480,6 @@ Transform:
   m_Father: {fileID: 4350635848823481838}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
---- !u!114 &4350635848183393587
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4350635848183393591}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e51d9c2dbd4044929178ac620989459d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sequence:
-    root:
-      rect:
-        serializedVersion: 2
-        x: 100
-        y: 100
-        width: 73
-        height: 71
-      linkIndices: 00000000
-    effects:
-    - id: 0
-  references:
-    version: 1
-    00000000:
-      type: {class: End, ns: Flux.Feedbacks, asm: Flux.Feedbacks}
-      data:
-        rect:
-          serializedVersion: 2
-          x: 242
-          y: 100
-          width: 102
-          height: 71
-        linkIndices: 
 --- !u!114 &1496621942
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -529,7 +493,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 4350635848823481839}
-  lifetime: {fileID: 4350635848183393587}
+  lifetime: {fileID: 1063805369112268148}
   path: respawns.player
   index: 0
 --- !u!1 &4350635848823481825
@@ -541,6 +505,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4350635848823481838}
+  - component: {fileID: 1063805369112268148}
   - component: {fileID: 4350635848823481835}
   - component: {fileID: 4844256925261569996}
   - component: {fileID: 4350635848823481833}
@@ -576,6 +541,41 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &1063805369112268148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4350635848823481825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e51d9c2dbd4044929178ac620989459d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sequence:
+    root:
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 100
+        width: 73
+        height: 71
+      linkIndices: 00000000
+    effects:
+    - id: 0
+  references:
+    version: 1
+    00000000:
+      type: {class: End, ns: Flux.Feedbacks, asm: Flux.Feedbacks}
+      data:
+        rect:
+          serializedVersion: 2
+          x: 242
+          y: 100
+          width: 102
+          height: 71
+        linkIndices: 
 --- !u!114 &4350635848823481835
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -604,7 +604,7 @@ MonoBehaviour:
   identity: {fileID: 4350635848823481835}
   body: {fileID: 4350635848823481836}
   aim: {fileID: 5291411985101480143}
-  life: {fileID: 4350635848183393587}
+  life: {fileID: 1063805369112268148}
   detection: {fileID: 1447148727}
   collider: {fileID: 197474977}
 --- !u!114 &4350635848823481833

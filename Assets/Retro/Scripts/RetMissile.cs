@@ -10,6 +10,9 @@ namespace Chrome.Retro
         [FoldoutGroup("Values"), SerializeField] private float smoothing;
         [FoldoutGroup("Values"), SerializeField] private float damage;
         [FoldoutGroup("Values"), SerializeField] private float duration;
+        [FoldoutGroup("Values"), SerializeField] private float refresh;
+        [FoldoutGroup("Values"), SerializeField] private float detection;
+        [FoldoutGroup("Values"), Range(-1.0f, 1.0f), SerializeField] private float tracking;
         
         [FoldoutGroup("Feedbacks"), SerializeField] private PoolableVfx impactVfx;
 
@@ -19,29 +22,26 @@ namespace Chrome.Retro
         private bool hasTarget;
         private Collider target;
         private InteractionHub hub;
-        
+
+        private float check;
+        private Collider[] results;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            results = new Collider[3];
+        }
+
         public override void Shoot(IIdentity source, Vector3 fireAnchor, Vector3 direction, Packet packet)
         {
+            identity.Copy(source);
+            
             base.Shoot(source, fireAnchor, direction, packet);
-
-            var board = source.Packet.Get<IBlackboard>();
-            var detection = board.Get<RetDetectionControl>(RetPlayerBoard.REF_DETECTION);
-
+            
             hasTarget = false;
             target = null;
-            if (detection.Targets.Any())
-            {
-                foreach (var possibleTarget in detection.Targets)
-                {
-                    if (!possibleTarget.TryGetComponent<InteractionHub>(out hub) || hub.Identity.Faction == identity.Faction) continue;
-
-                    hasTarget = true;
-                    target = possibleTarget;
-
-                    break;
-                }
-            }
-
+            
+            TryGetTarget();
             timer = duration;
         }
 
@@ -58,9 +58,42 @@ namespace Chrome.Retro
             {
                 var direction = Vector3.Normalize(target.transform.position.Flatten() - transform.position.Flatten());
                 this.direction = Vector3.SmoothDamp(this.direction, direction, ref damping, smoothing);
+
+                if (Vector3.Dot(transform.forward, direction) <= tracking)
+                {
+                    hasTarget = false;
+                    target = null;
+
+                    check = refresh;
+                }
             }
             
             base.Update();
+
+            if (!hasTarget)
+            {
+                check -= Time.deltaTime;
+                if (check <= 0.0f) TryGetTarget();
+            }
+        }
+
+        private void TryGetTarget()
+        {
+            var count = Physics.OverlapSphereNonAlloc(transform.position, detection, results, LayerMask.GetMask("Entity"));
+            if (count > 0)
+            {
+                for (var i = 0; i < count; i++)
+                {
+                    if (!results[i].TryGetComponent<InteractionHub>(out hub) || hub.Identity.Faction == identity.Faction) continue;
+                
+                    hasTarget = true;
+                    target = results[i];
+                
+                    break;
+                }
+            }
+
+            check = refresh;
         }
 
         protected override void OnHit(RaycastHit hit)

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2511ce134c04766922c168097b1e32b, type: 3}
+  m_Name: RetGrenadeLauncher
+  m_EditorClassIdentifier: 
+  model: {fileID: 5293722862417900036, guid: 8e4a4098d20e3214e9b1bd3e14fd654c, type: 3}
+  spread: 45
+  radius: 6.5
+  delay: 1
+  projectilePrefab: {fileID: 681452027333185184, guid: 43c97b9dda83dd1408ae127b7bdbf6b2, type: 3}
+  muzzleFlashPrefab: {fileID: 7240262647165215760, guid: 898bbcac2dc81234db9c5cd29fdeab01, type: 3}

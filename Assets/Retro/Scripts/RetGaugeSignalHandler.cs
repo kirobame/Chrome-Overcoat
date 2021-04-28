@@ -41,7 +41,7 @@ namespace Chrome.Retro
         [FoldoutGroup("Dependencies"), SerializeField] private EventHandler handler;
         [FoldoutGroup("Dependencies"), SerializeField] private RetGauge gauge;
 
-        [FoldoutGroup("Dependencies"), SerializeField] private Modification[] modifications;
+        [SerializeField] private Modification[] modifications;
         
         void Awake()
         {

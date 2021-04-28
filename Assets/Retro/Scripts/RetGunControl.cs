@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector;
@@ -8,6 +9,8 @@ namespace Chrome.Retro
 {
     public class RetGunControl : MonoBehaviour, ILifebound, ILink<IIdentity>
     {
+        public event Action<RetGun> onGunSwitch;
+    
         IIdentity ILink<IIdentity>.Link
         {
             set => identity = value;
@@ -22,6 +25,8 @@ namespace Chrome.Retro
 
         [FoldoutGroup("Values"), SerializeField] private RetGun defaultGun;
         [FoldoutGroup("Values"), SerializeField] private float smoothing;
+
+        private RetGunModel model;
         
         private float smoothedAngle;
         private float damping;
@@ -60,38 +65,28 @@ namespace Chrome.Retro
                 Current.Interrupt();
                 Execute();
 
-                AttemptNewFiring();
+                if (gameObject.activeInHierarchy) AttemptNewFiring();
             }
             else Execute();
 
             void Execute()
             {
-                var model = modelParent.GetComponentInChildren<RetGunModel>();
-                if (model != null)
-                {
-                    var children = new Transform[model.transform.childCount];
-                    for (var i = 0; i < children.Length; i++) children[i] = model.transform.GetChild(i);
-                    
-                    foreach (var child in children)
-                    {
-                        child.gameObject.SetActive(false);
-                        child.SetParent(null);
-                    }
-                    Destroy(model.gameObject);
-                }
+                model.Discard();
                 
                 Current = gun;
+                onGunSwitch?.Invoke(gun);
+                
                 InstantiateModel();
             }
         }
 
         private void InstantiateModel()
         {
-            var newModel = Instantiate(Current.Model, modelParent);
+            model = Instantiate(Current.Model, modelParent);
             var board = identity.Packet.Get<IBlackboard>();
             
-            board.Set(RetPlayerBoard.REF_FIREANCHOR, newModel.FireAnchor);
-            identity.Packet.Set(newModel.FireAnchor);
+            board.Set(RetPlayerBoard.REF_FIREANCHOR, model.FireAnchor);
+            identity.Packet.Set(model.FireAnchor);
         }
         
         //--------------------------------------------------------------------------------------------------------------/

@@ -25,7 +25,7 @@ namespace Chrome
             args = new SendbackArgs();
             args.onDone += OnSequenceDone;
 
-            lifebounds = transform.root.GetComponentsInChildren<ILifebound>().ToList();
+            lifebounds = GetComponentsInChildren<ILifebound>().ToList();
         }
 
         void OnEnable()

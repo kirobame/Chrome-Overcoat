@@ -53,9 +53,6 @@ namespace Chrome.Retro
             {
                 var life = playerBoard.Get<Lifetime>(RetPlayerBoard.REF_LIFE);
                 life.End();
-                
-                value = 0.25f * max;
-                slider.value = value / max * slider.maxValue;
             }
         }
         
