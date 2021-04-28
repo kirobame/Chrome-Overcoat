@@ -4,12 +4,16 @@ namespace Chrome
 {
     public class StopMoving : ProxyNode
     {
+        public StopMoving(IValue<NavMeshAgent> navMesh) => this.navMesh = navMesh;
+        
+        private IValue<NavMeshAgent> navMesh;
+        
         protected override void OnUpdate(Packet packet)
         {
-            if (packet.TryGet<NavMeshAgent>(out var navMesh))
+            if (navMesh.IsValid(packet))
             {
-                navMesh.updateRotation = false;
-                navMesh.isStopped = true;
+                navMesh.Value.updateRotation = false;
+                navMesh.Value.isStopped = true;
             }
             
             isDone = true;

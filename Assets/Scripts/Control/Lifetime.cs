@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Flux.Event;
 using Flux.Feedbacks;
 using UnityEngine;
@@ -12,7 +14,9 @@ namespace Chrome
         private SendbackArgs args;
         private bool hasBeenBootedUp;
 
-        private ILifebound[] lifebounds;
+        private List<ILifebound> lifebounds;
+        
+        //--------------------------------------------------------------------------------------------------------------/
         
         void Awake()
         {
@@ -21,7 +25,7 @@ namespace Chrome
             args = new SendbackArgs();
             args.onDone += OnSequenceDone;
 
-            lifebounds = transform.root.GetComponentsInChildren<ILifebound>();
+            lifebounds = transform.root.GetComponentsInChildren<ILifebound>().ToList();
         }
 
         void OnEnable()
@@ -35,12 +39,18 @@ namespace Chrome
             foreach (var lifebound in lifebounds) lifebound.Bootup();
         }
         
+        
+        //--------------------------------------------------------------------------------------------------------------/
+        public void Add(ILifebound bound) => lifebounds.Add(bound);
+        
         public void End()
         {
             foreach (var lifebound in lifebounds) lifebound.Shutdown();
             sequence.Play(args);
         }
-
+        
+        //--------------------------------------------------------------------------------------------------------------/
+        
         void OnSequenceDone(EventArgs args) => transform.root.gameObject.SetActive(false);
     }
 }

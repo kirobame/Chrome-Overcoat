@@ -26,7 +26,7 @@ namespace Chrome
                 var board = packet.Get<IBlackboard>();
 
                 var point = target.Value.bounds.center;
-                board.Set(path, point - from.Value.position);
+                board.Set(path, Vector3.Normalize(point - from.Value.position));
             }
 
             isDone = true;

@@ -82,7 +82,7 @@ namespace Chrome
             vfxPoolable.transform.position = hit.point;
             vfxPoolable.transform.rotation = Quaternion.LookRotation(hit.normal);
             vfxPoolable.Value.Play();
-
+            
             if (routine != null)
             {
                 StopCoroutine(routine);

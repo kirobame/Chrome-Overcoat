@@ -20,7 +20,6 @@ namespace Chrome.Retro
         [FoldoutGroup("Dependencies"), SerializeField] private MeshFilter filter;
         [FoldoutGroup("Dependencies"), SerializeField] private new MeshRenderer renderer;
 
-        [FoldoutGroup("Values"), SerializeField] private LayerMask mask;
         [FoldoutGroup("Values"), SerializeField] private float spread;
         [FoldoutGroup("Values"), SerializeField] private float radius;
         [FoldoutGroup("Values"), Min(3), SerializeField] private int definition;

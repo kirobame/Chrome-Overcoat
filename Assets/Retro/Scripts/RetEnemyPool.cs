@@ -5,16 +5,16 @@ using UnityEngine;
 
 namespace Chrome.Retro
 {
-    public class EnemyPool : Pool<Identity, PoolableEnemy>
+    public class RetEnemyPool : Pool<Identity, RetPoolableEnemy>
     {
         #region Nested Types
 
         [Serializable]
-        private class EnemyProvider : Provider<Identity, PoolableEnemy> { }
+        private class EnemyProvider : Provider<Identity, RetPoolableEnemy> { }
 
         #endregion
 
-        protected override IList<Provider<Identity, PoolableEnemy>> Providers => providers;
+        protected override IList<Provider<Identity, RetPoolableEnemy>> Providers => providers;
         [SerializeField] private EnemyProvider[] providers;
     }
 }

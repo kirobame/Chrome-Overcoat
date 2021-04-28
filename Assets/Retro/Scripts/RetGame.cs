@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using Flux.Data;
+using UnityEngine;
 
 namespace Chrome.Retro
 {
@@ -15,6 +17,14 @@ namespace Chrome.Retro
 
             waves[0].onPartiallyComplete += OnWavePartiallyComplete;
             waves[0].Execute();
+        }
+
+        public void Reboot()
+        {
+            waves[progress].onPartiallyComplete -= OnWavePartiallyComplete;
+            waves[progress].onComplete -= OnWaveComplete;
+            
+            foreach (var wave in waves) wave.Reboot();
         }
 
         void OnWavePartiallyComplete(RetWave wave)
@@ -35,7 +45,9 @@ namespace Chrome.Retro
         void OnWaveComplete(RetWave wave)
         {
             wave.onComplete -= OnWaveComplete;
-            Debug.Log("Win !");
+
+            var game = Repository.Get<RetGameControl>(RetReference.Game);
+            game.SwitchTo(RetGameState.Won);
         }
     }
 }

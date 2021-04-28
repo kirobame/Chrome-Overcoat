@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace Chrome.Retro
 {
-    public class PoolableEnemy : Poolable<Identity>
+    public class RetPoolableEnemy : Poolable<Identity>
     {
-        public Action<PoolableEnemy> onDeath;
-
+        public Action<RetPoolableEnemy> onDeath;
+            
         public override void Reboot() => onDeath?.Invoke(this);
     }
 }

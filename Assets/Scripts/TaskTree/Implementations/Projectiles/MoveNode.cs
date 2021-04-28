@@ -17,7 +17,7 @@ namespace Chrome
             }
             
             if (!Execute(packet, self.Value, out var hit)) return;
-
+            
             var board = packet.Get<IBlackboard>();
             board.Set("hit", hit);
 

@@ -34,11 +34,13 @@ namespace Chrome
         }
         public void Shutdown() { }
         
-        void Update()
+        void FixedUpdate()
         {
-            velocity += force * Time.deltaTime / mass;
-            Delta = Move(velocity * Time.deltaTime);
-
+            velocity += force * Time.fixedDeltaTime / mass;
+            Delta = Move(velocity * Time.fixedDeltaTime);
+            
+            //Debug.Log($"MOVE");
+            
             var hit = HandleCollisions();
             if (hit != null) onCollision?.Invoke(hit);
 

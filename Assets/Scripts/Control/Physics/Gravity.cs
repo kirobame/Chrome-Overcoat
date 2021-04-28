@@ -14,7 +14,7 @@ namespace Chrome
         [FoldoutGroup("Values"), SerializeField] private bool bypass;
         [FoldoutGroup("Values"), ShowIf("bypass"), SerializeField] private Vector3 overridingForce;
 
-        void Update()
+        void FixedUpdate()
         {
             var force = (bypass ? overridingForce : Physics.gravity) * (affect * body.Mass);
             body.force += force;

@@ -14,7 +14,7 @@ namespace Chrome.Retro
         private Vector3 smoothedInputs;
         private Vector3 damping;
 
-        void Update()
+        void FixedUpdate()
         {
             if (body.IsGrounded)
             {

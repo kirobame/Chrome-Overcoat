@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5842571535603271301}
   - component: {fileID: 8895487278531208367}
   - component: {fileID: 3278294482387087007}
+  - component: {fileID: 1142155981309571241}
   - component: {fileID: 832879105694303715}
   m_Layer: 0
   m_Name: RetMissile
@@ -60,6 +61,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   value: {fileID: 832879105694303715}
+--- !u!114 &1142155981309571241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 832879105694303712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3283f335286465388e567b7e228e180, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  value: 3
 --- !u!114 &832879105694303715
 MonoBehaviour:
   m_ObjectHideFlags: 0

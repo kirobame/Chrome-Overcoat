@@ -205,6 +205,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   detection: {fileID: 1447148727}
   aim: {fileID: 5291411985101480143}
+  fireAnchor: {fileID: 1254133303}
   gun: {fileID: 11400000, guid: ceeca1bb7c1481b4d927228dadb9c8f4, type: 2}
   smoothing: 0.075
 --- !u!114 &8423516828294127222
@@ -238,9 +239,6 @@ MonoBehaviour:
   body: {fileID: 4350635848823481836}
   filter: {fileID: 1447148726}
   renderer: {fileID: 1447148725}
-  mask:
-    serializedVersion: 2
-    m_Bits: 64
   spread: 90
   radius: 5
   definition: 45
@@ -366,7 +364,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4350635848183393588}
   - component: {fileID: 4350635848183393587}
-  - component: {fileID: 4350635848183393589}
+  - component: {fileID: 1496621942}
   m_Layer: 7
   m_Name: Life
   m_TagString: Untagged
@@ -423,7 +421,7 @@ MonoBehaviour:
           width: 102
           height: 71
         linkIndices: 
---- !u!114 &4350635848183393589
+--- !u!114 &1496621942
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -432,12 +430,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 4350635848183393591}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d442a975a2641fd918a97dc1d272ab6, type: 3}
+  m_Script: {fileID: 11500000, guid: 3e73bea975bf4f74852a2beb3059cbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   path: respawns.player
   index: 0
-  duration: 2.25
 --- !u!1 &4350635848823481825
 GameObject:
   m_ObjectHideFlags: 0
@@ -453,6 +450,7 @@ GameObject:
   - component: {fileID: 4350635848823481839}
   - component: {fileID: 4350635848823481836}
   - component: {fileID: 4350635848823481832}
+  - component: {fileID: 197474977}
   m_Layer: 7
   m_Name: RetPlayer
   m_TagString: Untagged
@@ -505,11 +503,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95c42db43f724af897389142839c9cde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  identity: {fileID: 4350635848823481835}
   body: {fileID: 4350635848823481836}
   aim: {fileID: 5291411985101480143}
   fireAnchor: {fileID: 1254133303}
   life: {fileID: 4350635848183393587}
   detection: {fileID: 1447148727}
+  collider: {fileID: 197474977}
 --- !u!114 &4350635848823481833
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -572,6 +572,20 @@ MonoBehaviour:
   affect: 1
   bypass: 0
   overridingForce: {x: 0, y: 0, z: 0}
+--- !u!136 &197474977
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4350635848823481825}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.38
+  m_Height: 1.9
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.95, z: 0}
 --- !u!1 &4965182189306932914
 GameObject:
   m_ObjectHideFlags: 0

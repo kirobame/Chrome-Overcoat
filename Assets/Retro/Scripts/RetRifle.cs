@@ -18,7 +18,7 @@ namespace Chrome.Retro
             timer = delay;
             
             var board = identity.Packet.Get<IBlackboard>();
-            var fireAnchor = board.Get<Transform>("aim.fireAnchor");
+            var fireAnchor = identity.Packet.Get<Transform>();
             var direction = identity.Packet.Get<Vector3>();
             
             var muzzleFlashPool = Repository.Get<VfxPool>(Pool.MuzzleFlash);

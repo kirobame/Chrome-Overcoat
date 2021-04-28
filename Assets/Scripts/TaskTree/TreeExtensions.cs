@@ -2,6 +2,17 @@
 {
     public static class TreeExtensions
     {
+        public static ICondition Inverse(this ICondition condition)
+        {
+            condition.Inverse = true;
+            return condition;
+        }
+        public static ICondition Chain(this ICondition condition, ConditionalOperator op)
+        {
+            condition.Operator = op;
+            return condition;
+        }
+        
         public static bool HasChannel(this int mask, int channel) => (mask | channel) == mask;
         public static string ToBinary(this int value, int length = 4)
         {

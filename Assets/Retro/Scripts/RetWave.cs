@@ -19,7 +19,7 @@ namespace Chrome.Retro
             public int Count => count;
             public RetWaveSpawnAddress Address => address;
             
-            [SerializeField] private PoolableEnemy enemyPrefab;
+            [SerializeField] private RetPoolableEnemy enemyPrefab;
             [SerializeField] private int count;
             [SerializeField] private RetWaveSpawnAddress address;
 
@@ -33,9 +33,9 @@ namespace Chrome.Retro
                 }
                 else return -1;
             }
-            public PoolableEnemy Assign(RetWaveSpawnAnchor anchor)
+            public RetPoolableEnemy Assign(RetWaveSpawnAnchor anchor)
             {
-                var enemyPool = Repository.Get<EnemyPool>(RetReference.EnemyPool);
+                var enemyPool = Repository.Get<RetEnemyPool>(RetReference.EnemyPool);
                 var enemyPoolable = enemyPool.RequestSinglePoolable(enemyPrefab);
                 
                 enemyPoolable.transform.position = anchor.transform.position;
@@ -46,21 +46,23 @@ namespace Chrome.Retro
 
         public event Action<RetWave> onPartiallyComplete;
         public event Action<RetWave> onComplete;
+
+        public IReadOnlyList<RetPoolableEnemy> Enemies => enemies;
         
         [SerializeField] private SpawnInfo[] infos;
         [SerializeField] private int completion;
 
         private int total;
         private int progress;
+        private List<RetPoolableEnemy> enemies = new List<RetPoolableEnemy>();
         
         private bool hasBeenPartiallyCompleted;
         
         public void Execute()
         {
-            Debug.Log($"Starting {this}");
-
-            progress = 0;
             total = 0;
+            progress = 0;
+            enemies.Clear();
             
             hasBeenPartiallyCompleted = false;
 
@@ -98,6 +100,7 @@ namespace Chrome.Retro
                     
                     var enemy = info.Assign(list[index]);
                     enemy.onDeath += OnEnemyDeath;
+                    enemies.Add(enemy);
                     
                     anchors.Remove(list[index]);
                     list.RemoveAt(index);
@@ -108,13 +111,21 @@ namespace Chrome.Retro
             }
         }
 
-        void OnEnemyDeath(PoolableEnemy enemy)
+        public void Reboot()
         {
-            Debug.Log($"{enemy} died -> {progress + 1} / {completion}");
-            
+            foreach (var enemy in enemies)
+            {
+                enemy.onDeath -= OnEnemyDeath;
+                enemy.transform.root.gameObject.SetActive(false);
+            }
+        }
+
+        void OnEnemyDeath(RetPoolableEnemy enemy)
+        {
             enemy.onDeath -= OnEnemyDeath;
-            progress++;
+            enemies.Remove(enemy);
             
+            progress++;
             if (progress >= completion && !hasBeenPartiallyCompleted)
             {
                 onPartiallyComplete?.Invoke(this);

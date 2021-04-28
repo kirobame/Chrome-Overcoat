@@ -1,29 +1,29 @@
-﻿using Sirenix.OdinInspector;
+﻿using Flux;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Chrome.Retro
 {
-    public class RetPlayerBoard : ConcreteBoard, ILink<IIdentity>
+    public class RetPlayerBoard : ConcreteBoard
     {
         public IIdentity Identity => identity;
-        IIdentity ILink<IIdentity>.Link
-        {
-            set => identity = value;
-        }
-        private IIdentity identity;
-        
+
         public const string REF_SELF = "player";
         public const string REF_BODY = "body";
+        public const string REF_COLLIDER = "collider";
         public const string REF_AIM = "aim";
         public const string REF_FIREANCHOR = "aim.fireAnchor";
         public const string REF_LIFE = "life";
         public const string REF_DETECTION = "detection";
-        
+        public const string REF_IDENTITY = "identity";
+
+        [FoldoutGroup("References"), SerializeField] private Identity identity;
         [FoldoutGroup("References"), SerializeField] private CharacterBody body;
         [FoldoutGroup("References"), SerializeField] private Transform aim;
         [FoldoutGroup("References"), SerializeField] private Transform fireAnchor;
         [FoldoutGroup("References"), SerializeField] private Lifetime life;
         [FoldoutGroup("References"), SerializeField] private RetDetectionControl detection;
+        [FoldoutGroup("References"), SerializeField] private new Collider collider;
         
         protected override void BuildBoard()
         {
@@ -32,6 +32,8 @@ namespace Chrome.Retro
             blackboard.Set(REF_FIREANCHOR, fireAnchor);
             blackboard.Set(REF_LIFE, life);
             blackboard.Set(REF_DETECTION, detection);
+            blackboard.Set(REF_IDENTITY, identity);
+            blackboard.Set(REF_COLLIDER, collider);
             
             Blackboard.Global.Set<IBlackboard>(REF_SELF, this);
         }

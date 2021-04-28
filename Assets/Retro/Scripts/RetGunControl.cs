@@ -16,6 +16,7 @@ namespace Chrome.Retro
 
         [FoldoutGroup("Dependencies"), SerializeField] private RetDetectionControl detection;
         [FoldoutGroup("Dependencies"), SerializeField] private Transform aim;
+        [FoldoutGroup("Dependencies"), SerializeField] private Transform fireAnchor;
 
         [FoldoutGroup("Values"), SerializeField] private RetGun gun;
         [FoldoutGroup("Values"), SerializeField] private float smoothing;
@@ -38,6 +39,8 @@ namespace Chrome.Retro
         {
             Vector3 direction;
             ComputeDirection();
+            identity.Packet.Set(fireAnchor);
+
             gun.Begin(identity, target, hub);
             
             while (!gun.Use(identity, target, hub))

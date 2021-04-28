@@ -21,7 +21,7 @@ namespace Chrome.Retro
         void Awake() => body.onCollision += OnBodyCollision;
         void OnDestroy() => body.onCollision -= OnBodyCollision;
         
-        void Update()
+        void FixedUpdate()
         {
             Inputs = new Vector3(Input.GetAxisRaw("Horizontal"), 0.0f, Input.GetAxisRaw("Vertical")).normalized;
             smoothedInputs = Vector3.SmoothDamp(smoothedInputs, Inputs, ref damping, smoothing);
