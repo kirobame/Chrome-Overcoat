@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2511ce134c04766922c168097b1e32b, type: 3}
   m_Name: RetEnemyRifle
   m_EditorClassIdentifier: 
+  model: {fileID: 8880676402250857786, guid: 0d1cd35b506570f499539854ccdb1b59, type: 3}
+  spread: 45
+  radius: 4
   delay: 0.4
   projectilePrefab: {fileID: 5155491008473705253, guid: 64b329886e24c5c48ac1c660f4508fa7, type: 3}
   muzzleFlashPrefab: {fileID: 2067428610923920391, guid: 23dfa5939b642674888ff7fc7e60372f, type: 3}

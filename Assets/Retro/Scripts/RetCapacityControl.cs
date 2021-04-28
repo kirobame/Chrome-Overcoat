@@ -12,9 +12,7 @@ namespace Chrome.Retro
             set => identity = value;
         }
         private IIdentity identity;
-        
-        [FoldoutGroup("Dependencies"), SerializeField] private Transform fireAnchor;
-        
+
         [FoldoutGroup("Values"), SerializeField] private GenericPoolable projectilePrefab;
         [FoldoutGroup("Values"), SerializeField] private float cost;
         
@@ -26,7 +24,8 @@ namespace Chrome.Retro
 
             var gauge = Repository.Get<RetGauge>(RetReference.Gauge);
             gauge.Modify(-cost);
-            
+
+            var fireAnchor = identity.Packet.Get<Transform>();
             var direction = fireAnchor.forward;
             identity.Packet.Set(direction);
             

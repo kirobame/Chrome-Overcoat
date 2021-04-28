@@ -20,7 +20,6 @@ namespace Chrome.Retro
         [FoldoutGroup("References"), SerializeField] private Identity identity;
         [FoldoutGroup("References"), SerializeField] private CharacterBody body;
         [FoldoutGroup("References"), SerializeField] private Transform aim;
-        [FoldoutGroup("References"), SerializeField] private Transform fireAnchor;
         [FoldoutGroup("References"), SerializeField] private Lifetime life;
         [FoldoutGroup("References"), SerializeField] private RetDetectionControl detection;
         [FoldoutGroup("References"), SerializeField] private new Collider collider;
@@ -29,7 +28,6 @@ namespace Chrome.Retro
         {
             blackboard.Set(REF_BODY, body);
             blackboard.Set(REF_AIM, aim);
-            blackboard.Set(REF_FIREANCHOR, fireAnchor);
             blackboard.Set(REF_LIFE, life);
             blackboard.Set(REF_DETECTION, detection);
             blackboard.Set(REF_IDENTITY, identity);

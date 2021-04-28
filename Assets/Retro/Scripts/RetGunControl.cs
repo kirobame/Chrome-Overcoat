@@ -6,44 +6,103 @@ using UnityEngine;
 
 namespace Chrome.Retro
 {
-    public class RetGunControl : MonoBehaviour, ILink<IIdentity>
+    public class RetGunControl : MonoBehaviour, ILifebound, ILink<IIdentity>
     {
         IIdentity ILink<IIdentity>.Link
         {
             set => identity = value;
         }
         private IIdentity identity;
+        
+        [ShowInInspector, HideInEditorMode] public RetGun Current { get; private set; }
 
+        [FoldoutGroup("Dependencies"), SerializeField] private Transform modelParent;
         [FoldoutGroup("Dependencies"), SerializeField] private RetDetectionControl detection;
         [FoldoutGroup("Dependencies"), SerializeField] private Transform aim;
-        [FoldoutGroup("Dependencies"), SerializeField] private Transform fireAnchor;
 
-        [FoldoutGroup("Values"), SerializeField] private RetGun gun;
+        [FoldoutGroup("Values"), SerializeField] private RetGun defaultGun;
         [FoldoutGroup("Values"), SerializeField] private float smoothing;
         
         private float smoothedAngle;
         private float damping;
         
         private Coroutine routine;
-        
-        void Awake() => detection.onTargetEntry += OnTargetEntry;
+
+        void Awake()
+        {
+            Current = defaultGun;
+            detection.onTargetEntry += OnTargetEntry;
+        }
+        void Start() => InstantiateModel();
         void OnDestroy() => detection.onTargetEntry -= OnTargetEntry;
 
+        public void Bootup() { }
+        public void Shutdown() => DropCurrent();
+        
+        //--------------------------------------------------------------------------------------------------------------/
+        
         void Update()
         {
             if (routine == null) smoothedAngle = Mathf.SmoothDampAngle(smoothedAngle, 0.0f, ref damping, smoothing);
             aim.localRotation = Quaternion.Euler(0.0f, smoothedAngle, 0.0f);
         }
+
+        //--------------------------------------------------------------------------------------------------------------/
+        
+        public void DropCurrent() => SwitchTo(defaultGun);
+        public void SwitchTo(RetGun gun)
+        {
+            if (routine != null)
+            {
+                StopCoroutine(routine);
+                routine = null;
+                
+                Current.Interrupt();
+                Execute();
+
+                AttemptNewFiring();
+            }
+            else Execute();
+
+            void Execute()
+            {
+                var model = modelParent.GetComponentInChildren<RetGunModel>();
+                if (model != null)
+                {
+                    var children = new Transform[model.transform.childCount];
+                    for (var i = 0; i < children.Length; i++) children[i] = model.transform.GetChild(i);
+                    
+                    foreach (var child in children)
+                    {
+                        child.gameObject.SetActive(false);
+                        child.SetParent(null);
+                    }
+                    Destroy(model.gameObject);
+                }
+                
+                Current = gun;
+                InstantiateModel();
+            }
+        }
+
+        private void InstantiateModel()
+        {
+            var newModel = Instantiate(Current.Model, modelParent);
+            var board = identity.Packet.Get<IBlackboard>();
+            
+            board.Set(RetPlayerBoard.REF_FIREANCHOR, newModel.FireAnchor);
+            identity.Packet.Set(newModel.FireAnchor);
+        }
+        
+        //--------------------------------------------------------------------------------------------------------------/
         
         private IEnumerator Routine(Collider target, InteractionHub hub)
         {
             Vector3 direction;
             ComputeDirection();
-            identity.Packet.Set(fireAnchor);
-
-            gun.Begin(identity, target, hub);
             
-            while (!gun.Use(identity, target, hub))
+            Current.Begin(identity, target, hub);
+            while (!Current.Use(identity, target, hub))
             {
                 ComputeDirection();
                 
@@ -52,7 +111,8 @@ namespace Chrome.Retro
                 
                 yield return new WaitForEndOfFrame();
             }
-
+            Current.End(identity, target, hub);
+            
             void ComputeDirection()
             {
                 direction = Vector3.Normalize(target.transform.position.Flatten() - transform.position.Flatten());
@@ -61,8 +121,18 @@ namespace Chrome.Retro
                 direction = transform.InverseTransformDirection(direction);
             }
             
-            gun.End(identity, target, hub);
+            if (AttemptNewFiring()) yield break;
+            routine = null;
+        }
+        
+        //--------------------------------------------------------------------------------------------------------------/
 
+        private bool IsValid(Collider collider, out InteractionHub interactionHub)
+        {
+            return collider.TryGetComponent<InteractionHub>(out interactionHub) && interactionHub.Identity.Faction != identity.Faction;
+        }
+        private bool AttemptNewFiring()
+        {
             if (detection.Targets.Any())
             {
                 foreach (var newTarget in detection.Targets)
@@ -70,18 +140,15 @@ namespace Chrome.Retro
                     if (!IsValid(newTarget, out var interactionHub)) continue;
                     
                     routine = StartCoroutine(Routine(newTarget, interactionHub));
-                    break;
+                    return true;
                 }
             }
-            
-            routine = null;
+
+            return false;
         }
 
-        private bool IsValid(Collider collider, out InteractionHub interactionHub)
-        {
-            return collider.TryGetComponent<InteractionHub>(out interactionHub) && interactionHub.Identity.Faction != identity.Faction;
-        }
-
+        //--------------------------------------------------------------------------------------------------------------/
+        
         void OnTargetEntry(Collider target)
         {
             if (routine != null || !IsValid(target, out var interactionHub)) return;

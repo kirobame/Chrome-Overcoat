@@ -10,19 +10,17 @@ namespace Chrome.Retro
 {
     public class RetDetectionControl : MonoBehaviour
     {
-        
         public event Action<Collider> onTargetEntry;
         public event Action<Collider> onTargetLeft;
 
         public IEnumerable<Collider> Targets => inRange;
-        
+
+        [FoldoutGroup("Dependencies"), SerializeField] private RetGunControl gun;
         [FoldoutGroup("Dependencies"), SerializeField] private CharacterBody body;
         [FoldoutGroup("Dependencies"), SerializeField] private MeshFilter filter;
         [FoldoutGroup("Dependencies"), SerializeField] private new MeshRenderer renderer;
 
-        [FoldoutGroup("Values"), SerializeField] private float spread;
-        [FoldoutGroup("Values"), SerializeField] private float radius;
-        [FoldoutGroup("Values"), Min(3), SerializeField] private int definition;
+        [FoldoutGroup("Values"), SerializeField] private int quality;
 
         private HashSet<Collider> inRange;
         private HashSet<Collider> cache;
@@ -34,12 +32,14 @@ namespace Chrome.Retro
         
         //--------------------------------------------------------------------------------------------------------------/
         
-        void Awake()
+        void Start()
         {
             inRange = new HashSet<Collider>();
             cache = new HashSet<Collider>();
             
+            var definition = ComputeDefinition();
             var length = definition + 1;
+            
             vertices = new Vector3[length];
             vertices[0] = Vector3.zero;
             
@@ -73,9 +73,10 @@ namespace Chrome.Retro
             else renderer.enabled = true;
             
             cache.Clear();
+            var definition = ComputeDefinition();
 
-            var baseAngle = -spread * 0.5f + 90.0f;
-            var step = spread / definition;
+            var baseAngle = -gun.Current.Spread * 0.5f + 90.0f;
+            var step = gun.Current.Spread / definition;
             for (var i = 0; i < definition; i++)
             {
                 if (i < definition - 1)
@@ -94,18 +95,18 @@ namespace Chrome.Retro
                 var direction = transform.TransformDirection(new Vector3(x, 0.0f, y));
                 var ray = new Ray(transform.position, direction);
 
-                if (Physics.Raycast(ray, out var hit, radius, LayerMask.GetMask("Environment", "Entity")))
+                if (Physics.Raycast(ray, out var hit, gun.Current.Radius, LayerMask.GetMask("Environment", "Entity")))
                 {
                     if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Entity"))
                     {
                         if (inRange.Add(hit.collider)) onTargetEntry?.Invoke(hit.collider);
                         cache.Add(hit.collider);
 
-                        point = new Vector3(x * radius, 0.0f, y * radius);
+                        point = new Vector3(x * gun.Current.Radius, 0.0f, y * gun.Current.Radius);
                     }
                     else point = transform.InverseTransformPoint(hit.point);
                 }
-                else point = new Vector3(x * radius, 0.0f, y * radius);
+                else point = new Vector3(x * gun.Current.Radius, 0.0f, y * gun.Current.Radius);
                 
                 var index = i + 1;
                 vertices[index] = point;
@@ -120,13 +121,16 @@ namespace Chrome.Retro
             }
             inRange.IntersectWith(cache);
 
-            var mesh = filter.mesh;
-            mesh.Clear();
+            var mesh = new Mesh();
             
             mesh.vertices = vertices;
             mesh.normals = normals;
             mesh.uv = UVs;
             mesh.triangles = triangles;
+
+            filter.mesh = mesh;
         }
+        
+        private int ComputeDefinition() => Mathf.RoundToInt(gun.Current.Spread * quality);
     }
 }

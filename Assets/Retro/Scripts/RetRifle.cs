@@ -1,5 +1,6 @@
 ﻿using System;
 using Flux.Data;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Chrome.Retro
@@ -7,17 +8,15 @@ namespace Chrome.Retro
     [CreateAssetMenu(fileName = "RetRifle", menuName = "Chrome Overcoat/Retro/Guns/Rifle")]
     public class RetRifle : RetGun
     {
-        [SerializeField] private float delay;
-        [SerializeField] private GenericPoolable projectilePrefab;
-        [SerializeField] private PoolableVfx muzzleFlashPrefab;
+        [FoldoutGroup("Values"),SerializeField] private float delay;
+        [FoldoutGroup("Values"),SerializeField] private GenericPoolable projectilePrefab;
+        [FoldoutGroup("Values"),SerializeField] private PoolableVfx muzzleFlashPrefab;
         
         private float timer;
 
         public override void Begin(IIdentity identity, Collider target, InteractionHub hub)
         {
             timer = delay;
-            
-            var board = identity.Packet.Get<IBlackboard>();
             var fireAnchor = identity.Packet.Get<Transform>();
             var direction = identity.Packet.Get<Vector3>();
             
