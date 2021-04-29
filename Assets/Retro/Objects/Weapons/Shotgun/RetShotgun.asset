@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1765f0a5c9f4ab586fdda976bde2d37, type: 3}
   m_Name: RetShotgun
   m_EditorClassIdentifier: 
+  title: Shotgun
   icon: {fileID: 1202984965197363600, guid: 999b2f38059452d4fb8218d8d6941c5d, type: 3}
   model: {fileID: 7777401193825588693, guid: 93add1bece451994d86fa6e6d7a1df95, type: 3}
   pickup: {fileID: 8093541853133893177, guid: 7e10a44422a7b92409c73960d50d37d0, type: 3}

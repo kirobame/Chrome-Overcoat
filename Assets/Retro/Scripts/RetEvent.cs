@@ -8,9 +8,11 @@ namespace Chrome.Retro
         OnGameEnd,
         OnGameLost,
         OnGameWon,
+        OnScreenDisplay,
         OnGunSwitch,
         OnAmmoChange,
         OnGunFound,
-        OnGunLost
+        OnGunLost,
+        OnGameStart
     }
 }

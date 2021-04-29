@@ -22,5 +22,31 @@ namespace Chrome.Retro
 
             return output;
         }
+        
+        public static string ConvertToTime(this float value)
+        {
+            var currentMinutes = Mathf.FloorToInt(value / 60.0f);
+            var currentSeconds = Mathf.FloorToInt(value - currentMinutes * 60.0f);
+
+            var stringedMinutes = currentMinutes < 10 ? $"0{currentMinutes}" : currentMinutes.ToString();
+            var stringedSeconds = currentSeconds < 10 ? $"0{currentSeconds}" : currentSeconds.ToString();
+            return $"{stringedMinutes}:{stringedSeconds}";
+        }
+
+        public static void Toggle(this CanvasGroup value, bool state)
+        {
+            if (state)
+            {
+                value.alpha = 1.0f;
+                value.interactable = true;
+                value.blocksRaycasts = true;
+            }
+            else
+            {
+                value.alpha = 0.0f;
+                value.interactable = false;
+                value.blocksRaycasts = false;
+            }
+        }
     }
 }
