@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Flux.Event;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -13,22 +14,24 @@ namespace Chrome.Retro
         [FoldoutGroup("Values"), SerializeField] private float radius;
         
         [FoldoutGroup("Dependencies"), SerializeField] private RetGunControl gun;
-        [FoldoutGroup("Dependencies"), SerializeField] private GameObject indicator;
 
         private bool hasPickup;
         private RetGunPickup pickup;
 
         void Update()
         {
-            if (!Input.GetKeyDown(KeyCode.P) || !hasPickup) return;
-            
-            gun.SwitchTo(pickup.Gun);
+            if (!Input.GetKeyDown(KeyCode.Z)) return;
 
-            onPickupLost?.Invoke();
-            OnPickupLost();
-            hasPickup = false;
+            if (hasPickup)
+            {
+                gun.SwitchTo(pickup.Gun, pickup.ammo);
+                
+                OnPickupLost();
+                hasPickup = false;
             
-            pickup.gameObject.SetActive(false);
+                pickup.gameObject.SetActive(false);
+            }
+            else if (!gun.IsOnDefault) gun.DropCurrent();
         }
         
         void FixedUpdate()
@@ -39,8 +42,7 @@ namespace Chrome.Retro
             if (!results.Any())
             {
                 if (!hasPickup) return;
-                
-                onPickupLost?.Invoke();
+
                 OnPickupLost();
                 hasPickup = false;
             }
@@ -68,12 +70,15 @@ namespace Chrome.Retro
                 {
                     if (hasPickup)
                     {
-                        if (newPickup != pickup) onPickupFound?.Invoke(newPickup);
+                        if (newPickup != pickup)
+                        {
+                            onPickupFound?.Invoke(newPickup);
+                            Events.ZipCall(RetEvent.OnGunFound, pickup);
+                        }
                     }
                     else
                     {
-                        onPickupFound?.Invoke(newPickup);
-                        OnPickupFound();
+                        OnPickupFound(newPickup);
                         hasPickup = true;
                     }
 
@@ -82,7 +87,15 @@ namespace Chrome.Retro
             }
         }
 
-        private void OnPickupLost() =>  indicator.SetActive(false);
-        private void OnPickupFound() =>  indicator.SetActive(true);
+        private void OnPickupLost()
+        {
+            onPickupLost?.Invoke();
+            Events.Call(RetEvent.OnGunLost);
+        }
+        private void OnPickupFound(RetGunPickup pickup)
+        {
+            onPickupFound?.Invoke(pickup);
+            Events.ZipCall(RetEvent.OnGunFound, pickup);
+        }
     }
 }

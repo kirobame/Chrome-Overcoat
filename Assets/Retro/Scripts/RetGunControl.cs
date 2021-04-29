@@ -2,8 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Flux.Data;
+using Flux.Event;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Chrome.Retro
 {
@@ -16,6 +19,8 @@ namespace Chrome.Retro
             set => identity = value;
         }
         private IIdentity identity;
+
+        public bool IsOnDefault => Current == defaultGun;
         
         [ShowInInspector, HideInEditorMode] public RetGun Current { get; private set; }
 
@@ -27,6 +32,7 @@ namespace Chrome.Retro
         [FoldoutGroup("Values"), SerializeField] private float smoothing;
 
         private RetGunModel model;
+        private int ammo;
         
         private float smoothedAngle;
         private float damping;
@@ -54,8 +60,8 @@ namespace Chrome.Retro
 
         //--------------------------------------------------------------------------------------------------------------/
         
-        public void DropCurrent() => SwitchTo(defaultGun);
-        public void SwitchTo(RetGun gun)
+        public void DropCurrent() => SwitchTo(defaultGun, -1);
+        public void SwitchTo(RetGun gun, int ammo)
         {
             if (routine != null)
             {
@@ -64,19 +70,38 @@ namespace Chrome.Retro
                 
                 Current.Interrupt();
                 Execute();
-
-                if (gameObject.activeInHierarchy) AttemptNewFiring();
             }
             else Execute();
 
             void Execute()
             {
+                if (Current != defaultGun && this.ammo > 0)
+                {
+                    var pickupPool = Repository.Get<GenericPool>(RetReference.PickupPool);
+                    var pickupInstance = pickupPool.CastSingle<RetGunPickup>(Current.Pickup);
+                    pickupInstance.ammo = this.ammo;
+
+                    var angle = Random.Range(70.0f, 80.0f) * Mathf.Deg2Rad;
+                    var direction = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0.0f);
+            
+                    var y = Random.Range(0.0f, 360.0f);
+                    direction = Vector3.Normalize(Quaternion.AngleAxis(y, Vector3.up) * direction);
+            
+                    pickupInstance.transform.position = aim.position;
+                    pickupInstance.Rigidbody.velocity = Vector3.zero;
+                    pickupInstance.Rigidbody.AddForce(direction * Random.Range(12.5f, 17.5f), ForceMode.Impulse);
+                    pickupInstance.Rigidbody.AddTorque(Random.onUnitSphere * Random.Range(7.5f, 12.5f), ForceMode.Impulse);
+                }
                 model.Discard();
                 
                 Current = gun;
+                this.ammo = ammo;
+                
                 onGunSwitch?.Invoke(gun);
+                Events.ZipCall<RetGun,int>(RetEvent.OnGunSwitch, Current, ammo);
                 
                 InstantiateModel();
+                if (gameObject.activeInHierarchy) AttemptNewFiring();
             }
         }
 
@@ -95,6 +120,12 @@ namespace Chrome.Retro
         {
             Vector3 direction;
             ComputeDirection();
+
+            if (ammo > 0)
+            {
+                ammo--;
+                Events.ZipCall<int>(RetEvent.OnAmmoChange, ammo);
+            }
             
             Current.Begin(identity, target, hub);
             while (!Current.Use(identity, target, hub))
@@ -107,6 +138,14 @@ namespace Chrome.Retro
                 yield return new WaitForEndOfFrame();
             }
             Current.End(identity, target, hub);
+
+            if (ammo == 0)
+            {
+                routine = null;
+                DropCurrent();
+                    
+                yield break;
+            }
             
             void ComputeDirection()
             {

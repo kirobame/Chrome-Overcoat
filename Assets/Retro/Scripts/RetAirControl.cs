@@ -22,7 +22,7 @@ namespace Chrome.Retro
                 return;
             }
             
-            var inputs = new Vector3(Input.GetAxisRaw("Horizontal"), 0.0f, Input.GetAxisRaw("Vertical")).normalized;
+            var inputs = RetExtensions.GetMoveInput().normalized;
             smoothedInputs = Vector3.SmoothDamp(smoothedInputs, inputs, ref damping, smoothing);
             var direction = smoothedInputs;
 

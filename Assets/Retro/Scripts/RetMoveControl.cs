@@ -14,6 +14,8 @@ namespace Chrome.Retro
         [FoldoutGroup("Values"), SerializeField] private float speed;
         [FoldoutGroup("Values"), SerializeField] private float smoothing;
 
+        [HideInInspector] public float speedBoost;
+        
         private Vector3 planeNormal;
         private Vector3 smoothedInputs;
         private Vector3 damping;
@@ -23,11 +25,13 @@ namespace Chrome.Retro
         
         void FixedUpdate()
         {
-            Inputs = new Vector3(Input.GetAxisRaw("Horizontal"), 0.0f, Input.GetAxisRaw("Vertical")).normalized;
+            Inputs = RetExtensions.GetMoveInput().normalized;
             smoothedInputs = Vector3.SmoothDamp(smoothedInputs, Inputs, ref damping, smoothing);
             
             if (!body.IsGrounded || smoothedInputs.magnitude < 0.001f) return;
 
+            var speed = this.speed + speedBoost;
+            
             var direction = smoothedInputs;
             var slopedDirection = Vector3.ProjectOnPlane(smoothedInputs, planeNormal);
             if (Vector3.Dot(gravity.Value.normalized, slopedDirection) > 0) direction = slopedDirection.normalized * smoothedInputs.magnitude;

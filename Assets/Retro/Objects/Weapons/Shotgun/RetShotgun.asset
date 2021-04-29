@@ -12,9 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1765f0a5c9f4ab586fdda976bde2d37, type: 3}
   m_Name: RetShotgun
   m_EditorClassIdentifier: 
+  icon: {fileID: 1202984965197363600, guid: 999b2f38059452d4fb8218d8d6941c5d, type: 3}
   model: {fileID: 7777401193825588693, guid: 93add1bece451994d86fa6e6d7a1df95, type: 3}
+  pickup: {fileID: 8093541853133893177, guid: 7e10a44422a7b92409c73960d50d37d0, type: 3}
   spread: 180
   radius: 4
+  maxAmmo: 4
   delay: 0.75
   projectilePrefab: {fileID: 3278294482387087007, guid: 48d19aea30ef1f54c8eb3d8ef6f9c4cd, type: 3}
   muzzleFlashPrefab: {fileID: 2017965796941768161, guid: 33ac8d8aac6693b47b52575e2f38f151, type: 3}

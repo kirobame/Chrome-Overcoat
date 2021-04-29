@@ -12,9 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2511ce134c04766922c168097b1e32b, type: 3}
   m_Name: RetLaserRifle
   m_EditorClassIdentifier: 
+  icon: {fileID: 184950751378207249, guid: 999b2f38059452d4fb8218d8d6941c5d, type: 3}
   model: {fileID: 8880676402250857786, guid: 0d1cd35b506570f499539854ccdb1b59, type: 3}
+  pickup: {fileID: 1816868956085821687, guid: bc8f8f040d1f7cc4b8836f2abf486ecc, type: 3}
   spread: 45
   radius: 4
+  maxAmmo: 5
   delay: 0.4
   projectilePrefab: {fileID: 5155491008473705253, guid: 64b329886e24c5c48ac1c660f4508fa7, type: 3}
   muzzleFlashPrefab: {fileID: 2067428610923920391, guid: 23dfa5939b642674888ff7fc7e60372f, type: 3}

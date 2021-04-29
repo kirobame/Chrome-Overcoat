@@ -1,10 +1,11 @@
-﻿using Flux.Event;
+﻿using Flux;
+using Flux.Event;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Chrome.Retro
 {
-    public class RetGunPickup : MonoBehaviour
+    public class RetGunPickup : MonoBehaviour, IBootable
     {
         public Rigidbody Rigidbody => rigidbody;
         public RetGun Gun => gun;
@@ -13,9 +14,17 @@ namespace Chrome.Retro
         
         [FoldoutGroup("Values"), SerializeField] private RetGun gun;
 
+        [ReadOnly, HideInEditorMode] public int ammo;
+
         void Awake() => Events.Subscribe(RetEvent.OnGameEnd, OnGameEnd);
         void OnDestroy() =>  Events.Unsubscribe(RetEvent.OnGameEnd, OnGameEnd);
 
-        void OnGameEnd() => gameObject.SetActive(false);
+        void OnGameEnd()
+        {
+            if (!gameObject.activeInHierarchy) return;
+            gameObject.SetActive(false);
+        }
+
+        public void Bootup() => ammo = gun.MaxAmmo;
     }
 }

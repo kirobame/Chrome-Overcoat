@@ -18,6 +18,7 @@ namespace Chrome.Retro
         {
             var pickupPool = Repository.Get<GenericPool>(RetReference.PickupPool);
             var pickupInstance = pickupPool.CastSingle<RetGunPickup>(pickupPrefab);
+            pickupInstance.Bootup();
 
             var angle = Random.Range(this.angle.x, this.angle.y) * Mathf.Deg2Rad;
             var direction = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0.0f);

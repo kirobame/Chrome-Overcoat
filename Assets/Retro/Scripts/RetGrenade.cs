@@ -11,6 +11,7 @@ namespace Chrome.Retro
         [FoldoutGroup("Values"), SerializeField] private AnimationCurve gain;
         [FoldoutGroup("Values"), SerializeField] private float duration;
         [FoldoutGroup("Values"), SerializeField] private float splash;
+        [FoldoutGroup("Values"), SerializeField] private float splashSize;
         [FoldoutGroup("Values"), SerializeField] private float damage;
         [FoldoutGroup("Values"), SerializeField] private AnimationCurve falloff;
         
@@ -88,6 +89,7 @@ namespace Chrome.Retro
             var vfxPool = Repository.Get<VfxPool>(Pool.Impact);
             var vfxPoolable = vfxPool.RequestSinglePoolable(impactVfx);
 
+            vfxPoolable.transform.localScale = Vector3.one * (splash * splashSize);
             vfxPoolable.transform.position = hit.point;
             vfxPoolable.Value.Play();
             

@@ -104,7 +104,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   source: {fileID: 5649485583328840428}
-  pickupPrefab: {fileID: 8093541853133893177, guid: 7e10a44422a7b92409c73960d50d37d0, type: 3}
+  pickupPrefab: {fileID: 1816868956085821687, guid: bc8f8f040d1f7cc4b8836f2abf486ecc, type: 3}
   angle: {x: 70, y: 80}
   ejection: {x: 12.5, y: 17.5}
   torque: {x: 10, y: 14}

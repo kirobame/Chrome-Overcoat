@@ -15,7 +15,7 @@ namespace Chrome.Retro
         
         void Update()
         {
-            var inputs = new Vector3(Input.GetAxisRaw("Horizontal"), 0.0f, Input.GetAxisRaw("Vertical")).normalized;
+            var inputs = RetExtensions.GetMoveInput().normalized;
             if (inputs != Vector3.zero) cachedInputs = inputs;
             
             var angle = Vector3.SignedAngle(Vector3.forward, cachedInputs, Vector3.up);

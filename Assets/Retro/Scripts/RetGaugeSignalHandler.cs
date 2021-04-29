@@ -37,6 +37,8 @@ namespace Chrome.Retro
         private List<Modification> inflictModifications = new List<Modification>();
         private List<Modification> receiveModifications = new List<Modification>();
         private List<Modification> killModifications = new List<Modification>();
+
+        [SerializeField] public bool isActive = true;
         
         [FoldoutGroup("Dependencies"), SerializeField] private EventHandler handler;
         [FoldoutGroup("Dependencies"), SerializeField] private RetGauge gauge;
@@ -45,6 +47,8 @@ namespace Chrome.Retro
         
         void Awake()
         {
+            if (!isActive) return;
+            
             foreach (var modification in modifications)
             {
                 switch (modification.signal)

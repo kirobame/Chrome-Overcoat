@@ -64,13 +64,22 @@ namespace Chrome.Retro
 
         private int current;
         private bool inTransition;
+        private bool inShow;
 
         void Awake()
         {
             inTransition = true;
+            inShow = true;
+            
             current = Array.FindIndex(infos, info => info.State == RetGameState.Started);
         }
 
+        void Update()
+        {
+            if (!Input.GetKeyDown(KeyCode.Z) || !inShow) return;
+            Play();
+        }
+        
         public void SwitchTo(RetGameState state)
         {
             if (inTransition) return;
@@ -93,10 +102,12 @@ namespace Chrome.Retro
             infos[current].Hide();
 
             inTransition = false;
+            inShow = false;
         }
 
         void OnShowComplete()
         {
+            inShow = true;
             infos[current].onShowComplete -= OnShowComplete;
 
             var playerBoard = Blackboard.Global.Get<IBlackboard>(RetPlayerBoard.REF_SELF);

@@ -1,11 +1,12 @@
-﻿using Flux;
+﻿using System;
+using Flux;
 using Flux.Data;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Chrome.Retro
 {
-    public class RetCapacityControl : MonoBehaviour, ILink<IIdentity>
+    public class RetCapacityControl : InputControl, ILink<IIdentity>
     { 
         IIdentity ILink<IIdentity>.Link
         {
@@ -13,35 +14,105 @@ namespace Chrome.Retro
         }
         private IIdentity identity;
 
-        [FoldoutGroup("Values"), SerializeField] private GenericPoolable projectilePrefab;
-        [FoldoutGroup("Values"), SerializeField] private float cost;
+        [FoldoutGroup("Dependencies"), SerializeField] private RetMoveControl move;
         
-        [FoldoutGroup("Feedbacks"), SerializeField] private PoolableVfx muzzleFlashPrefab;
+        [FoldoutGroup("Values"), SerializeField] private float maxTime;
+        [FoldoutGroup("Values"), SerializeField] private AnimationCurve damageMap;
+        [FoldoutGroup("Values"), SerializeField] private AnimationCurve falloff;
+        [FoldoutGroup("Values"), SerializeField] private float damage;
+        [FoldoutGroup("Values"), SerializeField] private AnimationCurve splashMap;
+        [FoldoutGroup("Values"), SerializeField] private float splash;
+        [FoldoutGroup("Values"), SerializeField] private AnimationCurve sizeMap;
+        [FoldoutGroup("Values"), SerializeField] private float size;
+        [FoldoutGroup("Values"), SerializeField] private AnimationCurve costMap;
+        [FoldoutGroup("Values"), SerializeField] private float cost;
+        [FoldoutGroup("Values"), SerializeField] private AnimationCurve speedMap;
+        [FoldoutGroup("Values"), SerializeField] private float speed;
+        [FoldoutGroup("Values"), SerializeField] private float smoothing;
+
+        [FoldoutGroup("Feedbacks"), SerializeField] private float trailSmoothing;
+        [FoldoutGroup("Feedbacks"), SerializeField] private float targetWidth;
+        [FoldoutGroup("Feedbacks"), SerializeField] private TrailRenderer trail;
+        [FoldoutGroup("Feedbacks"), SerializeField] private PoolableVfx explosionPrefab;
+
+        private bool isActive;
+        private float timer;
+        
+        private float speedBoost;
+        private float damping;
+
+        private float trailDamping;
+        private float trailWidth;
+
+        public override void Shutdown()
+        {
+            base.Shutdown();
+            
+            if (isActive)
+            {
+                timer = 0.0f;
+                isActive = false;
+            }
+        }
 
         void Update()
         {
-            if (!Input.GetKeyDown(KeyCode.R)) return;
-
-            var gauge = Repository.Get<RetGauge>(RetReference.Gauge);
-            gauge.Modify(-cost);
-
-            var fireAnchor = identity.Packet.Get<Transform>();
-            var direction = fireAnchor.forward;
-            identity.Packet.Set(direction);
+            if (!isActive)
+            {
+                speedBoost = Mathf.SmoothDamp(0.0f, speedBoost, ref damping, smoothing);
+                trailWidth = Mathf.SmoothDamp(0.0f, trailWidth, ref trailDamping, trailSmoothing);
+            }
             
-            var muzzleFlashPool = Repository.Get<VfxPool>(Pool.MuzzleFlash);
-            var muzzleFlashInstance = muzzleFlashPool.RequestSinglePoolable(muzzleFlashPrefab);
+            if (Input.GetKey(KeyCode.A))
+            {
+                timer = Mathf.Clamp(timer + Time.deltaTime, 0.0f, maxTime);
+                var ratio = timer / maxTime;
+                
+                var speedGoal = speedMap.Evaluate(ratio) * speed;
+                
+                speedBoost = Mathf.SmoothDamp(speedGoal, speedBoost, ref damping, smoothing);
+                trailWidth = Mathf.SmoothDamp(targetWidth, trailWidth, ref trailDamping, trailSmoothing);
 
-            muzzleFlashInstance.transform.localScale = Vector3.one;
-            muzzleFlashInstance.transform.parent = fireAnchor;
-            muzzleFlashInstance.transform.position = fireAnchor.position;
-            muzzleFlashInstance.transform.rotation = Quaternion.LookRotation(fireAnchor.forward);
-            muzzleFlashInstance.Value.Play();
+                var gauge = Repository.Get<RetGauge>(RetReference.Gauge);
+                gauge.Modify(costMap.Evaluate(ratio) * cost);
+                
+                isActive = true;
+            }
+
+            if (Input.GetKeyUp(KeyCode.A))
+            {
+                var ratio = timer / maxTime;
+                var splash = splashMap.Evaluate(ratio) * this.splash;
+                var damage = damageMap.Evaluate(ratio) * this.damage;
+                
+                var results = Physics.OverlapSphere(transform.position, splash, LayerMask.GetMask("Entity"));
+                foreach (var result in results)
+                {
+                    if (!result.TryGetComponent<InteractionHub>(out var hub) || hub.Identity.Faction == identity.Faction) continue;
+                
+                    var distance = Vector3.Distance(transform.position, result.transform.position);
+                    var splashRatio = Mathf.Clamp01(distance / splash);
+                
+                    hub.Relay<IDamageable>(damageable =>
+                    {
+                        if (damageable.Identity.Faction == identity.Faction) return;
+                        damageable.Hit(identity, falloff.Evaluate(splashRatio) * damage, identity.Packet);
+                    });
+                }
             
-            var projectilePool = Repository.Get<GenericPool>(Pool.Projectile);
-            var projectileInstance = projectilePool.CastSingle<Projectile>(projectilePrefab);
+                var vfxPool = Repository.Get<VfxPool>(Pool.Impact);
+                var vfxPoolable = vfxPool.RequestSinglePoolable(explosionPrefab);
+
+                vfxPoolable.transform.localScale = Vector3.one * (sizeMap.Evaluate(ratio) * size);
+                vfxPoolable.transform.position = transform.position + Vector3.up * 0.2f;
+                vfxPoolable.Value.Play();
+
+                timer = 0.0f;
+                isActive = false;
+            }
             
-            projectileInstance.Shoot(identity, fireAnchor.position, direction, identity.Packet);
+            move.speedBoost = speedBoost;
+            trail.widthMultiplier = trailWidth;
         }
     }
 }

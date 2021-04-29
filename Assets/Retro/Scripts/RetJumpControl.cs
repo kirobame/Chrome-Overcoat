@@ -23,7 +23,7 @@ namespace Chrome.Retro
             }
             else error += Time.deltaTime;
             
-            if (!Input.GetKeyUp(KeyCode.Space) || error > margin || hasJumped) return;
+            if (!Input.GetKeyUp(KeyCode.E) || error > margin || hasJumped) return;
 
             var attraction = gravity.Value;
             var length = -Mathf.Sqrt(height * 2.0f * attraction.magnitude);

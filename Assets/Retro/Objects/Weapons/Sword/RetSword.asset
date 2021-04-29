@@ -12,9 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 770cb0a6753e4a0e981c3ed1761b2ae9, type: 3}
   m_Name: RetSword
   m_EditorClassIdentifier: 
+  icon: {fileID: 5543941588292853863, guid: 999b2f38059452d4fb8218d8d6941c5d, type: 3}
   model: {fileID: 9205572518922063854, guid: 79a32bf3e9d019644916751031799d98, type: 3}
+  pickup: {fileID: 2952213446951348237, guid: 84b8e576123cc4449bc155626139a0f3, type: 3}
   spread: 180
   radius: 2
+  maxAmmo: -1
   delay: 0.6
   damage: 2
   category: 5
