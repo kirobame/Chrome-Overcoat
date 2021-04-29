@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2511ce134c04766922c168097b1e32b, type: 3}
   m_Name: RetGrenadeLauncher
   m_EditorClassIdentifier: 
+  title: Launcher
   icon: {fileID: 2130535880278150251, guid: 999b2f38059452d4fb8218d8d6941c5d, type: 3}
   model: {fileID: 5293722862417900036, guid: 8e4a4098d20e3214e9b1bd3e14fd654c, type: 3}
   pickup: {fileID: 569463858353241236, guid: 863c20ee1acca6b4285cdc88566b5867, type: 3}

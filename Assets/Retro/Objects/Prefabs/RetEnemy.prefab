@@ -484,6 +484,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8240647055159017477}
   - component: {fileID: 8240647055159017483}
+  - component: {fileID: 5804856956498250346}
   m_Layer: 7
   m_Name: Life
   m_TagString: Untagged
@@ -519,3 +520,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   link: {fileID: 1213800447252526399}
   maxHealth: 8
+--- !u!114 &5804856956498250346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8240647055159017478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc7f43b49c93b5142950815fba137d57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: {fileID: 8240647055159017483}
+  prefab: {fileID: 7139433599626926065, guid: 2c0b44c805334e24bbf91f198d40e1e3, type: 3}

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2511ce134c04766922c168097b1e32b, type: 3}
   m_Name: RetBulletRifle
   m_EditorClassIdentifier: 
+  title: Rifle
   icon: {fileID: 1161201145128540330, guid: 999b2f38059452d4fb8218d8d6941c5d, type: 3}
   model: {fileID: 8800820504237898023, guid: 4dc144c4563d5d64ca38aa758b8db031, type: 3}
   pickup: {fileID: 8317656573938464593, guid: bda9492b5338ace4caf1670958faa6a5, type: 3}

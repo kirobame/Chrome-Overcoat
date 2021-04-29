@@ -112,7 +112,13 @@ namespace Chrome.Retro
             }
             
             move.speedBoost = speedBoost;
-            trail.widthMultiplier = trailWidth;
+
+            if (trailWidth <= 0.001f) trail.enabled = false;
+            else
+            {
+                trail.enabled = true;
+                trail.widthMultiplier = trailWidth;
+            }
         }
     }
 }

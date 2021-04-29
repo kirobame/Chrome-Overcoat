@@ -56,33 +56,43 @@ namespace Chrome.Retro
                 })));
             }
         }
-
         #endregion
 
+        public static bool isLocked;
+        
         [FoldoutGroup("Values"), SerializeField] private RetGame game;
         [FoldoutGroup("Values"), SerializeField] private ScreenInfo[] infos;
 
         private int current;
         private bool inTransition;
         private bool inShow;
+        private bool inHide;
 
         void Awake()
         {
+            isLocked = false;
+            
             inTransition = true;
             inShow = true;
+            inHide = false;
             
             current = Array.FindIndex(infos, info => info.State == RetGameState.Started);
         }
 
         void Update()
         {
-            if (!Input.GetKeyDown(KeyCode.Z) || !inShow) return;
-            Play();
+            if (!inShow) return;
+            
+            if (Input.GetKeyDown(KeyCode.Z) && !isLocked && !inHide) Play();
+            if (Input.GetKeyDown(KeyCode.Escape)) Quit();
         }
         
         public void SwitchTo(RetGameState state)
         {
             if (inTransition) return;
+            
+            if (state == RetGameState.Won) Events.Call(RetEvent.OnGameWon);
+            else if (state == RetGameState.Lost) Events.Call(RetEvent.OnGameLost);
             current = Array.FindIndex(infos, info => info.State == state);
 
             infos[current].onShowComplete += OnShowComplete;
@@ -93,28 +103,42 @@ namespace Chrome.Retro
         
         public void Play()
         {
+            inHide = true;
+            
             var playerBoard = Blackboard.Global.Get<IBlackboard>(RetPlayerBoard.REF_SELF);
             var life = playerBoard.Get<Lifetime>(RetPlayerBoard.REF_LIFE);
             var root = life.transform.root.gameObject;
             if (!root.activeInHierarchy) root.SetActive(true);
             
             game.Begin();
+            Events.Call(RetEvent.OnGameStart);
+            
             infos[current].Hide();
-
+            
             inTransition = false;
             inShow = false;
         }
 
+        public void Quit()
+        {
+            Debug.Log("QUIT !");
+            Application.Quit();
+        }
+
         void OnShowComplete()
         {
-            inShow = true;
             infos[current].onShowComplete -= OnShowComplete;
+            
+            inHide = false;
+            inShow = true;
 
             var playerBoard = Blackboard.Global.Get<IBlackboard>(RetPlayerBoard.REF_SELF);
             var life = playerBoard.Get<Lifetime>(RetPlayerBoard.REF_LIFE);
             life.End();
             
             Events.Call(RetEvent.OnGameEnd);
+            Events.Call(RetEvent.OnScreenDisplay);
+            
             game.Reboot();
         }
     }
