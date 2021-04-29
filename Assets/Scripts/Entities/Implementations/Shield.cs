@@ -21,7 +21,12 @@ namespace Chrome
 
         [FoldoutGroup("Values"), SerializeField] private float maxHealth;
         private float health;
+
+        private bool isBroken = false;
+        public bool IsBroken() { return isBroken; }
+
         void Awake() => Bootup();
+        void Start() { }
 
         public void Hit(IIdentity source, float amount, Packet packet)
         {
@@ -34,25 +39,34 @@ namespace Chrome
             Events.ZipCall<byte, float>(GaugeEvent.OnDamageInflicted, type, damage);
 
             if (health <= 0) link.End();
-            if (health <= 0) Shutdown();
+            //if (health <= 0) Shutdown();
         }
 
-        public void Bootup()
+        public void Up()
         {
-            health = maxHealth;
-
             if (!mesh.enabled)
                 mesh.enabled = true;
             if (!col.enabled)
                 col.enabled = true;
         }
-
-        public void Shutdown()
+        public void Down()
         {
             if (mesh.enabled)
                 mesh.enabled = false;
             if (col.enabled)
                 col.enabled = false;
+        }
+
+        public void Bootup()
+        {
+            //Debug.Log("Shield bootup");
+            health = maxHealth;
+            isBroken = false;
+        }
+
+        public void Shutdown()
+        {
+            isBroken = true;
         }
     }
 }

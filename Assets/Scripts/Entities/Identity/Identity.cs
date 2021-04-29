@@ -29,10 +29,10 @@ namespace Chrome
             if (tr.GetComponent<Identity>() != null && tr.GetComponent<Identity>() != this) return;
 
             ILink<IIdentity>[] links = tr.GetComponents<ILink<IIdentity>>();
-
-            foreach (var link in links)
-                if (link != null && !ILinkList.Contains(link))
-                    ILinkList.Add(link);
+            if (links.Length > 0)
+                foreach (var link in links)
+                    if (link != null && !ILinkList.Contains(link))
+                        ILinkList.Add(link);
 
             if (tr.childCount > 0)
                 foreach (Transform child in tr)

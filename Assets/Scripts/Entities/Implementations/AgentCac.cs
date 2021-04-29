@@ -18,7 +18,7 @@ namespace Chrome
         [FoldoutGroup("References"), SerializeField] private Collider col;
         [FoldoutGroup("References"), SerializeField] private NavMeshAgent navMesh;
         [FoldoutGroup("References"), SerializeField] private Transform aim;
-        [FoldoutGroup("References"), SerializeField] private GameObject shield;
+        [FoldoutGroup("References"), SerializeField] private Shield shield;
 
         private ITaskTree taskTree;
 
@@ -35,7 +35,7 @@ namespace Chrome
             var ColReference = "collider".Reference<Collider>();
             var trReference = "transform".Reference<Transform>();
             var aimReference = "aim".Reference<Transform>();
-            var shieldReference = "shield".Reference<GameObject>();
+            var shieldReference = "shield".Reference<Shield>();
 
             var player = "player".Reference<Transform>(true);
             var playerColReference = "player.collider".Reference<Collider>(true);

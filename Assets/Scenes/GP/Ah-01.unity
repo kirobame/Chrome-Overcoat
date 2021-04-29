@@ -8741,6 +8741,7 @@ GameObject:
   - component: {fileID: 1116115630}
   - component: {fileID: 1116115627}
   - component: {fileID: 1116115632}
+  - component: {fileID: 1116115633}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -8893,6 +8894,41 @@ MonoBehaviour:
   blockingMask:
     serializedVersion: 2
     m_Bits: 64
+--- !u!114 &1116115633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1116115623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e51d9c2dbd4044929178ac620989459d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sequence:
+    root:
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 100
+        width: 73.600006
+        height: 71.2
+      linkIndices: 00000000
+    effects:
+    - id: 0
+  references:
+    version: 1
+    00000000:
+      type: {class: End, ns: Flux.Feedbacks, asm: Flux.Feedbacks}
+      data:
+        rect:
+          serializedVersion: 2
+          x: 212.8
+          y: 109.6
+          width: 102.40001
+          height: 71.200005
+        linkIndices: 
 --- !u!1001 &1117347372
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15247,7 +15283,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1757387378}
-  - component: {fileID: 1757387381}
   - component: {fileID: 1757387380}
   - component: {fileID: 1757387379}
   m_Layer: 7
@@ -15280,12 +15315,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1757387377}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d442a975a2641fd918a97dc1d272ab6, type: 3}
+  m_Script: {fileID: 11500000, guid: 68e99121213d46cc98968f134d52eb25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  path: respawns.player
-  index: 0
-  duration: 2.25
+  link: {fileID: 1116115633}
+  maxHealth: 9999
 --- !u!114 &1757387380
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15295,46 +15329,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1757387377}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68e99121213d46cc98968f134d52eb25, type: 3}
+  m_Script: {fileID: 11500000, guid: 4d442a975a2641fd918a97dc1d272ab6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  link: {fileID: 1757387381}
-  maxHealth: 9999
---- !u!114 &1757387381
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1757387377}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e51d9c2dbd4044929178ac620989459d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sequence:
-    root:
-      rect:
-        serializedVersion: 2
-        x: 100
-        y: 100
-        width: 73
-        height: 71
-      linkIndices: 00000000
-    effects:
-    - id: 0
-  references:
-    version: 1
-    00000000:
-      type: {class: End, ns: Flux.Feedbacks, asm: Flux.Feedbacks}
-      data:
-        rect:
-          serializedVersion: 2
-          x: 242
-          y: 100
-          width: 102
-          height: 71
-        linkIndices: 
+  path: respawns.player
+  index: 0
+  duration: 2.25
 --- !u!1001 &1765441737
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17967,7 +17967,7 @@ MonoBehaviour:
   link: {fileID: 2035674769}
   mesh: {fileID: 2035674763}
   col: {fileID: 2035674762}
-  maxHealth: 8
+  maxHealth: 4
 --- !u!114 &2035674767
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18596,7 +18596,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   handler: {fileID: 2115037599}
-  lifetime: {fileID: 1757387381}
+  lifetime: {fileID: 1116115633}
 --- !u!114 &2115037599
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21413,7 +21413,7 @@ MonoBehaviour:
   col: {fileID: 6927604122668135689}
   navMesh: {fileID: 6927604122668135692}
   aim: {fileID: 6927604122737235852}
-  shield: {fileID: 2035674760}
+  shield: {fileID: 2035674766}
 --- !u!4 &6927604122737235852
 Transform:
   m_ObjectHideFlags: 0

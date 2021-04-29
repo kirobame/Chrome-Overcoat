@@ -4,20 +4,17 @@ namespace Chrome
 {
     public class ShieldDown : ProxyNode
     {
-        public ShieldDown(IValue<GameObject> shield)
+        public ShieldDown(IValue<Shield> shield)
         {
             this.shield = shield;
         }
 
-        private IValue<GameObject> shield;
+        private IValue<Shield> shield;
 
         protected override void OnUpdate(Packet packet)
         {
             if (shield.IsValid(packet))
-            {
-                if (shield.Value.activeSelf)
-                    shield.Value.SetActive(false);
-            }
+                shield.Value.Down();
 
             isDone = true;
         }
