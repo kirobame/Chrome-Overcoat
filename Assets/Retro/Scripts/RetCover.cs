@@ -4,6 +4,6 @@ namespace Chrome.Retro
 {
     public class RetCover : MonoBehaviour
     {
-        void Awake() => RetCoverSystem.Register(this);
+        void Start() => RetCoverSystem.Register(this);
     }
 }

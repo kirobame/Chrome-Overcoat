@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f22984e6ad3430b9f402f3a1ce755f2, type: 3}
   m_Name: RetCoverProfile
   m_EditorClassIdentifier: 
-  range: {x: 4, y: 30}
+  range: {x: 4, y: 10.5}
+  maxFlank: 0
+  distances: {x: 5.5, y: 9}

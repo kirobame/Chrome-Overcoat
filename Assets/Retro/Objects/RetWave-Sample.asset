@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RetWave-Sample
   m_EditorClassIdentifier: 
   infos:
-  - enemyPrefab: {fileID: 7999712477629756169, guid: c63d99bd6d3bf834fbfc3d9ae7d8fa95, type: 3}
-    count: 2
+  - enemyPrefab: {fileID: 5948806156712276297, guid: bce89a97e33d52d4c846886b71df45c7, type: 3}
+    count: 1
     address: 7
   completion: 1

@@ -6,7 +6,11 @@ namespace Chrome.Retro
     public class RetCoverProfile : ScriptableObject
     {
         public Vector2 Range => range;
+        public float MaxFlank => maxFlank;
+        public Vector2 Distances => distances;
         
         [SerializeField] private Vector2 range;
+        [SerializeField, Range(-1.0f, 1.0f)] private float maxFlank;
+        [SerializeField] private Vector2 distances;
     }
 }

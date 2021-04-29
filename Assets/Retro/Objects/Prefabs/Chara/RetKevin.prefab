@@ -53,11 +53,11 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5482489280088685070}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.5}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 6354608062322919925}
+  m_Father: {fileID: 8236131778852011857}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5634729108172419392
@@ -89,7 +89,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8240647053616232772}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8379989260063059373
 MonoBehaviour:
@@ -108,37 +108,6 @@ MonoBehaviour:
   angle: {x: 70, y: 80}
   ejection: {x: 12.5, y: 17.5}
   torque: {x: 10, y: 14}
---- !u!1 &6443293133993866577
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6354608062322919925}
-  m_Layer: 7
-  m_Name: Pivot
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6354608062322919925
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6443293133993866577}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1808113010963933795}
-  m_Father: {fileID: 8240647053616232772}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8239751600761290783
 GameObject:
   m_ObjectHideFlags: 0
@@ -148,6 +117,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8236131778852011857}
+  - component: {fileID: 908836858094577719}
   - component: {fileID: 8226513078285290423}
   - component: {fileID: 8216925769953402663}
   m_Layer: 7
@@ -167,10 +137,26 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1808113010963933795}
   m_Father: {fileID: 8240647053616232772}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &908836858094577719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8239751600761290783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b086b7001c248d5b4bd7f645abbc8e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pivot: {fileID: 8236131778852011857}
+  smoothing: 0.08
+  direction: {x: 0, y: 0, z: 0}
 --- !u!33 &8226513078285290423
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -248,7 +234,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8240647053616232772}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8240647053616232773
 GameObject:
@@ -269,7 +255,7 @@ GameObject:
   - component: {fileID: 4506432812999787284}
   - component: {fileID: 1648635252637089153}
   m_Layer: 7
-  m_Name: RetEnemy
+  m_Name: RetKevin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -288,7 +274,6 @@ Transform:
   m_Children:
   - {fileID: 8236131778852011857}
   - {fileID: 5981575668562270794}
-  - {fileID: 6354608062322919925}
   - {fileID: 8240647053177236370}
   - {fileID: 8240647055159017477}
   - {fileID: 5649485583328840428}
@@ -445,13 +430,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bbd5ab7f5084d03b950087b93141ee3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lookAt: {fileID: 908836858094577719}
   head: {fileID: 5981575668562270794}
-  pivot: {fileID: 6354608062322919925}
+  pivot: {fileID: 8236131778852011857}
   fireAnchor: {fileID: 1808113010963933795}
   navMesh: {fileID: 1648635252637089153}
   gun: {fileID: 11400000, guid: 2cfaa26c4369b334c88309738802e0c5, type: 2}
-  reset: 0.3
-  distance: 7.5
+  reset: 0.25
+  distance: 6
 --- !u!195 &1648635252637089153
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -463,9 +449,9 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 3.5
-  m_Acceleration: 8
+  m_Acceleration: 12
   avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_AngularSpeed: 420
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -504,7 +490,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8240647053616232772}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8240647055159017483
 MonoBehaviour:

@@ -35,12 +35,12 @@ namespace Chrome
                 hasBeenBootedUp = true;
                 return;
             }
-            
+
             foreach (var lifebound in lifebounds) lifebound.Bootup();
         }
         
-        
         //--------------------------------------------------------------------------------------------------------------/
+        
         public void Add(ILifebound bound) => lifebounds.Add(bound);
         
         public void End()

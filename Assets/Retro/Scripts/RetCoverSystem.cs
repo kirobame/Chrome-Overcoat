@@ -57,31 +57,53 @@ namespace Chrome.Retro
 
                     if (!Physics.Raycast(ray, direction.magnitude, LayerMask.GetMask("Environment"))) continue;
 
-                    var orientation = (Vector3.Dot(direction.normalized, cover.transform.forward) + 1.0f) * 0.5f;
+                    var orientation = Vector3.Dot(direction.normalized, cover.transform.forward);
+                    if (orientation < 0.0f) continue;
+
                     entries.Add(new Entry(cover, (distance - profile.Range.x) / profile.Range.y, orientation));
                 }
 
                 entries.Sort();
                 HasBeenComputed = true;
             }
-            public Entry GetClosestFrom(Vector3 point)
+            public bool TryGetClosestFrom(Vector3 point, out Entry output)
             {
                 var flatPoint = point.Flatten();
                 
-                var entry = default(Entry);
+                Entry entry = null;
                 var minDistance = float.PositiveInfinity;
                 
+                var playerBoard = Blackboard.Global.Get<IBlackboard>(RetPlayerBoard.REF_SELF);
+                var identity = playerBoard.Get<IIdentity>(RetPlayerBoard.REF_IDENTITY);
+                var playerPoint = identity.Root.position.Flatten();
+
                 foreach (var watchedEntry in entries)
                 {
-                    var distance = Vector3.Distance(watchedEntry.Position.Flatten(), flatPoint);
-                    if (distance >= minDistance) continue;
+                    var watchedEntryPoint = watchedEntry.Position.Flatten();
+                    var distance = Vector3.Distance(watchedEntryPoint, flatPoint);
+                    
+                    if (distance > profile.Distances.y || distance >= minDistance) continue;
+                    
+                    var coverOrientation = Vector3.Normalize(playerPoint - watchedEntryPoint);
+                    var orientation = Vector3.Normalize(playerPoint - flatPoint);
+                    
+                    if (Vector3.Dot(coverOrientation, orientation) < profile.MaxFlank) continue;
                     
                     entry = watchedEntry;
                     minDistance = distance;
                 }
-                
-                entries.Remove(entry);
-                return entry;
+
+                if (entry != null)
+                {
+                    entries.Remove(entry);
+                    output = entry;
+                    return true;
+                }
+                else
+                {
+                    output = null;
+                    return false;
+                }
             }
             
             public void Reboot()
@@ -92,11 +114,11 @@ namespace Chrome.Retro
         }
 
         #endregion
-        
-        private static HashSet<RetCover> availableCovers = new HashSet<RetCover>();
-        private static HashSet<RetCover> usedCovers = new HashSet<RetCover>();
 
-        private static Dictionary<RetCoverProfile, Analysis> analyses = new Dictionary<RetCoverProfile, Analysis>();
+        private static HashSet<RetCover> availableCovers;
+        private static HashSet<RetCover> usedCovers;
+
+        private static Dictionary<RetCoverProfile, Analysis> analyses;
 
         public static void Register(RetCover cover) => availableCovers.Add(cover);
         public static void Free(RetCover cover)
@@ -106,6 +128,16 @@ namespace Chrome.Retro
 
         public static bool Request(RetCoverProfile profile, Vector3 position, out RetCover cover)
         {
+            var playerBoard = Blackboard.Global.Get<IBlackboard>(RetPlayerBoard.REF_SELF);
+            var identity = playerBoard.Get<IIdentity>(RetPlayerBoard.REF_IDENTITY);
+            var playerPoint = identity.Root.position.Flatten();
+
+            if (Vector3.Distance(playerPoint, position.Flatten()) <= profile.Distances.x)
+            {
+                cover = null;
+                return false;
+            }
+            
             if (!analyses.TryGetValue(profile, out var analysis))
             {
                 analysis = new Analysis(profile);
@@ -119,19 +151,30 @@ namespace Chrome.Retro
                 cover = null;
                 return false;
             }
-            
-            var entry = analysis.GetClosestFrom(position);
-            while (!availableCovers.Remove(entry.Cover))
-            {
-                if (analysis.Entries.Count == 0)
-                {
-                    cover = null;
-                    return false;
-                }
-                
-                entry = analysis.GetClosestFrom(position);
-            }
 
+            if (analysis.TryGetClosestFrom(position, out var entry))
+            {
+                while (!availableCovers.Remove(entry.Cover))
+                {
+                    if (analysis.Entries.Count == 0)
+                    {
+                        cover = null;
+                        return false;
+                    }
+
+                    if (!analysis.TryGetClosestFrom(position, out entry))
+                    {
+                        cover = null;
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                cover = null;
+                return false;
+            }
+            
             usedCovers.Add(entry.Cover);
             cover = entry.Cover;
             return true;
@@ -140,6 +183,14 @@ namespace Chrome.Retro
         private static void Refresh()
         {
             foreach (var analysis in analyses.Values) analysis.Reboot();
+        }
+
+        void Awake()
+        {
+            availableCovers = new HashSet<RetCover>();
+            usedCovers = new HashSet<RetCover>();
+            
+            analyses = new Dictionary<RetCoverProfile, Analysis>();
         }
 
         void LateUpdate() => Refresh();
