@@ -1,5 +1,6 @@
 ﻿using System;
 using Flux;
+using Flux.Audio;
 using Flux.Data;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -34,6 +35,8 @@ namespace Chrome.Retro
         [FoldoutGroup("Feedbacks"), SerializeField] private float targetWidth;
         [FoldoutGroup("Feedbacks"), SerializeField] private TrailRenderer trail;
         [FoldoutGroup("Feedbacks"), SerializeField] private PoolableVfx explosionPrefab;
+        [FoldoutGroup("Feedbacks"), SerializeField] private AudioPackage activation;
+        [FoldoutGroup("Feedbacks"), SerializeField] private AudioPackage explosion;
 
         private bool isActive;
         private float timer;
@@ -62,6 +65,11 @@ namespace Chrome.Retro
                 speedBoost = Mathf.SmoothDamp(0.0f, speedBoost, ref damping, smoothing);
                 trailWidth = Mathf.SmoothDamp(0.0f, trailWidth, ref trailDamping, trailSmoothing);
             }
+
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                activation.Play();
+            }
             
             if (Input.GetKey(KeyCode.A))
             {
@@ -81,6 +89,8 @@ namespace Chrome.Retro
 
             if (Input.GetKeyUp(KeyCode.A))
             {
+                explosion.Play();
+                
                 var ratio = timer / maxTime;
                 var splash = splashMap.Evaluate(ratio) * this.splash;
                 var damage = damageMap.Evaluate(ratio) * this.damage;

@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Flux.Audio;
 using Flux.Data;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -15,7 +16,8 @@ namespace Chrome.Retro
         [FoldoutGroup("Values"), Range(-1.0f, 1.0f), SerializeField] private float tracking;
         
         [FoldoutGroup("Feedbacks"), SerializeField] private PoolableVfx impactVfx;
-
+        [FoldoutGroup("Feedbacks"), SerializeField] private AudioPackage sound;
+        
         private float timer;
         private Vector3 damping;
         
@@ -103,6 +105,7 @@ namespace Chrome.Retro
             
             vfxPoolable.transform.localScale = Vector3.one;
 
+            sound.Play();
             if (hit.collider == target || hit.collider.TryGetComponent<InteractionHub>(out hub) && hub.Identity.Faction != identity.Faction)
             {
                 identity.Packet.Set(hit);

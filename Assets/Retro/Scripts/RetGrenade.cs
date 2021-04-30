@@ -1,4 +1,5 @@
 ﻿using Flux;
+using Flux.Audio;
 using Flux.Data;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -18,7 +19,8 @@ namespace Chrome.Retro
         [FoldoutGroup("Feedbacks"), SerializeField] private PoolableVfx impactVfx;
         [FoldoutGroup("Feedbacks"), SerializeField] private GameObject graph;
         [FoldoutGroup("Feedbacks"), SerializeField] private TrailRenderer trail;
-        
+        [FoldoutGroup("Feedbacks"), SerializeField] private AudioPackage sound;
+
         private float timer;
         
         private bool hasHit;
@@ -86,6 +88,7 @@ namespace Chrome.Retro
                 });
             }
             
+            sound.Play();
             var vfxPool = Repository.Get<VfxPool>(Pool.Impact);
             var vfxPoolable = vfxPool.RequestSinglePoolable(impactVfx);
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using Flux;
+using Flux.Audio;
 using Flux.Data;
 using Flux.Event;
 using Sirenix.OdinInspector;
@@ -67,6 +68,9 @@ namespace Chrome.Retro
         [FoldoutGroup("Feedbacks"), SerializeField] private AudioMixerSnapshot menuSnapshot;
         [FoldoutGroup("Feedbacks"), SerializeField] private AudioMixerSnapshot inGameSnapshot;
         [FoldoutGroup("Feedbacks"), SerializeField] private Vector2 transitions;
+        [FoldoutGroup("Feedbacks"), SerializeField] private AudioPackage win;
+        [FoldoutGroup("Feedbacks"), SerializeField] private AudioPackage loose;
+        [FoldoutGroup("Feedbacks"), SerializeField] private AudioPackage spawn;
 
         private int current;
         private bool inTransition;
@@ -95,9 +99,17 @@ namespace Chrome.Retro
         public void SwitchTo(RetGameState state)
         {
             if (inTransition) return;
-            
-            if (state == RetGameState.Won) Events.Call(RetEvent.OnGameWon);
-            else if (state == RetGameState.Lost) Events.Call(RetEvent.OnGameLost);
+
+            if (state == RetGameState.Won)
+            {
+                win.Play();
+                Events.Call(RetEvent.OnGameWon);
+            }
+            else if (state == RetGameState.Lost)
+            {
+                loose.Play();
+                Events.Call(RetEvent.OnGameLost);
+            }
             current = Array.FindIndex(infos, info => info.State == state);
 
             infos[current].onShowComplete += OnShowComplete;
@@ -116,6 +128,7 @@ namespace Chrome.Retro
             var root = life.transform.root.gameObject;
             if (!root.activeInHierarchy) root.SetActive(true);
             
+            spawn.Play();
             Routines.Start(Routines.DoAfter(() => game.Begin(), game.StartDelay));
             Events.Call(RetEvent.OnGameStart);
             

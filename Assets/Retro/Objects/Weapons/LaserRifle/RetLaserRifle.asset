@@ -23,3 +23,4 @@ MonoBehaviour:
   delay: 0.4
   projectilePrefab: {fileID: 5155491008473705253, guid: 64b329886e24c5c48ac1c660f4508fa7, type: 3}
   muzzleFlashPrefab: {fileID: 2067428610923920391, guid: 23dfa5939b642674888ff7fc7e60372f, type: 3}
+  sound: {fileID: 11400000, guid: f05fe6ec8200d974eb762fe42f678b69, type: 2}

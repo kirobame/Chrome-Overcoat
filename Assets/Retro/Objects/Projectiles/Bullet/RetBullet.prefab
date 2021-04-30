@@ -56,6 +56,10 @@ PrefabInstance:
       value: RetBullet
       objectReference: {fileID: 0}
     - target: {fileID: 34740033821788150, guid: 1095f378cc57ad54595eae679fdcf637, type: 3}
+      propertyPath: sound
+      value: 
+      objectReference: {fileID: 11400000, guid: 73879d9719336cf4ab507ece26f512f0, type: 2}
+    - target: {fileID: 34740033821788150, guid: 1095f378cc57ad54595eae679fdcf637, type: 3}
       propertyPath: impactVfx
       value: 
       objectReference: {fileID: 989992088512769323, guid: cf09b33813e7ce34490a32f98b4eb9fd, type: 3}

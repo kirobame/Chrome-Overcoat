@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Flux.Audio;
 using Flux.Data;
 using UnityEngine;
 
@@ -8,7 +9,8 @@ namespace Chrome.Retro
     public class RetGame : ScriptableObject
     {
         public float StartDelay => startDelay;
-        
+
+        [SerializeField] private AudioPackage sound;
         [SerializeField] private float startDelay;
         [SerializeField] private RetWave[] waves;
 
@@ -16,6 +18,7 @@ namespace Chrome.Retro
         
         public void Begin()
         {
+            sound.Play();
             progress = 0;
 
             waves[0].onPartiallyComplete += OnWavePartiallyComplete;
@@ -39,6 +42,8 @@ namespace Chrome.Retro
                 wave.onComplete += OnWaveComplete;
                 return;
             }
+            
+            sound.Play();
             
             progress++;
             waves[progress].onPartiallyComplete += OnWavePartiallyComplete;
