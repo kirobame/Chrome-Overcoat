@@ -13,25 +13,25 @@ MonoBehaviour:
   m_Name: RetWave-Simon12
   m_EditorClassIdentifier: 
   infos:
-  - enemyPrefab: {fileID: 5948806156712276297, guid: f4147eb98dc16aa46ad071c86a7dc433, type: 3}
+  - enemyPrefab: {fileID: 5948806156712276297, guid: bce89a97e33d52d4c846886b71df45c7, type: 3}
     count: 2
     address: 511
-  - enemyPrefab: {fileID: 8466399675669850887, guid: 487e778018b836847b2feb0c656fbd0d, type: 3}
+  - enemyPrefab: {fileID: 2703974350041118036, guid: f70a798e6c5bbcc40a3c91c2bc0d60ab, type: 3}
     count: 2
     address: 166
-  - enemyPrefab: {fileID: 4760352211115948272, guid: 009e21696d6abf5499554f57c987edb7, type: 3}
+  - enemyPrefab: {fileID: 889611247076007219, guid: 76412038833b137439779d222f3972b2, type: 3}
     count: 3
     address: 166
-  - enemyPrefab: {fileID: 4760352211115948272, guid: 21474a21a18ac5c45b6c0ab65c9687e1, type: 3}
+  - enemyPrefab: {fileID: 5948806156712276297, guid: bce89a97e33d52d4c846886b71df45c7, type: 3}
     count: 1
     address: 277
-  - enemyPrefab: {fileID: 2270795153610218287, guid: 520a2a3a30614394092c4cf84b6f0a53, type: 3}
+  - enemyPrefab: {fileID: 3103330212697190568, guid: 6754e23a1fc148141850db9851b6c99d, type: 3}
     count: 2
     address: 277
-  - enemyPrefab: {fileID: 4760352211115948272, guid: 20c29c6a50c2a684880d76d5982d609a, type: 3}
+  - enemyPrefab: {fileID: 8018036747820047512, guid: b28b5d9b512d05341adad2329a9167af, type: 3}
     count: 1
     address: 511
-  - enemyPrefab: {fileID: 8882426455171800039, guid: 9763bcb1182352d42aeaea0d73da631d, type: 3}
+  - enemyPrefab: {fileID: 2703974350041118036, guid: f70a798e6c5bbcc40a3c91c2bc0d60ab, type: 3}
     count: 1
     address: 511
   completion: 10

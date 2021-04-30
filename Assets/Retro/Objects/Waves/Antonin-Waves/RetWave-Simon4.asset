@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: RetWave-Simon4
   m_EditorClassIdentifier: 
   infos:
-  - enemyPrefab: {fileID: 5948806156712276297, guid: f4147eb98dc16aa46ad071c86a7dc433, type: 3}
+  - enemyPrefab: {fileID: 7618997479423793499, guid: 842537758ecaadc479efc043a7d1cce6, type: 3}
     count: 2
     address: 273
-  - enemyPrefab: {fileID: 8466399675669850887, guid: 487e778018b836847b2feb0c656fbd0d, type: 3}
+  - enemyPrefab: {fileID: 7999712477629756169, guid: c63d99bd6d3bf834fbfc3d9ae7d8fa95, type: 3}
     count: 1
     address: 198
-  - enemyPrefab: {fileID: 4760352211115948272, guid: 009e21696d6abf5499554f57c987edb7, type: 3}
+  - enemyPrefab: {fileID: 3103330212697190568, guid: 6754e23a1fc148141850db9851b6c99d, type: 3}
     count: 1
     address: 198
   completion: 3

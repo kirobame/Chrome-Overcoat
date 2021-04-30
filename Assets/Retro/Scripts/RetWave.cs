@@ -131,9 +131,13 @@ namespace Chrome.Retro
         {
             foreach (var enemy in enemies)
             {
+                if (enemy == null) return;
+                
                 enemy.onDeath -= OnEnemyDeath;
                 enemy.transform.root.gameObject.SetActive(false);
             }
+            
+            enemies.Clear();
         }
 
         void OnEnemyDeath(RetPoolableEnemy enemy)

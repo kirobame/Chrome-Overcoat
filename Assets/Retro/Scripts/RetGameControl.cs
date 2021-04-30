@@ -156,10 +156,10 @@ namespace Chrome.Retro
             var life = playerBoard.Get<Lifetime>(RetPlayerBoard.REF_LIFE);
             life.End();
             
+            game.Reboot();
+            
             Events.Call(RetEvent.OnGameEnd);
             Events.Call(RetEvent.OnScreenDisplay);
-            
-            game.Reboot();
         }
     }
 }
