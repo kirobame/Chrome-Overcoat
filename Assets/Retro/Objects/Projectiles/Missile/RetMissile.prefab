@@ -98,6 +98,7 @@ MonoBehaviour:
   detection: 3
   tracking: 0
   impactVfx: {fileID: 1093206931982187042, guid: efd387b2f3593d641ac4d6fba318c78b, type: 3}
+  sound: {fileID: 11400000, guid: 73879d9719336cf4ab507ece26f512f0, type: 2}
 --- !u!1 &8019562954338777677
 GameObject:
   m_ObjectHideFlags: 0

@@ -23,5 +23,6 @@ MonoBehaviour:
   delay: 0.75
   projectilePrefab: {fileID: 3278294482387087007, guid: 48d19aea30ef1f54c8eb3d8ef6f9c4cd, type: 3}
   muzzleFlashPrefab: {fileID: 2017965796941768161, guid: 33ac8d8aac6693b47b52575e2f38f151, type: 3}
+  sound: {fileID: 11400000, guid: 15508094e6ca18d43b4ee14f72d148ea, type: 2}
   pallet: 3
   cone: 52.5

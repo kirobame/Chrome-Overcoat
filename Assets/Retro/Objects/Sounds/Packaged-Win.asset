@@ -9,11 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd703d9c23ce4f4794a49474ba0dc826, type: 3}
-  m_Name: RetWave-01
+  m_Script: {fileID: 11500000, guid: c00ac4e52c664524b131bfbb103b630c, type: 3}
+  m_Name: Packaged-Win
   m_EditorClassIdentifier: 
-  infos:
-  - enemyPrefab: {fileID: 7999712477629756169, guid: c63d99bd6d3bf834fbfc3d9ae7d8fa95, type: 3}
-    count: 2
-    address: 7
-  completion: 1
+  clip: {fileID: 8300000, guid: 0c42be37338a46f479cafcf7d0e6d2c3, type: 3}
+  mixerGroup: {fileID: 0}
+  volume: 1
+  pitch: 1

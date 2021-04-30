@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Flux.Audio;
 using Flux.Data;
 using Flux.Event;
 using Sirenix.OdinInspector;
@@ -21,7 +22,7 @@ namespace Chrome.Retro
         [FoldoutGroup("Dependencies"), SerializeField] private new MeshRenderer renderer;
 
         [FoldoutGroup("Values"), SerializeField] private int quality;
-
+        
         private bool hasBeenBootedUp;
         
         private HashSet<Collider> inRange;

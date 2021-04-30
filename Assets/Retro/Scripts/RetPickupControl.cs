@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Flux.Audio;
 using Flux.Event;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -15,6 +16,9 @@ namespace Chrome.Retro
         
         [FoldoutGroup("Dependencies"), SerializeField] private RetGunControl gun;
 
+        [FoldoutGroup("Feedbacks"), SerializeField] private AudioPackage foundSound;
+        [FoldoutGroup("Feedbacks"), SerializeField] private AudioPackage dropSound;
+
         private bool hasPickup;
         private RetGunPickup pickup;
 
@@ -24,6 +28,7 @@ namespace Chrome.Retro
 
             if (hasPickup)
             {
+                dropSound.Play();
                 gun.SwitchTo(pickup.Gun, pickup.ammo);
                 
                 OnPickupLost();
@@ -31,7 +36,11 @@ namespace Chrome.Retro
             
                 pickup.gameObject.SetActive(false);
             }
-            else if (!gun.IsOnDefault) gun.DropCurrent();
+            else if (!gun.IsOnDefault)
+            {
+                dropSound.Play();
+                gun.DropCurrent();
+            }
         }
         
         void FixedUpdate()
@@ -72,12 +81,16 @@ namespace Chrome.Retro
                     {
                         if (newPickup != pickup)
                         {
+                            foundSound.Play();
+                            
                             onPickupFound?.Invoke(newPickup);
                             Events.ZipCall(RetEvent.OnGunFound, pickup);
                         }
                     }
                     else
                     {
+                        foundSound.Play();
+                        
                         OnPickupFound(newPickup);
                         hasPickup = true;
                     }

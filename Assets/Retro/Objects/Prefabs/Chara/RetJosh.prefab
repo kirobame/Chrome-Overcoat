@@ -49,6 +49,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: bf51e4a4ba925f84aa5f4eeefd3258db, type: 2}
+    - target: {fileID: 7999712477629756169, guid: c63d99bd6d3bf834fbfc3d9ae7d8fa95, type: 3}
+      propertyPath: deathSound
+      value: 
+      objectReference: {fileID: 11400000, guid: a64f34c5456396e4db8455d24dd4c6fe, type: 2}
     - target: {fileID: 8216925769953402663, guid: c63d99bd6d3bf834fbfc3d9ae7d8fa95, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
