@@ -21,14 +21,13 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: RetAim
-  m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+  m_Shader: {fileID: 4800000, guid: ac52de039855e1e4eb7f1861cf1c8e98, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
-  stringTagMap:
-    RenderType: Transparent
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
   disabledShaderPasses:
   - SHADOWCASTER
   m_SavedProperties:
@@ -98,6 +97,7 @@ Material:
     - _ClearCoatSmoothness: 0
     - _Cull: 2
     - _Cutoff: 0.5
+    - _DepthLevel: 2
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 10
@@ -105,6 +105,8 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
+    - _LerpAlpha: 0.5
+    - _LerpDistance: 2.9
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
@@ -120,6 +122,8 @@ Material:
     m_Colors:
     - _BaseColor: {r: 0.3445621, g: 0.48524785, b: 0.8207547, a: 0.5019608}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _ColorCenter: {r: 1, g: 0, b: 0, a: 1}
+    - _ColorExt: {r: 1, g: 0.60441756, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_BuildTextureStacks: []

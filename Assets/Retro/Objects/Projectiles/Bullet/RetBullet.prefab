@@ -7,6 +7,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1562849812, guid: 1095f378cc57ad54595eae679fdcf637, type: 3}
+      propertyPath: m_Parameters.widthMultiplier
+      value: 0.15
+      objectReference: {fileID: 0}
     - target: {fileID: 30921159864898313, guid: 1095f378cc57ad54595eae679fdcf637, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -63,5 +67,9 @@ PrefabInstance:
       propertyPath: impactVfx
       value: 
       objectReference: {fileID: 989992088512769323, guid: cf09b33813e7ce34490a32f98b4eb9fd, type: 3}
+    - target: {fileID: 5212214593583665140, guid: 1095f378cc57ad54595eae679fdcf637, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1095f378cc57ad54595eae679fdcf637, type: 3}

@@ -21,7 +21,7 @@ Material:
     m_TexEnvs:
     - _CRTTex:
         m_Texture: {fileID: 2800000, guid: 7f9e48412f7328a4cb29223c837ec4f6, type: 3}
-        m_Scale: {x: 5, y: 5}
+        m_Scale: {x: 3, y: 3}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
@@ -29,7 +29,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _CRTBrightness: 0.63
-    - _CRTSaturation: 0.99
+    - _CRTSaturation: 0.36
     - _CRTStrength: 1.48
     m_Colors:
     - _Color: {r: 1.39772, g: 1.39772, b: 1.39772, a: 1}
