@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RetWave-02
   m_EditorClassIdentifier: 
   infos:
-  - enemyPrefab: {fileID: 7999712477629756169, guid: c63d99bd6d3bf834fbfc3d9ae7d8fa95, type: 3}
+  - enemyPrefab: {fileID: 3103330212697190568, guid: 6754e23a1fc148141850db9851b6c99d, type: 3}
     count: 2
     address: 5
   completion: 1

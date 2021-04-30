@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lookAt: {fileID: 9022665253594411748}
   head: {fileID: 1663900975786236395}
-  pivot: {fileID: 3916179255002381552}
+  pivot: {fileID: 520040330179292096}
   fireAnchor: {fileID: 6701984392927537602}
   navMesh: {fileID: 5977595538973048352}
   gun: {fileID: 11400000, guid: 0390090f53048454196e45892f5b9a18, type: 2}
@@ -122,9 +122,9 @@ NavMeshAgent:
   m_CorrespondingSourceObject: {fileID: 1648635252637089153, guid: c63d99bd6d3bf834fbfc3d9ae7d8fa95, type: 3}
   m_PrefabInstance: {fileID: 4905984048740696993}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &3916179255002381552 stripped
+--- !u!4 &520040330179292096 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 8236131778852011857, guid: c63d99bd6d3bf834fbfc3d9ae7d8fa95, type: 3}
+  m_CorrespondingSourceObject: {fileID: 4837432880178833505, guid: c63d99bd6d3bf834fbfc3d9ae7d8fa95, type: 3}
   m_PrefabInstance: {fileID: 4905984048740696993}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &9022665253594411748 stripped
