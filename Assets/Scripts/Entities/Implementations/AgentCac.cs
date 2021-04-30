@@ -64,7 +64,7 @@ namespace Chrome
                             new Delay(0.5f),
                             new ShieldDown(shieldReference))
                         //Both
-                        //new ShieldDown().Mask(0b_0011)
+                        //new ShieldDown(shieldReference).Mask(0b_0011)
                         )
                     )
                 );

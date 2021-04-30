@@ -18024,10 +18024,10 @@ MonoBehaviour:
       data:
         rect:
           serializedVersion: 2
-          x: 230.4
-          y: 94.4
+          x: 236
+          y: 147.2
           width: 102.399994
-          height: 71.200005
+          height: 71.2
         linkIndices: 
 --- !u!1001 &2037637259
 PrefabInstance:
