@@ -264,6 +264,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sound: {fileID: 11400000, guid: f20219f971295d446b3ecb3dbb6e2487, type: 2}
+  splatter: 0
+  bloodSplatterPrefab: {fileID: 0}
 --- !u!1 &301505813183866944
 GameObject:
   m_ObjectHideFlags: 0
@@ -1654,11 +1656,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae029609791c402cb4060549525675ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  modelParent: {fileID: 0}
+  modelParent: {fileID: 8717863539237956643}
   detection: {fileID: 4535709658597770260}
   aim: {fileID: 8717863539237956643}
   animator: {fileID: 2459878959121241150}
-  defaultGun: {fileID: 11400000, guid: 693fdd7ca4339784dbd046b8929ef26e, type: 2}
+  defaultGun: {fileID: 11400000, guid: 599b99f2f5f7c984bb2e56aec83f3103, type: 2}
 --- !u!114 &4535709658597770260
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1671,7 +1673,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8364a6f43294ebe8e6c6eab6c29c901, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gun: {fileID: 4535709658597770267}
+  gun: {fileID: 8628385516816366998}
   body: {fileID: 185355290499276111}
   filter: {fileID: 4535709658597770261}
   renderer: {fileID: 4535709658597770262}
@@ -1689,7 +1691,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 1.5
-  gun: {fileID: 4535709658597770267}
+  gun: {fileID: 8628385516816366998}
   foundSound: {fileID: 11400000, guid: 097d7ea36289b534bb98a2e5e116b9b3, type: 2}
   dropSound: {fileID: 11400000, guid: 5784264b7d6ccdb44b9b9b5b213adeca, type: 2}
 --- !u!33 &4535709658597770261
