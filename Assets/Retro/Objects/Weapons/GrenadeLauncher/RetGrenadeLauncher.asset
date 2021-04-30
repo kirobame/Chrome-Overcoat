@@ -19,7 +19,7 @@ MonoBehaviour:
   pickup: {fileID: 569463858353241236, guid: 863c20ee1acca6b4285cdc88566b5867, type: 3}
   spread: 45
   radius: 6.5
-  maxAmmo: 4
+  maxAmmo: 5
   delay: 0.75
   projectilePrefab: {fileID: 681452027333185184, guid: 43c97b9dda83dd1408ae127b7bdbf6b2, type: 3}
   muzzleFlashPrefab: {fileID: 7240262647165215760, guid: 898bbcac2dc81234db9c5cd29fdeab01, type: 3}

@@ -20,7 +20,7 @@ MonoBehaviour:
   spread: 180
   radius: 2
   maxAmmo: -1
-  delay: 1.5
+  delay: 1
   damage: 4
   category: 6
   hitVfxPrefab: {fileID: 8424460690970285546, guid: 60141b4977ac9144ba36d828fac44edf, type: 3}

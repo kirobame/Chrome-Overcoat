@@ -103,7 +103,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8240647053616232773, guid: c63d99bd6d3bf834fbfc3d9ae7d8fa95, type: 3}
       propertyPath: m_Name
-      value: RetJosh
+      value: RetJosh-NoLoot
+      objectReference: {fileID: 0}
+    - target: {fileID: 8240647055159017483, guid: c63d99bd6d3bf834fbfc3d9ae7d8fa95, type: 3}
+      propertyPath: maxHealth
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8819484758902165127, guid: c63d99bd6d3bf834fbfc3d9ae7d8fa95, type: 3}
       propertyPath: m_Materials.Array.data[0]

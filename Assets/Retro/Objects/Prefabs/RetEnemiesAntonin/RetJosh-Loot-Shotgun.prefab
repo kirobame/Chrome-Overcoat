@@ -59,5 +59,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: RetJosh-Loot-Shotgun
       objectReference: {fileID: 0}
+    - target: {fileID: 8483965505765856187, guid: 76412038833b137439779d222f3972b2, type: 3}
+      propertyPath: m_Speed
+      value: 2.75
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 76412038833b137439779d222f3972b2, type: 3}

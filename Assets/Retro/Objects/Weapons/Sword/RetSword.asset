@@ -18,7 +18,7 @@ MonoBehaviour:
   model: {fileID: 1892097630342930754, guid: 02a3a214294f8ed4ea06b9d79ef11971, type: 3}
   pickup: {fileID: 2952213446951348237, guid: 84b8e576123cc4449bc155626139a0f3, type: 3}
   spread: 180
-  radius: 1.75
+  radius: 1.5
   maxAmmo: -1
   delay: 0.5
   damage: 2

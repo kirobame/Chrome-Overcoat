@@ -55,6 +55,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2400192395950793478, guid: b42f40a59363c14458abbb441e57f20d, type: 3}
+      propertyPath: maxHealth
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 7721828850810097000, guid: b42f40a59363c14458abbb441e57f20d, type: 3}
       propertyPath: pickupPrefab
       value: 

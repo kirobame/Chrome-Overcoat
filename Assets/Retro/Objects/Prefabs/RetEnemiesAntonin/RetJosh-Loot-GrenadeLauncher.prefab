@@ -11,6 +11,10 @@ PrefabInstance:
       propertyPath: pickupPrefab
       value: 
       objectReference: {fileID: 569463858353241236, guid: 863c20ee1acca6b4285cdc88566b5867, type: 3}
+    - target: {fileID: 1225137976168066609, guid: 76412038833b137439779d222f3972b2, type: 3}
+      propertyPath: maxHealth
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 1225137977712433022, guid: 76412038833b137439779d222f3972b2, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -58,6 +62,10 @@ PrefabInstance:
     - target: {fileID: 1225137977712433023, guid: 76412038833b137439779d222f3972b2, type: 3}
       propertyPath: m_Name
       value: RetJosh-Loot-GrenadeLauncher
+      objectReference: {fileID: 0}
+    - target: {fileID: 8483965505765856187, guid: 76412038833b137439779d222f3972b2, type: 3}
+      propertyPath: m_Speed
+      value: 2.75
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 76412038833b137439779d222f3972b2, type: 3}
