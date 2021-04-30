@@ -9,11 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd703d9c23ce4f4794a49474ba0dc826, type: 3}
-  m_Name: RetWave-Sample
+  m_Script: {fileID: 11500000, guid: 6f22984e6ad3430b9f402f3a1ce755f2, type: 3}
+  m_Name: RetCoverProfile
   m_EditorClassIdentifier: 
-  infos:
-  - enemyPrefab: {fileID: 5948806156712276297, guid: bce89a97e33d52d4c846886b71df45c7, type: 3}
-    count: 1
-    address: 7
-  completion: 1
+  range: {x: 4, y: 10.5}
+  maxFlank: 0
+  distances: {x: 5.5, y: 9}

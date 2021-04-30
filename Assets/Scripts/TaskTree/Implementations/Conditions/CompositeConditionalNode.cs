@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using UnityEngine;
 
 namespace Chrome
 {
@@ -26,11 +27,13 @@ namespace Chrome
                 {
                     case ConditionalOperator.AND:
 
+                        if (!output) return false;
                         output &= HandleCheck(packet, conditions[i]);
                         break;
                     
                     case ConditionalOperator.OR:
 
+                        if (output) return true;
                         output |= HandleCheck(packet, conditions[i]);
                         break;
                 }
