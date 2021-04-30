@@ -5,6 +5,14 @@ namespace Chrome.Retro
 {
     public static class RetExtensions
     {
+        public static Vector3 Vector3Mul(Vector3 a, Vector3 b)
+        {
+            a.x *= b.x;
+            a.y *= b.y;
+            a.z *= b.z;
+            return a;
+        }
+        
         public static Vector3 Flatten(this Vector3 value, float height = 0.0f)
         {
             value.y = height;
