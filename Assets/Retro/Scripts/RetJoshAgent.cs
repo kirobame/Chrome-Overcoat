@@ -10,13 +10,14 @@ namespace Chrome.Retro
 
         [FoldoutGroup("Values"), SerializeField] private RetCoverProfile coverProfile;
         [FoldoutGroup("Values"), SerializeField] private float chaseTime;
+        [FoldoutGroup("Values"), SerializeField] private float maxShootDistance;
 
         protected override void BuildTree()
         {
             var isTargetVisible = new IsVisible(REF_HEAD.Reference<Transform>(), REF_TARGETCOL.Reference<Collider>(), LayerMask.GetMask("Environment"));
             var isInProximityOfTarget = new IsInProximityOf(REF_ROOT.Reference<Transform>(), REF_TARGET.Reference<Transform>(), distance);
             var hasCover = new RetHasCover(REF_ROOT.Reference<Transform>(), REF_COVER, coverProfile);
-            var isCoverValid = new RetIsCoverValid(REF_COVER.Reference<RetCover>());
+            var isCoverValid = new RetIsCoverValid(REF_ROOT.Reference<Transform>(), REF_COVER.Reference<RetCover>(), maxShootDistance);
 
             var conditionalNodeOne = new CompositeConditionalNode(isTargetVisible.Chain(ConditionalOperator.AND), hasCover);
             var conditionalNodeTwo = new CompositeConditionalNode(isTargetVisible.Chain(ConditionalOperator.AND), isCoverValid);

@@ -22,6 +22,7 @@ MonoBehaviour:
   distance: 7.5
   coverProfile: {fileID: 11400000, guid: d2575abd74c72ee4893713fef1eb3d30, type: 2}
   chaseTime: 4.25
+  maxShootDistance: 8.5
 --- !u!1001 &4905984048740696993
 PrefabInstance:
   m_ObjectHideFlags: 0
