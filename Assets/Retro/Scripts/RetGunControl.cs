@@ -10,20 +10,16 @@ using Random = UnityEngine.Random;
 
 namespace Chrome.Retro
 {
-    public class RetGunControl : MonoBehaviour, ILifebound, ILink<IIdentity>
+    public class RetGunControl : RetBaseGunControl, ILifebound, ILink<IIdentity>
     {
-        public event Action<RetGun> onGunSwitch;
-    
         IIdentity ILink<IIdentity>.Link
         {
             set => identity = value;
         }
         private IIdentity identity;
 
-        public bool IsOnDefault => Current == defaultGun;
+        public override bool IsOnDefault => Current == defaultGun;
         
-        [ShowInInspector, HideInEditorMode] public RetGun Current { get; private set; }
-
         [FoldoutGroup("Dependencies"), SerializeField] private Transform modelParent;
         [FoldoutGroup("Dependencies"), SerializeField] private RetDetectionControl detection;
         [FoldoutGroup("Dependencies"), SerializeField] private Transform aim;
@@ -42,15 +38,25 @@ namespace Chrome.Retro
 
         void Awake()
         {
+            if (!enabled) return;
+
             Current = defaultGun;
             detection.onTargetEntry += OnTargetEntry;
         }
         void Start() => InstantiateModel();
         void OnDestroy() => detection.onTargetEntry -= OnTargetEntry;
 
-        public void Bootup() => ActualizeMesh();
-        public void Shutdown() => DropCurrent();
-        
+        public void Bootup()
+        {
+            if (!enabled) return;
+            ActualizeMesh();
+        }
+        public void Shutdown()
+        {
+            if (!enabled) return;
+            DropCurrent();
+        }
+
         //--------------------------------------------------------------------------------------------------------------/
         
         void Update()
@@ -61,8 +67,8 @@ namespace Chrome.Retro
 
         //--------------------------------------------------------------------------------------------------------------/
         
-        public void DropCurrent() => SwitchTo(defaultGun, -1);
-        public void SwitchTo(RetGun gun, int ammo)
+        public override void DropCurrent() => SwitchTo(defaultGun, -1);
+        public override void SwitchTo(RetGun gun, int ammo)
         {
             if (routine != null)
             {
@@ -98,7 +104,7 @@ namespace Chrome.Retro
                 Current = gun;
                 this.ammo = ammo;
                 
-                onGunSwitch?.Invoke(gun);
+                SignalSwitch(gun);
                 Events.ZipCall<RetGun,int>(RetEvent.OnGunSwitch, Current, ammo);
                 
                 InstantiateModel();

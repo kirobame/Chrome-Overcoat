@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Chrome.Retro
 {
-    public class RetJumpControl : InputControl
+    public class RetJumpControl : MonoBehaviour
     {
         [FoldoutGroup("Dependencies"), SerializeField] private CharacterBody body;
         [FoldoutGroup("Dependencies"), SerializeField] private Gravity gravity;
