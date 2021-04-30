@@ -110,6 +110,7 @@ namespace Chrome.Retro
 
         private void InstantiateModel()
         {
+            Debug.Log(Current);
             model = Instantiate(Current.Model, modelParent);
             var board = identity.Packet.Get<IBlackboard>();
             

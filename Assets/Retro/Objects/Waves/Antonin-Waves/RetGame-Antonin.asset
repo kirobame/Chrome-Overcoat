@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a7a4d368f2b4ea18f3d06b120ea459d, type: 3}
   m_Name: RetGame-Antonin
   m_EditorClassIdentifier: 
+  startDelay: 3
   waves:
   - {fileID: 11400000, guid: 251b1be7a1b430043b5517bc25e3d41e, type: 2}
   - {fileID: 11400000, guid: c82862c946e0813448cd506040ef6022, type: 2}
