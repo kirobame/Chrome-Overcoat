@@ -32,7 +32,7 @@ namespace Chrome.Retro
             hub.Relay<IDamageable>(damageable => { damageable.Hit(identity, damage, identity.Packet); });
             identity.Packet.Load(snapshot);
             
-            sound.Play();
+            //sound.Play();
         }
 
         public override bool Use(IIdentity identity, Collider target, InteractionHub hub)

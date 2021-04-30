@@ -20,7 +20,7 @@ namespace Chrome.Retro
             var baseDirection = Quaternion.AngleAxis(-cone * 0.5f, Vector3.up) * direction;
             var step = cone / (pallet - 1);
 
-            sound.Play();
+            //sound.Play();
             for (var i = 0; i < pallet; i++)
             {
                 direction = Quaternion.AngleAxis(step * i, Vector3.up) * baseDirection;
