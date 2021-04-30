@@ -13,7 +13,7 @@ namespace Chrome.Retro
             var direction = identity.Packet.Get<Vector3>();
             var fireAnchor = identity.Packet.Get<Transform>();
             
-            sound.Play();
+            //sound.Play();
             Shoot(identity, direction, fireAnchor);
         }
     }

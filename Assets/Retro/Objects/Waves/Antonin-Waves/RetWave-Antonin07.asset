@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd703d9c23ce4f4794a49474ba0dc826, type: 3}
+  m_Name: RetWave-Antonin07
+  m_EditorClassIdentifier: 
+  infos:
+  - enemyPrefab: {fileID: 3089653282459108252, guid: 5370583ba2ad595408f253fabadb1c94, type: 3}
+    count: 4
+    address: 1
+  - enemyPrefab: {fileID: 3089653282459108252, guid: 6d8823595db7129429a536cf01e5dac8, type: 3}
+    count: 1
+    address: 8
+  - enemyPrefab: {fileID: 3089653282459108252, guid: b8d38cef1490f184bbc543386cbcc1cd, type: 3}
+    count: 1
+    address: 8
+  - enemyPrefab: {fileID: 3089653282459108252, guid: 146fb4b3fb845664692b88be811d22e6, type: 3}
+    count: 1
+    address: 0
+  - enemyPrefab: {fileID: 3089653282459108252, guid: 4ff0c9df79d087546b062c6f71c687e9, type: 3}
+    count: 1
+    address: 0
+  - enemyPrefab: {fileID: 3089653282459108252, guid: b8461eb732ac5514885fd461a806d10a, type: 3}
+    count: 1
+    address: 0
+  - enemyPrefab: {fileID: 3089653282459108252, guid: 0cb4a34c6ad9c754a9111c2e807ae2c9, type: 3}
+    count: 1
+    address: 0
+  completion: 10
