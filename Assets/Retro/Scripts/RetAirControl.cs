@@ -17,7 +17,7 @@ namespace Chrome.Retro
 
         void FixedUpdate()
         {
-            if (transform.position.y < -3.0f)
+            if (transform.position.y < -5.0f)
             {
                 life.End();
                 return;

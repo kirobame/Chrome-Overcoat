@@ -35,11 +35,20 @@ namespace Chrome.Retro
         [FoldoutGroup("Values"), SerializeField] protected float distance;
 
         protected ITaskTree taskTree;
+        private bool hasBeenBootedUp;
 
         public void Bootup()
         {
-            taskTree.Bootup(identity.Packet);
-            taskTree.Start(identity.Packet);
+            if (!hasBeenBootedUp)
+            {
+                hasBeenBootedUp = true;
+                return;
+            }
+            else
+            {
+                taskTree.Bootup(identity.Packet);
+                taskTree.Start(identity.Packet);
+            }
         }
         public void Shutdown() => taskTree.Shutdown(identity.Packet);
         

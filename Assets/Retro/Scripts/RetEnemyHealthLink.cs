@@ -16,9 +16,8 @@ namespace Chrome.Retro
         
         void Awake()
         {
-            hasHUD = false;
+            //hasHUD = false;
             health.onChange += OnHealthChange;
-
             Events.Subscribe(RetEvent.OnGameEnd, OnGameEnd);
         }
         void OnDestroy()

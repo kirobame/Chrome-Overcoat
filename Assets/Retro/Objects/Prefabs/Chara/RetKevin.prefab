@@ -1858,6 +1858,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   value: {fileID: 8240647053616232777}
+  lifetime: {fileID: 1213800447252526399}
   agent: {fileID: 1648635252637089153}
 --- !u!114 &1213800447252526399
 MonoBehaviour:
@@ -1884,6 +1885,7 @@ MonoBehaviour:
     - id: 0
     - id: 1
     - id: 2
+  bypassBootup: 1
   references:
     version: 1
     00000000:

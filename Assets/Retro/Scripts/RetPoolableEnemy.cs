@@ -11,7 +11,9 @@ namespace Chrome.Retro
         public Action<RetPoolableEnemy> onDeath;
 
         public NavMeshAgent Agent => agent;
-        
+        public Lifetime Lifetime => lifetime;
+
+        [FoldoutGroup("Dependencies"), SerializeField] private Lifetime lifetime;
         [FoldoutGroup("Dependencies"), SerializeField] private NavMeshAgent agent;
             
         public override void Reboot() => onDeath?.Invoke(this);
