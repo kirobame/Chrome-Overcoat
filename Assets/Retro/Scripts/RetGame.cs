@@ -7,6 +7,9 @@ namespace Chrome.Retro
     [CreateAssetMenu(fileName = "RetGame", menuName = "Chrome Overcoat/Retro/Game")]
     public class RetGame : ScriptableObject
     {
+        public float StartDelay => startDelay;
+        
+        [SerializeField] private float startDelay;
         [SerializeField] private RetWave[] waves;
 
         private int progress;

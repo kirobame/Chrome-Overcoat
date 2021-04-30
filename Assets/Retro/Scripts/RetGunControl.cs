@@ -27,6 +27,7 @@ namespace Chrome.Retro
         [FoldoutGroup("Dependencies"), SerializeField] private Transform modelParent;
         [FoldoutGroup("Dependencies"), SerializeField] private RetDetectionControl detection;
         [FoldoutGroup("Dependencies"), SerializeField] private Transform aim;
+        [FoldoutGroup("Dependencies"), SerializeField] private Animator animator;
 
         [FoldoutGroup("Values"), SerializeField] private RetGun defaultGun;
         [FoldoutGroup("Values"), SerializeField] private float smoothing;
@@ -47,7 +48,7 @@ namespace Chrome.Retro
         void Start() => InstantiateModel();
         void OnDestroy() => detection.onTargetEntry -= OnTargetEntry;
 
-        public void Bootup() { }
+        public void Bootup() => ActualizeMesh();
         public void Shutdown() => DropCurrent();
         
         //--------------------------------------------------------------------------------------------------------------/
@@ -55,7 +56,7 @@ namespace Chrome.Retro
         void Update()
         {
             if (routine == null) smoothedAngle = Mathf.SmoothDampAngle(smoothedAngle, 0.0f, ref damping, smoothing);
-            aim.localRotation = Quaternion.Euler(0.0f, smoothedAngle, 0.0f);
+            //aim.localRotation = Quaternion.Euler(0.0f, smoothedAngle, 0.0f);
         }
 
         //--------------------------------------------------------------------------------------------------------------/
@@ -101,6 +102,8 @@ namespace Chrome.Retro
                 Events.ZipCall<RetGun,int>(RetEvent.OnGunSwitch, Current, ammo);
                 
                 InstantiateModel();
+                ActualizeMesh();
+                
                 if (gameObject.activeInHierarchy) AttemptNewFiring();
             }
         }
@@ -112,6 +115,19 @@ namespace Chrome.Retro
             
             board.Set(RetPlayerBoard.REF_FIREANCHOR, model.FireAnchor);
             identity.Packet.Set(model.FireAnchor);
+        }
+        private void ActualizeMesh()
+        {
+            if (Current == defaultGun)
+            {
+                animator.SetBool("IsMelee", true);
+                animator.SetBool("IsRange", false);
+            }
+            else
+            {
+                animator.SetBool("IsMelee", false);
+                animator.SetBool("IsRange", true);
+            }
         }
         
         //--------------------------------------------------------------------------------------------------------------/

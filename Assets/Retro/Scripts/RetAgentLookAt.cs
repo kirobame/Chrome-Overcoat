@@ -17,6 +17,8 @@ namespace Chrome.Retro
         void Update()
         {
             smoothedDirection = Vector3.Normalize(Vector3.SmoothDamp(smoothedDirection, direction, ref damping, smoothing));
+            if (smoothedDirection == Vector3.zero) return;
+            
             pivot.transform.localRotation = Quaternion.LookRotation(smoothedDirection, pivot.transform.up);
         }
     }

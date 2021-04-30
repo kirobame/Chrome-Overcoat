@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: RetBulletRifle
   m_EditorClassIdentifier: 
   title: Rifle
-  icon: {fileID: 1161201145128540330, guid: 999b2f38059452d4fb8218d8d6941c5d, type: 3}
-  model: {fileID: 8800820504237898023, guid: 4dc144c4563d5d64ca38aa758b8db031, type: 3}
+  cutIcon: {fileID: 21300000, guid: 6e5c60a9c9e3bbb4b842ee8dba9df264, type: 3}
+  icon: {fileID: 21300000, guid: ff391dfcc3ef2364397a42a2cc161ff8, type: 3}
+  model: {fileID: 6546627908282000598, guid: c5e478911cb9e184298f3c5fbcc770a4, type: 3}
   pickup: {fileID: 8317656573938464593, guid: bda9492b5338ace4caf1670958faa6a5, type: 3}
   spread: 90
   radius: 4

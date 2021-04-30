@@ -25,7 +25,6 @@ namespace Chrome.Retro
 
         protected override void Open(Packet packet)
         {
-            Debug.Log("TEST");
             if (aim.IsValid(packet)) aim.Value.localRotation = Quaternion.identity;
         }
 

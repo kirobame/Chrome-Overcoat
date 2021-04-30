@@ -10,7 +10,8 @@ namespace Chrome
     public class Lifetime : MonoBehaviour
     {
         [SerializeField] private Sequence sequence;
-
+        public bool bypassBootup;
+        
         private SendbackArgs args;
         private bool hasBeenBootedUp;
 
@@ -30,7 +31,7 @@ namespace Chrome
 
         void OnEnable()
         {
-            if (!hasBeenBootedUp)
+            if (!hasBeenBootedUp && !bypassBootup)
             {
                 hasBeenBootedUp = true;
                 return;

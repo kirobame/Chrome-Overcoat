@@ -4,6 +4,7 @@ using Flux.Data;
 using Flux.Event;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Audio;
 
 namespace Chrome.Retro
 {
@@ -63,6 +64,10 @@ namespace Chrome.Retro
         [FoldoutGroup("Values"), SerializeField] private RetGame game;
         [FoldoutGroup("Values"), SerializeField] private ScreenInfo[] infos;
 
+        [FoldoutGroup("Feedbacks"), SerializeField] private AudioMixerSnapshot menuSnapshot;
+        [FoldoutGroup("Feedbacks"), SerializeField] private AudioMixerSnapshot inGameSnapshot;
+        [FoldoutGroup("Feedbacks"), SerializeField] private Vector2 transitions;
+
         private int current;
         private bool inTransition;
         private bool inShow;
@@ -98,6 +103,7 @@ namespace Chrome.Retro
             infos[current].onShowComplete += OnShowComplete;
             infos[current].Show();
 
+            menuSnapshot.TransitionTo(transitions.x);
             inTransition = true;
         }
         
@@ -110,11 +116,12 @@ namespace Chrome.Retro
             var root = life.transform.root.gameObject;
             if (!root.activeInHierarchy) root.SetActive(true);
             
-            game.Begin();
+            Routines.Start(Routines.DoAfter(() => game.Begin(), game.StartDelay));
             Events.Call(RetEvent.OnGameStart);
             
             infos[current].Hide();
             
+            inGameSnapshot.TransitionTo(transitions.y);
             inTransition = false;
             inShow = false;
         }

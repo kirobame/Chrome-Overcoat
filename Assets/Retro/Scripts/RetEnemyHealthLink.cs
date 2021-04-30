@@ -1,4 +1,5 @@
 ﻿using Flux.Data;
+using Flux.Event;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -15,10 +16,15 @@ namespace Chrome.Retro
         
         void Awake()
         {
-            hasHUD = false;
+            //hasHUD = false;
             health.onChange += OnHealthChange;
+            Events.Subscribe(RetEvent.OnGameEnd, OnGameEnd);
         }
-        void OnDestroy() => health.onChange -= OnHealthChange;
+        void OnDestroy()
+        {
+            health.onChange -= OnHealthChange;
+            Events.Unsubscribe(RetEvent.OnGameEnd, OnGameEnd);
+        }
 
         void Update()
         {
@@ -45,6 +51,11 @@ namespace Chrome.Retro
             hasHUD = false;
         }
 
+        void OnGameEnd()
+        {
+            if (!hasHUD) return;
+            Shutdown();
+        }
         void OnHealthChange(float heath, float maxHealth) => HUD.Set(heath / maxHealth);
     }
 }
