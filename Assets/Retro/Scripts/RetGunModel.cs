@@ -22,7 +22,7 @@ namespace Chrome.Retro
                 children[i].gameObject.SetActive(false);
             }
             
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 }

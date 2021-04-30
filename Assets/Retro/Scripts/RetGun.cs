@@ -10,7 +10,7 @@ namespace Chrome.Retro
         public Sprite CutIcon => cutIcon;
         public Sprite Icon => icon;   
         
-        public RetGunModel Model => model;
+        public GenericPoolable Model => model;
         public GenericPoolable Pickup => pickup;
         
         public float Spread => spread;
@@ -21,8 +21,8 @@ namespace Chrome.Retro
         [FoldoutGroup("Info"), SerializeField] private string title;
         [FoldoutGroup("Info"), SerializeField] private Sprite cutIcon;
         [FoldoutGroup("Info"), SerializeField] private Sprite icon;
-        
-        [FoldoutGroup("Embedded"), SerializeField] private RetGunModel model;
+
+        [FoldoutGroup("Embedded"), SerializeField] private GenericPoolable model;
         [FoldoutGroup("Embedded"), SerializeField] private GenericPoolable pickup;
         [FoldoutGroup("Embedded"), SerializeField] private float spread;
         [FoldoutGroup("Embedded"), SerializeField] private float radius;

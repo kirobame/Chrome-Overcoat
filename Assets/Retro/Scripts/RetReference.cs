@@ -12,6 +12,7 @@ namespace Chrome.Retro
         PickupPool,
         Timer,
         WorldCanvas,
-        HUDPool
+        HUDPool,
+        ModelPool
     }
 }

@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Linq;
+using System.Numerics;
 using Flux.Data;
 using Flux.Event;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Quaternion = UnityEngine.Quaternion;
 using Random = UnityEngine.Random;
+using Vector3 = UnityEngine.Vector3;
 
 namespace Chrome.Retro
 {
@@ -184,9 +187,14 @@ namespace Chrome.Retro
 
         private void InstantiateModel()
         {
-            model = Instantiate(Current.Model, modelParent);
-            var board = identity.Packet.Get<IBlackboard>();
+            var modelPool = Repository.Get<GenericPool>(RetReference.ModelPool);
+            model = modelPool.CastSingle<RetGunModel>(Current.Model);
             
+            model.transform.SetParent(modelParent);
+            model.transform.localPosition = Vector3.zero;
+            model.transform.localRotation = Quaternion.identity;
+            
+            var board = identity.Packet.Get<IBlackboard>();
             board.Set(RetPlayerBoard.REF_FIREANCHOR, model.FireAnchor);
             identity.Packet.Set(model.FireAnchor);
         }
