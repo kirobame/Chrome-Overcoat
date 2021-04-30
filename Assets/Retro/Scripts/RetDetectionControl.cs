@@ -16,7 +16,7 @@ namespace Chrome.Retro
 
         public IEnumerable<Collider> Targets => inRange;
 
-        [FoldoutGroup("Dependencies"), SerializeField] private RetGunControl gun;
+        [FoldoutGroup("Dependencies"), SerializeField] private RetBaseGunControl gun;
         [FoldoutGroup("Dependencies"), SerializeField] private CharacterBody body;
         [FoldoutGroup("Dependencies"), SerializeField] private MeshFilter filter;
         [FoldoutGroup("Dependencies"), SerializeField] private new MeshRenderer renderer;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Flux.Audio;
 using Flux.Data;
 using Flux.Event;
 using Sirenix.OdinInspector;
@@ -21,6 +22,9 @@ namespace Chrome.Retro
         [FoldoutGroup("Dependencies"), SerializeField] private CanvasGroup replayGroup;
 
         [FoldoutGroup("Values"), SerializeField] private bool wipe;
+
+        [FoldoutGroup("Feedbacks"), SerializeField] private AudioPackage type;
+        [FoldoutGroup("Feedbacks"), SerializeField] private AudioPackage validation;
         
         private int insertion;
         private float elapsedTime;
@@ -90,6 +94,7 @@ namespace Chrome.Retro
                 
                 usernameField.text = string.Empty;
                 usernameField.onSubmit.AddListener(OnUsernameSubmitted);
+                usernameField.onValueChanged.AddListener(OnNameChange);
                 
                 Events.Subscribe(RetEvent.OnScreenDisplay, OnScreenDisplay);
             }
@@ -103,11 +108,15 @@ namespace Chrome.Retro
             usernameField.Select();
         }
 
+        void OnNameChange(string value) => type.Play();
         void OnUsernameSubmitted(string username)
         {
             usernameField.onSubmit.RemoveListener(OnUsernameSubmitted);
+            usernameField.onValueChanged.RemoveListener(OnNameChange);
 
             if (insertion == -1) return;
+            
+            validation.Play();
             
             scoreGroup.Toggle(false);
             replayGroup.Toggle(true);

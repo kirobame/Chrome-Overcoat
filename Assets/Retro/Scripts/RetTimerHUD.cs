@@ -68,7 +68,7 @@ namespace Chrome.Retro
                 if (currentSeconds != cachedSeconds)
                 {
                     cachedSeconds = currentSeconds;
-                    if (cachedSeconds < threshold) alert.Play();
+                    if (currentMinutes == 0 && cachedSeconds < threshold) alert.Play();
                 }
             }
         }

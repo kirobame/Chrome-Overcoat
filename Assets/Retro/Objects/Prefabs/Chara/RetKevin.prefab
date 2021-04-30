@@ -1762,7 +1762,9 @@ MonoBehaviour:
   value: {fileID: 8240647053616232777}
   lifetime: {fileID: 1213800447252526399}
   agent: {fileID: 1648635252637089153}
+  pivot: {fileID: 4837432880178833505}
   apparitionPrefab: {fileID: 7623618407719436478, guid: 1766413eeeeff0944bc7bd9b72d02890, type: 3}
+  bloodPool: {fileID: 2665132423237637178, guid: 71d8c1c48d0f6fb49817b89f7a356be6, type: 3}
   offset: {x: 0, y: 1, z: 0}
   deathSound: {fileID: 11400000, guid: bde370064c455164c93d79ed560e6fe0, type: 2}
 --- !u!114 &1213800447252526399
@@ -1993,6 +1995,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sound: {fileID: 11400000, guid: 66dd63239e2cb9d4c9cf57c00137f293, type: 2}
+  splatter: 1
+  bloodSplatterPrefab: {fileID: 7946580959819710731, guid: 2eead987c9ccf37419f78351916ae3cc, type: 3}
 --- !u!114 &5804856956498250346
 MonoBehaviour:
   m_ObjectHideFlags: 0

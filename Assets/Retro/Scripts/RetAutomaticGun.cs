@@ -7,6 +7,8 @@ namespace Chrome.Retro
 {
     public class RetAutomaticGun : RetGun
     {
+        public float Timer => timer;
+        
         [FoldoutGroup("Values"),SerializeField] private float delay;
         [FoldoutGroup("Values"),SerializeField] private GenericPoolable projectilePrefab;
         [FoldoutGroup("Values"),SerializeField] private PoolableVfx muzzleFlashPrefab;

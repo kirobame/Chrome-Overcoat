@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 570218052215673341}
   - component: {fileID: 1569812630226195492}
   m_Layer: 7
-  m_Name: RetRifleModel
+  m_Name: RetModelBulletRifle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -84,7 +84,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6499533676734684570}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: -8001804525739307194, guid: 07ed101792c3a4d4b9324edd825e0055, type: 3}
 --- !u!23 &1569812630226195492
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -104,7 +104,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3f6c8c241c64ff747b2c957e0a49e2c6, type: 2}
+  - {fileID: 2100000, guid: e8ffa27c77bb45b4c8d7c4eeccf3f12e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Retro/Objects/FX/Post Process/CRT.meta
+guid: bbbc821b4f1d51441b8db018a919db96
+=======
 guid: e51b0c4ab5c97b9449f98846c39abdaf
+>>>>>>> retro:Assets/Retro/Objects/Prefabs/Enviro/Covers.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
