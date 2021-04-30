@@ -20,7 +20,7 @@ namespace Chrome.Retro
         {
             progress = 0;
 
-            //Debug.Log($"Playing first wave");
+            Debug.Log($"Playing first wave");
             waves[0].onPartiallyComplete += OnWavePartiallyComplete;
             if (waves[0].Execute()) sound.Play();
         }
@@ -39,13 +39,13 @@ namespace Chrome.Retro
 
             if (progress + 1 >= waves.Length)
             {
-                //Debug.Log($"Waiting for last wave end");
+                Debug.Log($"Waiting for last wave end");
                 wave.onComplete += OnWaveComplete;
                 return;
             }
             
             progress++;
-            //Debug.Log($"Playing wave : {waves[progress]}");
+            Debug.Log($"Playing wave : {waves[progress]}");
             waves[progress].onPartiallyComplete += OnWavePartiallyComplete;
             if (waves[progress].Execute()) sound.Play();
         }

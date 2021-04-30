@@ -19,16 +19,7 @@ namespace Chrome.Retro
         private IIdentity identity;
 
         public override bool IsOnDefault => Current == defaultGun;
-        public override void DropCurrent()
-        {
-           
-        }
-
-        public override void SwitchTo(RetGun gun, int ammo)
-        {
-            
-        }
-
+        
         [FoldoutGroup("Dependencies"), SerializeField] private Transform modelParent;
         [FoldoutGroup("Dependencies"), SerializeField] private RetDetectionControl detection;
         [FoldoutGroup("Dependencies"), SerializeField] private Transform aim;
@@ -45,7 +36,7 @@ namespace Chrome.Retro
         
         private Coroutine routine;
 
-        /*void Awake()
+        void Awake()
         {
             if (!enabled) return;
 
@@ -108,7 +99,7 @@ namespace Chrome.Retro
                     pickupInstance.Rigidbody.AddForce(direction * Random.Range(12.5f, 17.5f), ForceMode.Impulse);
                     pickupInstance.Rigidbody.AddTorque(Random.onUnitSphere * Random.Range(7.5f, 12.5f), ForceMode.Impulse);
                 }
-                //model.Discard();
+                model.Discard();
                 
                 Current = gun;
                 this.ammo = ammo;
@@ -125,6 +116,7 @@ namespace Chrome.Retro
 
         private void InstantiateModel()
         {
+            Debug.Log(Current);
             model = Instantiate(Current.Model, modelParent);
             var board = identity.Packet.Get<IBlackboard>();
             
@@ -218,15 +210,6 @@ namespace Chrome.Retro
         {
             if (routine != null || !IsValid(target, out var interactionHub)) return;
             routine = StartCoroutine(Routine(target, interactionHub));
-        }*/
-        public void Bootup()
-        {
-            
-        }
-
-        public void Shutdown()
-        {
-            
         }
     }
 }

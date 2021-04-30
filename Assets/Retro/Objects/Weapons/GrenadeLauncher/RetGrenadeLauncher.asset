@@ -15,7 +15,7 @@ MonoBehaviour:
   title: Launcher
   cutIcon: {fileID: 21300000, guid: f7538192a68228b48baf798862ab4906, type: 3}
   icon: {fileID: 21300000, guid: 0f89113761528294fb0ef4a1a5dfa423, type: 3}
-  model: {fileID: 8566587692246150415, guid: 6aba3166c0e24f54b848b3ef4f340af1, type: 3}
+  model: {fileID: 6546627908282000598, guid: c5e478911cb9e184298f3c5fbcc770a4, type: 3}
   pickup: {fileID: 569463858353241236, guid: 863c20ee1acca6b4285cdc88566b5867, type: 3}
   spread: 45
   radius: 6.5
