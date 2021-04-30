@@ -1,4 +1,5 @@
-﻿using Flux.Data;
+﻿using Flux.Audio;
+using Flux.Data;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -9,6 +10,8 @@ namespace Chrome.Retro
         [FoldoutGroup("Values"),SerializeField] private float delay;
         [FoldoutGroup("Values"),SerializeField] private GenericPoolable projectilePrefab;
         [FoldoutGroup("Values"),SerializeField] private PoolableVfx muzzleFlashPrefab;
+
+        [FoldoutGroup("Feedbacks"), SerializeField] protected AudioPackage sound;
         
         protected float timer;
 

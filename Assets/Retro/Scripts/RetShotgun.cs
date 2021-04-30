@@ -1,4 +1,5 @@
-﻿using Sirenix.OdinInspector;
+﻿using Flux.Audio;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Chrome.Retro
@@ -19,6 +20,7 @@ namespace Chrome.Retro
             var baseDirection = Quaternion.AngleAxis(-cone * 0.5f, Vector3.up) * direction;
             var step = cone / (pallet - 1);
 
+            sound.Play();
             for (var i = 0; i < pallet; i++)
             {
                 direction = Quaternion.AngleAxis(step * i, Vector3.up) * baseDirection;
