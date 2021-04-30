@@ -56,15 +56,17 @@ namespace Chrome.Retro
         private int total;
         private int progress;
         private List<RetPoolableEnemy> enemies = new List<RetPoolableEnemy>();
-        
+
+        private int actualCompletion;
         private bool hasBeenPartiallyCompleted;
         
-        public void Execute()
+        public bool Execute()
         {
             total = 0;
             progress = 0;
             enemies.Clear();
-            
+
+            actualCompletion = 0;
             hasBeenPartiallyCompleted = false;
 
             var anchors = Repository.GetAll<RetWaveSpawnAnchor>(RetReference.WaveSpawns).ToList();
@@ -91,7 +93,7 @@ namespace Chrome.Retro
                 
                 costs.Sort();
                 var count = info.Count;
-                
+
                 while (costs.Count > 0 && count > 0)
                 {
                     while (availableAnchors[costs[0]].Count <= 0) costs.RemoveAt(0);
@@ -110,6 +112,19 @@ namespace Chrome.Retro
                     total++;
                 }
             }
+            
+            if (total == 0)
+            {
+                onPartiallyComplete?.Invoke(this);
+                onComplete?.Invoke(this);
+                    
+                return false;
+            }
+            
+            if (completion > total) actualCompletion = total;
+            else actualCompletion = completion;
+
+            return true;
         }
 
         public void Reboot()
@@ -127,7 +142,7 @@ namespace Chrome.Retro
             enemies.Remove(enemy);
             
             progress++;
-            if (progress >= completion && !hasBeenPartiallyCompleted)
+            if (progress >= actualCompletion && !hasBeenPartiallyCompleted)
             {
                 onPartiallyComplete?.Invoke(this);
                 hasBeenPartiallyCompleted = true;

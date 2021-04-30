@@ -18,11 +18,10 @@ namespace Chrome.Retro
         
         public void Begin()
         {
-            sound.Play();
             progress = 0;
 
             waves[0].onPartiallyComplete += OnWavePartiallyComplete;
-            waves[0].Execute();
+            if (waves[0].Execute()) sound.Play();
         }
 
         public void Reboot()
@@ -43,11 +42,9 @@ namespace Chrome.Retro
                 return;
             }
             
-            sound.Play();
-            
             progress++;
             waves[progress].onPartiallyComplete += OnWavePartiallyComplete;
-            waves[progress].Execute();
+            if (waves[progress].Execute()) sound.Play();
         }
 
         void OnWaveComplete(RetWave wave)
