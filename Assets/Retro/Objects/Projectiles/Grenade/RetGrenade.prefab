@@ -28807,3 +28807,4 @@ MonoBehaviour:
   impactVfx: {fileID: 1266729306698211977, guid: 5164359ff8d633c46a3e9a461b4b2bca, type: 3}
   graph: {fileID: 921733482041256571}
   trail: {fileID: 4921797607968069155}
+  sound: {fileID: 11400000, guid: dc1f299acef0ab347bdb41ce8df84b6a, type: 2}

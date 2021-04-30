@@ -21,5 +21,6 @@ MonoBehaviour:
   radius: 4
   maxAmmo: 8
   delay: 0.2
-  projectilePrefab: {fileID: 34740033821788151, guid: 1095f378cc57ad54595eae679fdcf637, type: 3}
+  projectilePrefab: {fileID: 5598392427369097847, guid: 6c74ef0086f103147a31b86972980cef, type: 3}
   muzzleFlashPrefab: {fileID: 2930363514148838660, guid: 164fec9a7e2f09442a3424f886ce728f, type: 3}
+  sound: {fileID: 11400000, guid: f05fe6ec8200d974eb762fe42f678b69, type: 2}

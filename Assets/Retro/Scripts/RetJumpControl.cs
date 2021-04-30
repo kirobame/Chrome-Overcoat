@@ -1,4 +1,5 @@
-﻿using Sirenix.OdinInspector;
+﻿using Flux.Audio;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Chrome.Retro
@@ -11,6 +12,8 @@ namespace Chrome.Retro
         [FoldoutGroup("Values"), SerializeField] private float margin;
         [FoldoutGroup("Values"), SerializeField] private float height;
 
+        [FoldoutGroup("Feedbacks"), SerializeField] private AudioPackage sound;
+        
         private bool hasJumped;
         private float error;
         
@@ -24,11 +27,12 @@ namespace Chrome.Retro
             else error += Time.deltaTime;
             
             if (!Input.GetKeyUp(KeyCode.E) || error > margin || hasJumped) return;
-
+            
             var attraction = gravity.Value;
             var length = -Mathf.Sqrt(height * 2.0f * attraction.magnitude);
             body.velocity += attraction.normalized * length;
 
+            sound.Play();
             hasJumped = true;
         }
     }

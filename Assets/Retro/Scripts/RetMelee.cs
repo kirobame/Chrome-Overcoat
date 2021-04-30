@@ -13,7 +13,7 @@ namespace Chrome.Retro
         [FoldoutGroup("Values"), SerializeField] private byte category;
 
         [FoldoutGroup("Feedbacks"), SerializeField] private PoolableVfx hitVfxPrefab;
-        [FoldoutGroup("Feedbacks"), SerializeField] private AudioPackage audioPackage;
+        [FoldoutGroup("Feedbacks"), SerializeField] private AudioPackage sound;
 
         private float timer;
         
@@ -31,6 +31,8 @@ namespace Chrome.Retro
             identity.Packet.Set(category);
             hub.Relay<IDamageable>(damageable => { damageable.Hit(identity, damage, identity.Packet); });
             identity.Packet.Load(snapshot);
+            
+            sound.Play();
         }
 
         public override bool Use(IIdentity identity, Collider target, InteractionHub hub)

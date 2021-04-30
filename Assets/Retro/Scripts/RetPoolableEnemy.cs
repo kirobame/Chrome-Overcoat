@@ -1,4 +1,6 @@
 ﻿using System;
+using Flux;
+using Flux.Audio;
 using Flux.Data;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -15,7 +17,28 @@ namespace Chrome.Retro
 
         [FoldoutGroup("Dependencies"), SerializeField] private Lifetime lifetime;
         [FoldoutGroup("Dependencies"), SerializeField] private NavMeshAgent agent;
-            
-        public override void Reboot() => onDeath?.Invoke(this);
+
+        [FoldoutGroup("Feedbacks"), SerializeField] private PoolableVfx apparitionPrefab;
+        [FoldoutGroup("Feedbacks"), SerializeField] private Vector3 offset;
+        [FoldoutGroup("Feedbacks"), SerializeField] private AudioPackage deathSound;
+
+        void OnEnable()
+        {
+            Routines.Start(Routines.DoAfter(() =>
+            {
+                var vfxPool = Repository.Get<VfxPool>(Pool.Impact);
+                var vfxInstance = vfxPool.RequestSingle(apparitionPrefab);
+
+                vfxInstance.transform.position = transform.position + offset;
+                vfxInstance.Play();
+                
+            }, new YieldFrame()));
+        }
+
+        public override void Reboot()
+        {
+            deathSound.Play();
+            onDeath?.Invoke(this);
+        }
     }
 }
