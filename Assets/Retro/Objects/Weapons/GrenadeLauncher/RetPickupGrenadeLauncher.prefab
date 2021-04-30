@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 569463858353241236}
   - component: {fileID: 2888020540964811051}
   - component: {fileID: 2888020540964811049}
-  - component: {fileID: 3401276063654559322}
+  - component: {fileID: 4982526302771432692}
   m_Layer: 31
   m_Name: RetPickupGrenadeLauncher
   m_TagString: Untagged
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 2888020540964811046}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -10, y: 1.5, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 1.899261, y: 1.899261, z: 1.899261}
   m_Children:
   - {fileID: 6943205542364691978}
   m_Father: {fileID: 0}
@@ -61,7 +61,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rigidbody: {fileID: 2888020540964811049}
-  gun: {fileID: 11400000, guid: 2cfaa26c4369b334c88309738802e0c5, type: 2}
+  gun: {fileID: 11400000, guid: 599b99f2f5f7c984bb2e56aec83f3103, type: 2}
   ammo: 0
 --- !u!54 &2888020540964811049
 Rigidbody:
@@ -79,8 +79,8 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &3401276063654559322
-BoxCollider:
+--- !u!136 &4982526302771432692
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -89,9 +89,10 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.5, y: 0.26, z: 0.17}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 0.15
+  m_Height: 0.475
+  m_Direction: 2
+  m_Center: {x: 0, y: 0, z: -0.06}
 --- !u!1001 &4228724643584724163
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -99,9 +100,29 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2888020540964811050}
     m_Modifications:
+    - target: {fileID: 2782317742438964999, guid: 8e4a4098d20e3214e9b1bd3e14fd654c, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: af70ad7c012024d408eb4f23220479a1, type: 2}
+    - target: {fileID: 3799926718958803678, guid: 8e4a4098d20e3214e9b1bd3e14fd654c, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: c0084b4bf084208408e8ba2db59daaa7, type: 2}
     - target: {fileID: 6553944789956784841, guid: 8e4a4098d20e3214e9b1bd3e14fd654c, type: 3}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6553944789956784841, guid: 8e4a4098d20e3214e9b1bd3e14fd654c, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.30523983
+      objectReference: {fileID: 0}
+    - target: {fileID: 6553944789956784841, guid: 8e4a4098d20e3214e9b1bd3e14fd654c, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.30523983
+      objectReference: {fileID: 0}
+    - target: {fileID: 6553944789956784841, guid: 8e4a4098d20e3214e9b1bd3e14fd654c, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.30523983
       objectReference: {fileID: 0}
     - target: {fileID: 6553944789956784841, guid: 8e4a4098d20e3214e9b1bd3e14fd654c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -109,7 +130,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6553944789956784841, guid: 8e4a4098d20e3214e9b1bd3e14fd654c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.103
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6553944789956784841, guid: 8e4a4098d20e3214e9b1bd3e14fd654c, type: 3}
       propertyPath: m_LocalPosition.z

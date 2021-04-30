@@ -67,7 +67,7 @@ namespace Chrome.Retro
                 return;
             }
 
-            speed = cachedSpeed + gain.Evaluate(1.0f - timer / duration) * bonusSpeed;
+            Speed = cachedSpeed + gain.Evaluate(1.0f - timer / duration) * bonusSpeed;
             base.Update();
         }
 

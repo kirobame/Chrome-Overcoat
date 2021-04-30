@@ -25,6 +25,7 @@ namespace Chrome.Retro
 
         [FoldoutGroup("Feedbacks"), SerializeField] private AudioPackage type;
         [FoldoutGroup("Feedbacks"), SerializeField] private AudioPackage validation;
+        [FoldoutGroup("Feedbacks"), SerializeField] private AudioPackage wrong;
         
         private int insertion;
         private float elapsedTime;
@@ -111,6 +112,12 @@ namespace Chrome.Retro
         void OnNameChange(string value) => type.Play();
         void OnUsernameSubmitted(string username)
         {
+            if (username.Length != 3)
+            {
+                wrong.Play();
+                return;
+            }
+            
             usernameField.onSubmit.RemoveListener(OnUsernameSubmitted);
             usernameField.onValueChanged.RemoveListener(OnNameChange);
 

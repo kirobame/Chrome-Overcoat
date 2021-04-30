@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   source: {fileID: 3280360796147751020}
-  pickupPrefab: {fileID: 1816868956085821687, guid: bc8f8f040d1f7cc4b8836f2abf486ecc, type: 3}
+  pickupPrefab: {fileID: 569463858353241236, guid: 863c20ee1acca6b4285cdc88566b5867, type: 3}
   angle: {x: 70, y: 80}
   ejection: {x: 12.5, y: 17.5}
   torque: {x: 7.5, y: 12.5}
@@ -103,6 +103,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 38178011422348344b2800553a84b687, type: 2}
+    - target: {fileID: -5754084199372789682, guid: c2d954667b69ebf4fb1dfeaf7dbcca8a, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c2d954667b69ebf4fb1dfeaf7dbcca8a, type: 3}
       propertyPath: m_Name
       value: SM_knifechrome

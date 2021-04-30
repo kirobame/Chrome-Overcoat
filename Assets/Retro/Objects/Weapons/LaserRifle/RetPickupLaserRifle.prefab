@@ -61,7 +61,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rigidbody: {fileID: 3946766865531039050}
-  gun: {fileID: 11400000, guid: 2cfaa26c4369b334c88309738802e0c5, type: 2}
+  gun: {fileID: 11400000, guid: db3e990493ef025449bb235022299cb0, type: 2}
   ammo: 0
 --- !u!54 &3946766865531039050
 Rigidbody:
@@ -90,8 +90,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.17, y: 0.98, z: 0.19}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.17, y: 0.25, z: 0.75}
+  m_Center: {x: 0, y: 0, z: -0.025}
 --- !u!1001 &3946766866877071692
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -133,19 +133,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7547433502635343351, guid: 0d1cd35b506570f499539854ccdb1b59, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.323
+      value: 0.007
       objectReference: {fileID: 0}
     - target: {fileID: 7547433502635343351, guid: 0d1cd35b506570f499539854ccdb1b59, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.31
       objectReference: {fileID: 0}
     - target: {fileID: 7547433502635343351, guid: 0d1cd35b506570f499539854ccdb1b59, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7071065
       objectReference: {fileID: 0}
     - target: {fileID: 7547433502635343351, guid: 0d1cd35b506570f499539854ccdb1b59, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: -0.7071071
       objectReference: {fileID: 0}
     - target: {fileID: 7547433502635343351, guid: 0d1cd35b506570f499539854ccdb1b59, type: 3}
       propertyPath: m_LocalRotation.y
@@ -157,7 +157,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7547433502635343351, guid: 0d1cd35b506570f499539854ccdb1b59, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: -90
       objectReference: {fileID: 0}
     - target: {fileID: 7547433502635343351, guid: 0d1cd35b506570f499539854ccdb1b59, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y

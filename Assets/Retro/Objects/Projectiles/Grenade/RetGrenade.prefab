@@ -28729,7 +28729,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 0.05
-  speed: 3.5
+  speed: 0.75
   hitMask:
     serializedVersion: 2
     m_Bits: 192
