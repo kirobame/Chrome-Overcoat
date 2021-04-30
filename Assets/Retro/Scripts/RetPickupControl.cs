@@ -14,7 +14,7 @@ namespace Chrome.Retro
         
         [FoldoutGroup("Values"), SerializeField] private float radius;
         
-        [FoldoutGroup("Dependencies"), SerializeField] private RetGunControl gun;
+        [FoldoutGroup("Dependencies"), SerializeField] private RetBaseGunControl gun;
 
         [FoldoutGroup("Feedbacks"), SerializeField] private AudioPackage foundSound;
         [FoldoutGroup("Feedbacks"), SerializeField] private AudioPackage dropSound;
