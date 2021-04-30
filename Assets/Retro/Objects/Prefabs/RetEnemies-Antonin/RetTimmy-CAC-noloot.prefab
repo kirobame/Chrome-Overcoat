@@ -78,7 +78,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: e7b81d207c7958a46823dd4bd89106a7, type: 2}
     - target: {fileID: 1648635252637089153, guid: c63d99bd6d3bf834fbfc3d9ae7d8fa95, type: 3}
       propertyPath: m_Speed
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1648635252637089153, guid: c63d99bd6d3bf834fbfc3d9ae7d8fa95, type: 3}
       propertyPath: m_StoppingDistance
@@ -94,11 +94,11 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 2a9b7259ba2d62c4bbe54fb29712936d, type: 2}
     - target: {fileID: 4506432812999787284, guid: c63d99bd6d3bf834fbfc3d9ae7d8fa95, type: 3}
       propertyPath: reset
-      value: 0.15
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4506432812999787284, guid: c63d99bd6d3bf834fbfc3d9ae7d8fa95, type: 3}
       propertyPath: distance
-      value: 2.75
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6468623091901679582, guid: c63d99bd6d3bf834fbfc3d9ae7d8fa95, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -162,11 +162,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8240647053616232773, guid: c63d99bd6d3bf834fbfc3d9ae7d8fa95, type: 3}
       propertyPath: m_Name
-      value: RetTimmy
+      value: RetTimmy-CAC-noloot
       objectReference: {fileID: 0}
     - target: {fileID: 8240647053616232773, guid: c63d99bd6d3bf834fbfc3d9ae7d8fa95, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8240647055159017483, guid: c63d99bd6d3bf834fbfc3d9ae7d8fa95, type: 3}
+      propertyPath: maxHealth
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8819484758902165127, guid: c63d99bd6d3bf834fbfc3d9ae7d8fa95, type: 3}
       propertyPath: m_Materials.Array.data[0]

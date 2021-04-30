@@ -7,6 +7,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3911700263621313450, guid: 6754e23a1fc148141850db9851b6c99d, type: 3}
+      propertyPath: maxHealth
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 3911700264222341860, guid: 6754e23a1fc148141850db9851b6c99d, type: 3}
       propertyPath: m_Name
       value: RetJosh-MG-noloot
@@ -55,13 +59,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5977595538973048352, guid: 6754e23a1fc148141850db9851b6c99d, type: 3}
+      propertyPath: m_Speed
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7925251097830786690, guid: 6754e23a1fc148141850db9851b6c99d, type: 3}
       propertyPath: gun
       value: 
       objectReference: {fileID: 11400000, guid: ceeca1bb7c1481b4d927228dadb9c8f4, type: 2}
     - target: {fileID: 7925251097830786690, guid: 6754e23a1fc148141850db9851b6c99d, type: 3}
       propertyPath: reset
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7925251097830786690, guid: 6754e23a1fc148141850db9851b6c99d, type: 3}
       propertyPath: distance
