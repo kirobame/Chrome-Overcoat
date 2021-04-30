@@ -35,11 +35,20 @@ namespace Chrome.Retro
         [FoldoutGroup("Values"), SerializeField] protected float distance;
 
         protected ITaskTree taskTree;
+        private bool hasBeenBootedUp;
 
         public void Bootup()
         {
-            taskTree.Bootup(identity.Packet);
-            taskTree.Start(identity.Packet);
+            if (!hasBeenBootedUp)
+            {
+                hasBeenBootedUp = true;
+                return;
+            }
+            else
+            {
+                taskTree.Bootup(identity.Packet);
+                taskTree.Start(identity.Packet);
+            }
         }
         public void Shutdown() => taskTree.Shutdown(identity.Packet);
         
@@ -78,7 +87,7 @@ namespace Chrome.Retro
                     new StopMoving(new PackettedValue<NavMeshAgent>()).Mask(0b_0001).Append(
                         new RootNode().Append(
                             new RetLookAt(REF_TARGETCOL.Reference<Collider>(), new PackettedValue<RetAgentLookAt>()),
-                            new ComputeDirectionTo(REF_SHOOTDIR, REF_HEAD.Reference<Transform>(), REF_TARGETCOL.Reference<Collider>(), Vector3.up * 0.525f)),
+                            new ComputeDirectionTo(REF_SHOOTDIR, REF_HEAD.Reference<Transform>(), REF_TARGETCOL.Reference<Collider>(), Vector3.up * 0.225f)),
                         new RetGunNode(REF_SHOOTDIR.Reference<Vector3>(), REF_FIREANCHOR.Reference<Transform>(), REF_TARGETCOL.Reference<Collider>(), gun)),
                     new RetMoveTo(new PackettedValue<NavMeshAgent>(), REF_TARGET.Reference<Transform>(), new PackettedValue<RetAgentLookAt>()).Mask(0b_0010).Append(
                         new Delay(reset))));

@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Retro/Objects/FX/Post Process/CRT/Materials.meta
 guid: 89366fe316a7abf459f17df06a3ae3f1
+=======
+guid: f84ebdc7d13cd35439fa1ced455df6ef
+>>>>>>> retro:Assets/Retro/Objects/Sounds.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

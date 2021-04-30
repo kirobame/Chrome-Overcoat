@@ -1,4 +1,5 @@
-﻿using Flux.Data;
+﻿using Flux.Audio;
+using Flux.Data;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -12,6 +13,7 @@ namespace Chrome.Retro
         [FoldoutGroup("Values"), SerializeField] private byte category;
 
         [FoldoutGroup("Feedbacks"), SerializeField] private PoolableVfx hitVfxPrefab;
+        [FoldoutGroup("Feedbacks"), SerializeField] private AudioPackage audioPackage;
 
         private float timer;
         

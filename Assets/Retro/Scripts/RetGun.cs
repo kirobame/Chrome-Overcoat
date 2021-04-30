@@ -7,6 +7,7 @@ namespace Chrome.Retro
     public abstract class RetGun : ScriptableObject
     {
         public string Title => title;
+        public Sprite CutIcon => cutIcon;
         public Sprite Icon => icon;   
         
         public RetGunModel Model => model;
@@ -18,6 +19,7 @@ namespace Chrome.Retro
         public int MaxAmmo => maxAmmo;
 
         [FoldoutGroup("Info"), SerializeField] private string title;
+        [FoldoutGroup("Info"), SerializeField] private Sprite cutIcon;
         [FoldoutGroup("Info"), SerializeField] private Sprite icon;
         
         [FoldoutGroup("Embedded"), SerializeField] private RetGunModel model;

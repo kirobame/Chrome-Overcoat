@@ -20,16 +20,21 @@ namespace Chrome.Retro
 
         void OnGunSwitch(RetGun gun, int ammo)
         {
-            icon.sprite = gun.Icon;
+            icon.sprite = gun.CutIcon;
+            icon.SetNativeSize();
+            
             OnAmmoChange(ammo);
         }
 
         void OnAmmoChange(int ammo)
         {
-            if (ammo < 0) this.ammo.enabled = false;
+            if (ammo < 0)
+            {
+                if (this.ammo.gameObject.activeInHierarchy) this.ammo.gameObject.SetActive(false);
+            }
             else
             {
-                this.ammo.enabled = true;
+                if (!this.ammo.gameObject.activeInHierarchy)this.ammo.gameObject.SetActive(true);
                 this.ammo.text = ammo < 10 ? $"0{ammo}" : ammo.ToString();
             }
         }

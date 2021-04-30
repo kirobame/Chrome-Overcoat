@@ -46,7 +46,7 @@ namespace Chrome.Retro
             for (var i = 0; i < board.Count; i++)
             {
                 var time = board[i].time < 0 ? "XX:XX" : board[i].time.ConvertToTime();
-                content.AppendLine($"[{i}] {board[i].name} - {time}");
+                content.AppendLine($"[{i + 1}] {board[i].name} - {time}");
             }
 
             scoreboard.text = content.ToString();
@@ -91,10 +91,6 @@ namespace Chrome.Retro
                 usernameField.text = string.Empty;
                 usernameField.onSubmit.AddListener(OnUsernameSubmitted);
                 
-                /*usernameField.ActivateInputField();
-                usernameField.Select();
-                usernameField.OnPointerClick (new PointerEventData(EventSystem.current));
-                EventSystem.current.SetSelectedGameObject(usernameField.gameObject, new BaseEventData(EventSystem.current));*/
                 Events.Subscribe(RetEvent.OnScreenDisplay, OnScreenDisplay);
             }
         }

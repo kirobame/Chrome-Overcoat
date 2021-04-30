@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: RetGrenadeLauncher
   m_EditorClassIdentifier: 
   title: Launcher
-  icon: {fileID: 2130535880278150251, guid: 999b2f38059452d4fb8218d8d6941c5d, type: 3}
-  model: {fileID: 5293722862417900036, guid: 8e4a4098d20e3214e9b1bd3e14fd654c, type: 3}
+  cutIcon: {fileID: 21300000, guid: f7538192a68228b48baf798862ab4906, type: 3}
+  icon: {fileID: 21300000, guid: 0f89113761528294fb0ef4a1a5dfa423, type: 3}
+  model: {fileID: 6546627908282000598, guid: c5e478911cb9e184298f3c5fbcc770a4, type: 3}
   pickup: {fileID: 569463858353241236, guid: 863c20ee1acca6b4285cdc88566b5867, type: 3}
   spread: 45
   radius: 6.5
