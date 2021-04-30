@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2a7a4d368f2b4ea18f3d06b120ea459d, type: 3}
-  m_Name: RetGame-Simon
+  m_Name: RetGame-Final
   m_EditorClassIdentifier: 
   sound: {fileID: 11400000, guid: f1ec96b1c873fbc4db910f972ce88b8c, type: 2}
   startDelay: 3

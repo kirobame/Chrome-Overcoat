@@ -20,7 +20,7 @@ MonoBehaviour:
   spread: 45
   radius: 6.5
   maxAmmo: 4
-  delay: 1
+  delay: 0.75
   projectilePrefab: {fileID: 681452027333185184, guid: 43c97b9dda83dd1408ae127b7bdbf6b2, type: 3}
   muzzleFlashPrefab: {fileID: 7240262647165215760, guid: 898bbcac2dc81234db9c5cd29fdeab01, type: 3}
   sound: {fileID: 11400000, guid: 9bf011f6754af1c45896195c4ba572e9, type: 2}

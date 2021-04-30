@@ -10,13 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd703d9c23ce4f4794a49474ba0dc826, type: 3}
-  m_Name: RetWave-Simon1
+  m_Name: RetWave-Simon9
   m_EditorClassIdentifier: 
   infos:
   - enemyPrefab: {fileID: 5948806156712276297, guid: f4147eb98dc16aa46ad071c86a7dc433, type: 3}
-    count: 2
-    address: 31
-  - enemyPrefab: {fileID: 8466399675669850887, guid: 487e778018b836847b2feb0c656fbd0d, type: 3}
+    count: 3
+    address: 36
+  - enemyPrefab: {fileID: 4760352211115948272, guid: 009e21696d6abf5499554f57c987edb7, type: 3}
     count: 1
-    address: 31
-  completion: 3
+    address: 99
+  - enemyPrefab: {fileID: 8466399675669850887, guid: 487e778018b836847b2feb0c656fbd0d, type: 3}
+    count: 2
+    address: 99
+  - enemyPrefab: {fileID: 2270795153610218287, guid: 520a2a3a30614394092c4cf84b6f0a53, type: 3}
+    count: 1
+    address: 408
+  - enemyPrefab: {fileID: 4760352211115948272, guid: 21474a21a18ac5c45b6c0ab65c9687e1, type: 3}
+    count: 1
+    address: 408
+  - enemyPrefab: {fileID: 8882426455171800039, guid: 9763bcb1182352d42aeaea0d73da631d, type: 3}
+    count: 1
+    address: 108
+  completion: 9

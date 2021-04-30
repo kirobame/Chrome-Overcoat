@@ -18,7 +18,7 @@ MonoBehaviour:
   model: {fileID: 6546627908282000598, guid: c5e478911cb9e184298f3c5fbcc770a4, type: 3}
   pickup: {fileID: 8317656573938464593, guid: bda9492b5338ace4caf1670958faa6a5, type: 3}
   spread: 90
-  radius: 4
+  radius: 4.5
   maxAmmo: 8
   delay: 0.15
   projectilePrefab: {fileID: 5598392427369097847, guid: 6c74ef0086f103147a31b86972980cef, type: 3}

@@ -18,9 +18,9 @@ MonoBehaviour:
   model: {fileID: 6546627908282000598, guid: c5e478911cb9e184298f3c5fbcc770a4, type: 3}
   pickup: {fileID: 1816868956085821687, guid: 9e8989c74fd1a1c4ca674a15c5d34d22, type: 3}
   spread: 180
-  radius: 4
-  maxAmmo: 7
-  delay: 0.75
+  radius: 3.5
+  maxAmmo: 8
+  delay: 1.25
   projectilePrefab: {fileID: 3278294482387087007, guid: 48d19aea30ef1f54c8eb3d8ef6f9c4cd, type: 3}
   muzzleFlashPrefab: {fileID: 2017965796941768161, guid: 33ac8d8aac6693b47b52575e2f38f151, type: 3}
   sound: {fileID: 11400000, guid: 15508094e6ca18d43b4ee14f72d148ea, type: 2}

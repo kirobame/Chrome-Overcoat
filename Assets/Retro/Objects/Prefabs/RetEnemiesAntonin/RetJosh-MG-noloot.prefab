@@ -9,7 +9,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3911700263621313450, guid: 6754e23a1fc148141850db9851b6c99d, type: 3}
       propertyPath: maxHealth
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3911700264222341860, guid: 6754e23a1fc148141850db9851b6c99d, type: 3}
       propertyPath: m_Name
@@ -61,7 +61,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5977595538973048352, guid: 6754e23a1fc148141850db9851b6c99d, type: 3}
       propertyPath: m_Speed
-      value: 2
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 7925251097830786690, guid: 6754e23a1fc148141850db9851b6c99d, type: 3}
       propertyPath: gun
