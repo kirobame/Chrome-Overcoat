@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: RetWave-Antonin03
   m_EditorClassIdentifier: 
   infos:
-  - enemyPrefab: {fileID: 7999712477629756169, guid: 812aaa21ec789f64e92af8f6cd4be2d1, type: 3}
+  - enemyPrefab: {fileID: 3089653282459108252, guid: 5370583ba2ad595408f253fabadb1c94, type: 3}
     count: 3
     address: 1
-  - enemyPrefab: {fileID: 7999712477629756169, guid: 003c492e0fe6dbb4a87597c8eb63eccd, type: 3}
+  - enemyPrefab: {fileID: 3089653282459108252, guid: 6d8823595db7129429a536cf01e5dac8, type: 3}
     count: 2
-    address: 0
-  - enemyPrefab: {fileID: 7999712477629756169, guid: e4da9f100d05b2149b822c9c9aaadec1, type: 3}
+    address: 8
+  - enemyPrefab: {fileID: 3089653282459108252, guid: b8d38cef1490f184bbc543386cbcc1cd, type: 3}
     count: 1
-    address: 0
+    address: 8
   completion: 5

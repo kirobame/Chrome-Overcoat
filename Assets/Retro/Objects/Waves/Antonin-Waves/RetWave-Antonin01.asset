@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd703d9c23ce4f4794a49474ba0dc826, type: 3}
-  m_Name: RetWave-Antonin01 2
+  m_Name: RetWave-Antonin01
   m_EditorClassIdentifier: 
   infos:
-  - enemyPrefab: {fileID: 7999712477629756169, guid: 812aaa21ec789f64e92af8f6cd4be2d1, type: 3}
+  - enemyPrefab: {fileID: 3089653282459108252, guid: 5370583ba2ad595408f253fabadb1c94, type: 3}
     count: 4
     address: 1
   completion: 4

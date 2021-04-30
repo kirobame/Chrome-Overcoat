@@ -13,4 +13,6 @@ MonoBehaviour:
   m_Name: RetGame-Antonin
   m_EditorClassIdentifier: 
   waves:
+  - {fileID: 11400000, guid: 251b1be7a1b430043b5517bc25e3d41e, type: 2}
+  - {fileID: 11400000, guid: c82862c946e0813448cd506040ef6022, type: 2}
   - {fileID: 11400000, guid: 2d034dd972d17aa43add34eea46edfdb, type: 2}
