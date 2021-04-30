@@ -20,6 +20,7 @@ namespace Chrome
             firstGauge = Repository.Get<Gauge>(Gauges.One);
             
             handler.AddDependency(Events.Subscribe<byte,float>(GaugeEvent.OnGunFired, OnGunFired));
+            handler.AddDependency(Events.Subscribe<byte,float>(GaugeEvent.OnFrenzyAbilityUsed, OnFrenzyAbilityUsed));
             handler.AddDependency(Events.Subscribe<Vector3>(GaugeEvent.OnJetpackUsed, OnJetpackUsed));
             handler.AddDependency(Events.Subscribe<byte>(GaugeEvent.OnThrusterUsed, OnAirControlUsed));
             handler.AddDependency(Events.Subscribe<byte,float>(GaugeEvent.OnDamageInflicted, OnDamageInflicted));
@@ -58,6 +59,15 @@ namespace Chrome
                 case 1: // On normal bullet fired
 
                     firstGauge.ADD(-2.5f);
+                    break;
+            }
+        }
+        void OnFrenzyAbilityUsed(byte type, float cost)
+        {
+            firstGauge.ADD(cost);
+            switch (type)
+            {
+                case 0:
                     break;
             }
         }

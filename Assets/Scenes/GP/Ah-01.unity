@@ -8767,6 +8767,7 @@ Transform:
   - {fileID: 560282137}
   - {fileID: 1317599168}
   - {fileID: 1770030522}
+  - {fileID: 1754414195}
   m_Father: {fileID: 0}
   m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
@@ -15274,6 +15275,52 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3187219598947616990, guid: 66e5059132311884482d84c5ce0d3f37, type: 3}
   m_PrefabInstance: {fileID: 1745075844}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1754414194
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1754414195}
+  - component: {fileID: 1754414196}
+  m_Layer: 0
+  m_Name: FrenzyAbility
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1754414195
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1754414194}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1116115624}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1754414196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1754414194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96281548edac22c419d87c955c6a2c2f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  frenzyWeapon: {fileID: 11400000, guid: 9cb9f358c11fcec4683bf078a6dcb158, type: 2}
+  heatCost: 5
+  lowHeatLock: 0
 --- !u!1 &1757387377
 GameObject:
   m_ObjectHideFlags: 0

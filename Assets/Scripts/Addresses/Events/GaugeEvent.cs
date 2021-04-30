@@ -6,6 +6,7 @@ namespace Chrome
     public enum GaugeEvent : byte
     {
         OnGunFired,
+        OnFrenzyAbilityUsed,
         OnJetpackUsed,
         OnThrusterUsed,
         OnDamageInflicted,

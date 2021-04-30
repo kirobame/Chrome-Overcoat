@@ -11,7 +11,7 @@ namespace Chrome
             
             gauge.AddModule(module);
         }
-        
+
         public static void MUL(this Gauge gauge, float value, float time = 0.0f)
         {
             var module = new GaugeMultiplicationModule(value);
