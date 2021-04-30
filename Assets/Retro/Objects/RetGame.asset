@@ -16,5 +16,3 @@ MonoBehaviour:
   startDelay: 1
   waves:
   - {fileID: 11400000, guid: fecf7ed422b3c414a8ab9df706b5a30c, type: 2}
-  - {fileID: 11400000, guid: a68c6396ec1a9704aab20896c60e9561, type: 2}
-  - {fileID: 11400000, guid: 9216960e36b441e408434670e3ea1897, type: 2}
