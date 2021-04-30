@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: RetTimmySword
   m_EditorClassIdentifier: 
   title: Sword
+  cutIcon: {fileID: 0}
   icon: {fileID: 5543941588292853863, guid: 999b2f38059452d4fb8218d8d6941c5d, type: 3}
-  model: {fileID: 9205572518922063854, guid: 79a32bf3e9d019644916751031799d98, type: 3}
+  model: {fileID: 1892097630342930754, guid: 02a3a214294f8ed4ea06b9d79ef11971, type: 3}
   pickup: {fileID: 2952213446951348237, guid: 84b8e576123cc4449bc155626139a0f3, type: 3}
   spread: 180
   radius: 2

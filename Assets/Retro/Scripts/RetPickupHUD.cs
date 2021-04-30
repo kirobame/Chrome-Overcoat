@@ -23,6 +23,8 @@ namespace Chrome.Retro
         void OnGunFound(RetGunPickup pickup)
         {
             icon.sprite = pickup.Gun.Icon;
+            icon.SetNativeSize();
+            
             ammo.text = pickup.ammo < 10 ? $"0{pickup.ammo}" : pickup.ammo.ToString();
             title.text = pickup.Gun.Title;
             

@@ -19,7 +19,7 @@ GameObject:
   - component: {fileID: 885048539167734213}
   - component: {fileID: 3470237599793358476}
   m_Layer: 7
-  m_Name: '[E]-Player'
+  m_Name: RetPlayerAlt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -568,7 +568,7 @@ MonoBehaviour:
   modelParent: {fileID: 8513707519912921261}
   detection: {fileID: 3470237598224982170}
   aim: {fileID: 8738704698415119586}
-  defaultGun: {fileID: 11400000, guid: ceeca1bb7c1481b4d927228dadb9c8f4, type: 2}
+  defaultGun: {fileID: 11400000, guid: 693fdd7ca4339784dbd046b8929ef26e, type: 2}
   smoothing: 0.075
 --- !u!114 &3470237598224982170
 MonoBehaviour:
@@ -868,6 +868,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   body: {fileID: 885048539167734209}
+  life: {fileID: 4533902086868373849}
   maxSpeed: 3
   speed: 0.2
   smoothing: 0.1

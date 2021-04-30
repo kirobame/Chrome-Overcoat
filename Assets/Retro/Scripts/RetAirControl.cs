@@ -6,6 +6,7 @@ namespace Chrome.Retro
     public class RetAirControl : InputControl
     {
         [FoldoutGroup("Dependencies"), SerializeField] private CharacterBody body;
+        [FoldoutGroup("Dependencies"), SerializeField] private Lifetime life;
         
         [FoldoutGroup("Values"), SerializeField] private float maxSpeed;
         [FoldoutGroup("Values"), SerializeField] private float speed;
@@ -16,6 +17,12 @@ namespace Chrome.Retro
 
         void FixedUpdate()
         {
+            if (transform.position.y < -3.0f)
+            {
+                life.End();
+                return;
+            }
+            
             if (body.IsGrounded)
             {
                 smoothedInputs = Vector3.zero;

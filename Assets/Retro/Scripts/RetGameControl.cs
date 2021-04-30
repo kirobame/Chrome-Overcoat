@@ -110,7 +110,7 @@ namespace Chrome.Retro
             var root = life.transform.root.gameObject;
             if (!root.activeInHierarchy) root.SetActive(true);
             
-            game.Begin();
+            Routines.Start(Routines.DoAfter(() => game.Begin(), game.StartDelay));
             Events.Call(RetEvent.OnGameStart);
             
             infos[current].Hide();

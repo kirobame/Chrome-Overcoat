@@ -25,7 +25,6 @@ namespace Chrome.Retro
 
             if (IsDone)
             {
-                Debug.Log("DONE");
                 Close(packet);
             }
 

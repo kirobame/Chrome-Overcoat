@@ -37,8 +37,9 @@ namespace Chrome.Retro
             {
                 var enemyPool = Repository.Get<RetEnemyPool>(RetReference.EnemyPool);
                 var enemyPoolable = enemyPool.RequestSinglePoolable(enemyPrefab);
-                
-                enemyPoolable.transform.position = anchor.transform.position;
+
+                enemyPoolable.Agent.Warp(anchor.transform.position);
+                //enemyPoolable.transform.position = anchor.transform.position;
                 return enemyPoolable;
             }
         }

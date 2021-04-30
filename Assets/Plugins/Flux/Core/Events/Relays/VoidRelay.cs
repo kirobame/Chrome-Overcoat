@@ -6,7 +6,7 @@ namespace Flux.Event
     {
         private event Action callback;
 
-        public override void TryCall(EventArgs args) => callback();
+        public override void TryCall(EventArgs args) => callback?.Invoke();
 
         protected override void OnSubscription(object method) => callback += (Action)method;
         protected override void OnUnsubscription(object method) => callback -= (Action)method;
