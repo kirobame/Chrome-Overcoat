@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a7a4d368f2b4ea18f3d06b120ea459d, type: 3}
   m_Name: RetGame
   m_EditorClassIdentifier: 
+  startDelay: 1
   waves:
   - {fileID: 11400000, guid: fecf7ed422b3c414a8ab9df706b5a30c, type: 2}

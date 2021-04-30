@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Flux.Audio;
+using UnityEngine;
 
 namespace Chrome.Retro
 {
@@ -48,5 +49,7 @@ namespace Chrome.Retro
                 value.blocksRaycasts = false;
             }
         }
+
+        public static void Play(this AudioPackage audio) => AudioHandler.Play(audio);
     }
 }
