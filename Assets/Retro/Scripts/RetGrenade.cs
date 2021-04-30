@@ -67,6 +67,30 @@ namespace Chrome.Retro
                 return;
             }
 
+            var success = false;
+            var results = Physics.OverlapSphere(transform.position, 0.25f, LayerMask.GetMask("Entity"));
+            foreach (var result in results)
+            {
+                if (!result.TryGetComponent<InteractionHub>(out var hub) || hub.Identity.Faction == identity.Faction) continue;
+                
+                var distance = Vector3.Distance(transform.position, result.transform.position);
+                var ratio = Mathf.Clamp01(distance / splash);
+                
+                hub.Relay<IDamageable>(damageable =>
+                {
+                    if (damageable.Identity.Faction == identity.Faction) return;
+                    damageable.Hit(identity, falloff.Evaluate(ratio) * damage, identity.Packet);
+                });
+
+                success = true;
+            }
+
+            if (success)
+            {
+                Hit(transform.position);
+                return;
+            }
+
             Speed = cachedSpeed + gain.Evaluate(1.0f - timer / duration) * bonusSpeed;
             base.Update();
         }
@@ -87,13 +111,18 @@ namespace Chrome.Retro
                     damageable.Hit(identity, falloff.Evaluate(ratio) * damage, identity.Packet);
                 });
             }
-            
+
+            Hit(hit.point);
+        }
+
+        private void Hit(Vector3 point)
+        {
             sound.Play();
             var vfxPool = Repository.Get<VfxPool>(Pool.Impact);
             var vfxPoolable = vfxPool.RequestSinglePoolable(impactVfx);
 
             vfxPoolable.transform.localScale = Vector3.one * (splash * splashSize);
-            vfxPoolable.transform.position = hit.point;
+            vfxPoolable.transform.position = point;
             vfxPoolable.Value.Play();
             
             if (routine != null)

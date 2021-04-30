@@ -82,7 +82,6 @@ namespace Chrome.Retro
                 trailWidth = Mathf.SmoothDamp(targetWidth, trailWidth, ref trailDamping, trailSmoothing);
 
                 var gauge = Repository.Get<RetGauge>(RetReference.Gauge);
-                Debug.Log(costMap.Evaluate(ratio) * cost);
                 gauge.Modify(costMap.Evaluate(ratio) * cost);
                 
                 isActive = true;
