@@ -18378,6 +18378,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   handler: {fileID: 2115037599}
   lifetime: {fileID: 1757387381}
+  heatDieOnMax: 1
+  heatDieOnMin: 0
+  heatPassiveBehaviours: []
+  heatOnGunFired1: 0
+  heatOnGunFired2: 0
+  heatOnJetpackUsed: 0
+  heatOnAirControl: 0
+  heatOnDamageInflictedConstant: 0
+  heatOnDamageInflictedAmountMultiplier: 0
+  heatOnDamageReceivedConstant: 0
+  heatOnDamageReceivedAmountMultiplier: 0
+  heatOnKill: 0
+  heatOnJump: 0
+  heatOnSprint: 0
+  heatOnMove: 0
+  energyDieOnMax: 0
+  energyDieOnMin: 1
+  energyPassiveBehaviours: []
+  energyOnGunFired1: 0
+  energyOnGunFired2: 0
+  energyOnJetpackUsed: 0
+  energyOnAirControl: 0
+  energyOnDamageInflictedConstant: 0
+  energyOnDamageInflictedAmountMultiplier: 0
+  energyOnDamageReceivedConstant: 0
+  energyOnDamageReceivedAmountMultiplier: 0
+  energyOnKill: 0
+  energyOnJump: 0
+  energyOnSprint: 0
+  energyOnMove: 0
 --- !u!114 &2115037599
 MonoBehaviour:
   m_ObjectHideFlags: 0
