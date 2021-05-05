@@ -16,7 +16,31 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 440364ff8d25a7c449f78e62136a07fd
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 5370583ba2ad595408f253fabadb1c94
+    m_Address: Assets/Retro/Objects/Prefabs/RetEnemies-Antonin/RetKevin-CAC-noloot.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: b8461eb732ac5514885fd461a806d10a
+    m_Address: Assets/Retro/Objects/Prefabs/RetEnemies-Antonin/RetKevin-GL-noloot.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 6d8823595db7129429a536cf01e5dac8
+    m_Address: Assets/Retro/Objects/Prefabs/RetEnemies-Antonin/RetKevin-MG-noloot.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 146fb4b3fb845664692b88be811d22e6
+    m_Address: Assets/Retro/Objects/Prefabs/RetEnemies-Antonin/RetKevin-SG-noloot.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 239abe5094ba2a545a1573bbc9f8e52b, type: 2}
   m_SchemaSet:

@@ -44,22 +44,10 @@ namespace Chrome
 
             taskTree = new RootNode();
             var conditionalNode = new CanSee(playerColReference, new PackettedValue<LineOfSight>());
-            
-            /*taskTree.Append(
-                conditionalNode.Append(
-                    new StopMoving().Mask(0b_0001).Append(
-                        new RootNode().Append(
-                            new LookAt(playerColReference, aimReference)), 
-                        new SimulatedClickInput(1.0f).Append(
-                            new ComputeDirectionTo("shootDir", fireAnchorReference, playerColReference).Append(
-                                new Shoot("shootDir".Reference<Vector3>(), fireAnchorReference, bulletPrefab, muzzleFlashPrefab).Append(
-                                    new Delay(0.33f))))),
-                    new MoveTo(new PackettedValue<NavMeshAgent>(), "player".Reference<Transform>(true), aimReference).Mask(0b_0010).Append(
-                        new Delay(0.5f))));*/
-            
+
             taskTree.Append(
                 conditionalNode.Append(
-                    new StopMoving().Mask(0b_0001).Append(
+                    new StopMoving(new PackettedValue<NavMeshAgent>()).Mask(0b_0001).Append(
                         new RootNode().Append(
                             new ComputeDirectionTo("shootDir", fireAnchorReference, playerColReference),
                             new LookAt(playerColReference, aimReference)), 

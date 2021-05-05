@@ -65,36 +65,15 @@ namespace Chrome
 
                             Start(packet);
                             step = Step.Hit;
+                            
+                            HandleHit(packet);
                         }
                     }
                     break;
                 
                 case Step.Hit:
-                    
-                    foreach (var branch in Branches) branch.Update(packet);
-                    OnUpdate(packet);
-                    
-                    if (IsDone)
-                    {
-                        var board = packet.Get<IBlackboard>();
-                        var end = board.Get<bool>("end");
 
-                        RemoveOutputChannel(packet, 0b_0100);
-                        if (end)
-                        {
-                            AddOutputChannel(packet, 0b_1000);
-                            step = Step.End;
-                        }
-                        else
-                        {
-                            board.Set<CollisionHit<Transform>>("hit", null);
-                            
-                            AddOutputChannel(packet, 0b_0010);
-                            step = Step.Move;
-                        }
-                        
-                        Start(packet);
-                    }
+                    HandleHit(packet);
                     break;
                 
                 case Step.End:
@@ -113,6 +92,34 @@ namespace Chrome
             }
 
             return null;
+        }
+
+        private void HandleHit(Packet packet)
+        {
+            foreach (var branch in Branches) branch.Update(packet);
+            OnUpdate(packet);
+                    
+            if (IsDone)
+            {
+                var board = packet.Get<IBlackboard>();
+                var end = board.Get<bool>("end");
+
+                RemoveOutputChannel(packet, 0b_0100);
+                if (end)
+                {
+                    AddOutputChannel(packet, 0b_1000);
+                    step = Step.End;
+                }
+                else
+                {
+                    board.Set<CollisionHit<Transform>>("hit", null);
+                            
+                    AddOutputChannel(packet, 0b_0010);
+                    step = Step.Move;
+                }
+                        
+                Start(packet);
+            }
         }
     }
 }

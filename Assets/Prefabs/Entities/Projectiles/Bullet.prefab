@@ -9815,6 +9815,7 @@ GameObject:
   m_Component:
   - component: {fileID: 30921159864898313}
   - component: {fileID: 6124273840482104688}
+  - component: {fileID: 5390938792985237082}
   - component: {fileID: 34740033821788151}
   - component: {fileID: 34740033821788150}
   m_Layer: 0
@@ -9833,7 +9834,7 @@ Transform:
   m_GameObject: {fileID: 34740033821788149}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -11.08582, y: 5.841, z: 9.019422}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children:
   - {fileID: 6276600383613429950}
   - {fileID: 1562849811}
@@ -9853,6 +9854,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   faction: 2
+--- !u!114 &5390938792985237082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 34740033821788149}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3283f335286465388e567b7e228e180, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  value: 1
 --- !u!114 &34740033821788151
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9888,6 +9902,7 @@ MonoBehaviour:
   impactVfx: {fileID: 3183420789188184947, guid: 66e5059132311884482d84c5ce0d3f37, type: 3}
   graph: {fileID: 5212214593583665140}
   trail: {fileID: 1562849812}
+  sound: {fileID: 0}
 --- !u!1 &34867107092590559
 GameObject:
   m_ObjectHideFlags: 0
@@ -14717,7 +14732,7 @@ Transform:
   m_GameObject: {fileID: 5212214593583665140}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.0125, y: 0.0125, z: 0.0125}
+  m_LocalScale: {x: 0.0225, y: 0.0225, z: 0.0225}
   m_Children:
   - {fileID: 32089924397620621}
   - {fileID: 32319825932783879}

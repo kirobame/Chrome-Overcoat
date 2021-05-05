@@ -11,10 +11,10 @@ namespace Chrome
         [FoldoutGroup("Values"), SerializeField] protected float radius;
         [FoldoutGroup("Values"), SerializeField] protected float speed;
         [FoldoutGroup("Values"), SerializeField] protected LayerMask hitMask;
-        
+
         //--------------------------------------------------------------------------------------------------------------/
 
-        void Awake() => Speed = speed;
+        protected virtual void Awake() => Speed = speed;
 
         protected virtual void Update()
         {

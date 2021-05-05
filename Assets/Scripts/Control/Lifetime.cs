@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Flux.Event;
 using Flux.Feedbacks;
 using UnityEngine;
@@ -9,7 +8,8 @@ namespace Chrome
     public class Lifetime : MonoBehaviour, ILifebound
     {
         [SerializeField] private Sequence sequence;
-
+        public bool bypassBootup;
+        
         private SendbackArgs args;
         private bool hasBeenBootedUp;
         
@@ -17,14 +17,13 @@ namespace Chrome
         private List<ILifebound> lifeboundsList = new List<ILifebound>();
         private List<Lifetime> subLifetimesList = new List<Lifetime>();
 
+        private List<ILifebound> lifebounds;
         void Awake()
         {
             hasBeenBootedUp = false;
             
             args = new SendbackArgs();
             args.onDone += OnSequenceDone;
-
-            //lifebounds = transform.root.GetComponentsInChildren<ILifebound>();
 
             GetILifebounds(this.transform);
         }
@@ -51,7 +50,7 @@ namespace Chrome
 
         void OnEnable()
         {
-            if (!hasBeenBootedUp)
+            if (!hasBeenBootedUp && !bypassBootup)
             {
                 hasBeenBootedUp = true;
                 return;
@@ -63,7 +62,7 @@ namespace Chrome
                 subLifetime.Bootup();
             }
         }
-
+        
         public void End()
         {
             foreach (var lifebound in lifeboundsList) lifebound.Shutdown();
