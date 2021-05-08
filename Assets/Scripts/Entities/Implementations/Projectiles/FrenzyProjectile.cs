@@ -10,8 +10,10 @@ namespace Chrome
     public class FrenzyProjectile : StandardProjectile
     {
         [FoldoutGroup("Values"), SerializeField] private float damage;
-        [FoldoutGroup("Bounce"), SerializeField] private PoolableVfx impactVfx;
-        [FoldoutGroup("Bounce"), SerializeField, Range(0.01f, 3.0f)] private float impactSize;
+        [FoldoutGroup("Values"), SerializeField] private float explosionRadius;
+        [FoldoutGroup("Impact"), SerializeField] private PoolableVfx impactVfx;
+        [FoldoutGroup("Impact"), SerializeField, Range(0.01f, 3.0f)] private float impactSize;
+
         protected override void OnHit(RaycastHit hit)
         {
             var vfxPool = Repository.Get<VfxPool>(Pool.Impact);
@@ -19,10 +21,6 @@ namespace Chrome
             TryHit(vfx, hit);
         }
 
-        private void Explode()
-        {
-
-        }
         private PoolableVfx PlayImpact(PoolableVfx vfx, RaycastHit hit)
         {
             vfx.transform.localScale = Vector3.one * (transform.localScale.x * impactSize);
@@ -34,18 +32,24 @@ namespace Chrome
         }
         private void TryHit(PoolableVfx vfx, RaycastHit hit)
         {
-            if (hit.collider.TryGetComponent<InteractionHub>(out var hub))
+            var entities = Physics.OverlapSphere(transform.position, explosionRadius);
+            foreach (var entity in entities)
             {
-                identity.Packet.Set(hit);
-
-                hub.Relay<IDamageable>(damageable =>
+                if (entity.TryGetComponent<InteractionHub>(out var hub) && transform.CanSee(entity, hitMask))
                 {
-                    if (damageable.Identity.Faction == identity.Faction) return;
-                    damageable.Hit(identity, damage, identity.Packet);
-                });
+                    identity.Packet.Set(hit);
 
-                vfx.transform.SetParent(hit.transform);
+                    hub.Relay<IDamageable>(damageable =>
+                    {
+                        if (damageable.Identity.Faction == identity.Faction) return;
+                        damageable.Hit(identity, damage, identity.Packet);
+                    });
+
+                    vfx.transform.SetParent(hit.transform);
+                }
             }
+
+            gameObject.SetActive(false);
         }
     }
 }

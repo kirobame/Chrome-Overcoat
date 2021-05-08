@@ -75,6 +75,8 @@ namespace Chrome
         
         void Update()
         {
+            var snapshot = identity.Packet.Save();
+
             if (state == PressState.Released)
             {
                 if (Input.GetKeyDown(KeyCode.E) && !isLeft) ChangeWeapon(true);
@@ -99,6 +101,8 @@ namespace Chrome
 
             aimCompute.Update(identity.Packet);
             Current.Update(identity.Packet);
+
+            identity.Packet.Load(snapshot);
         }
 
         private void OnMouseDown()

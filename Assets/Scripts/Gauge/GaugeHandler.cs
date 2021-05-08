@@ -64,7 +64,8 @@ namespace Chrome
         }
         void OnFrenzyAbilityUsed(byte type, float cost)
         {
-            firstGauge.ADD(cost);
+            Debug.Log("OnFrenzyAbilityUsed");
+            firstGauge.ADD(-cost);
             switch (type)
             {
                 case 0:

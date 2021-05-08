@@ -52,11 +52,15 @@ namespace Chrome
 
         private void Update()
         {
+            var snapshot = identity.Packet.Save();
+
             if (Input.GetKeyDown(KeyCode.A))
                 Activate();
 
             aimCompute.Update(identity.Packet);
             frenzyWeapon.Update(identity.Packet);
+
+            identity.Packet.Load(snapshot);
         }
 
         private void Activate()

@@ -9816,7 +9816,7 @@ GameObject:
   - component: {fileID: 30921159864898313}
   - component: {fileID: 6124273840482104688}
   - component: {fileID: 34740033821788151}
-  - component: {fileID: 34740033821788150}
+  - component: {fileID: -4486240497018722569}
   m_Layer: 0
   m_Name: FrenzyProjectile
   m_TagString: FX
@@ -9865,8 +9865,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2fe2c17e75c43e8a98d86588c77ed96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  value: {fileID: 34740033821788150}
---- !u!114 &34740033821788150
+  value: {fileID: -4486240497018722569}
+--- !u!114 &-4486240497018722569
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9875,7 +9875,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 34740033821788149}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8bed43c70dc04bc8b3bcc2558eeb71b8, type: 3}
+  m_Script: {fileID: 11500000, guid: bc8ad27ef3e30fc40859ce44a2772ca0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 0.05
@@ -9883,11 +9883,10 @@ MonoBehaviour:
   hitMask:
     serializedVersion: 2
     m_Bits: 192
-  damage: 1
-  deactivationTime: 7.5
-  impactVfx: {fileID: 3183420789188184947, guid: 66e5059132311884482d84c5ce0d3f37, type: 3}
-  graph: {fileID: 5212214593583665140}
-  trail: {fileID: 1562849812}
+  damage: 10
+  explosionRadius: 4
+  impactVfx: {fileID: 6771830444896824688, guid: b3b9af14dbc3d03459b72e0fa333aba6, type: 3}
+  impactSize: 2
 --- !u!1 &34867107092590559
 GameObject:
   m_ObjectHideFlags: 0
