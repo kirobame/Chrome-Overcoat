@@ -48,11 +48,11 @@ namespace Chrome.Retro
                 
                 foreach (var cover in covers)
                 {
-                    var distance = Vector3.Distance(identity.Root.position.Flatten(), cover.transform.position.Flatten());
+                    var distance = Vector3.Distance(identity.Transform.position.Flatten(), cover.transform.position.Flatten());
                     if (distance < profile.Range.x || distance > profile.Range.y) continue;
                     
                     var height = cover.transform.position.y;
-                    var direction = identity.Root.position.Flatten(height) - cover.transform.position;
+                    var direction = identity.Transform.position.Flatten(height) - cover.transform.position;
                     var ray = new Ray(cover.transform.position, direction.normalized);
 
                     if (!Physics.Raycast(ray, direction.magnitude, LayerMask.GetMask("Environment"))) continue;
@@ -75,7 +75,7 @@ namespace Chrome.Retro
                 
                 var playerBoard = Blackboard.Global.Get<IBlackboard>(RetPlayerBoard.REF_SELF);
                 var identity = playerBoard.Get<IIdentity>(RetPlayerBoard.REF_IDENTITY);
-                var playerPoint = identity.Root.position.Flatten();
+                var playerPoint = identity.Transform.position.Flatten();
 
                 foreach (var watchedEntry in entries)
                 {
@@ -130,7 +130,7 @@ namespace Chrome.Retro
         {
             var playerBoard = Blackboard.Global.Get<IBlackboard>(RetPlayerBoard.REF_SELF);
             var identity = playerBoard.Get<IIdentity>(RetPlayerBoard.REF_IDENTITY);
-            var playerPoint = identity.Root.position.Flatten();
+            var playerPoint = identity.Transform.position.Flatten();
 
             if (Vector3.Distance(playerPoint, position.Flatten()) <= profile.Distances.x)
             {

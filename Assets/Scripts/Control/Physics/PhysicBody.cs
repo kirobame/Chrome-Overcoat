@@ -8,10 +8,12 @@ namespace Chrome
 {
     public abstract class PhysicBody : MonoBehaviour, ILifebound
     {
+        public event Action<ILifebound> onDestruction;
         public event Action<CollisionHit<PhysicBody>> onCollision;
         
         public abstract Collider Collider { get; }
 
+        public bool IsActive => true;
         public float Mass => mass;
         
         public Vector3 Velocity { get; private set; }
@@ -24,6 +26,8 @@ namespace Chrome
 
         //--------------------------------------------------------------------------------------------------------------/
 
+        void OnDestroy() => onDestruction?.Invoke(this);
+        
         public void Bootup()
         {
             Velocity = Vector3.zero;
@@ -38,9 +42,7 @@ namespace Chrome
         {
             velocity += force * Time.fixedDeltaTime / mass;
             Delta = Move(velocity * Time.fixedDeltaTime);
-            
-            //Debug.Log($"MOVE");
-            
+
             var hit = HandleCollisions();
             if (hit != null) onCollision?.Invoke(hit);
 

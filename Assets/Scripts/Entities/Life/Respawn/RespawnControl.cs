@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Flux;
 using UnityEngine;
 
@@ -6,10 +7,16 @@ namespace Chrome
 {
     public class RespawnControl : MonoBehaviour, ILifebound
     {
+        public event Action<ILifebound> onDestruction;
+
+        public bool IsActive => true;
+        
         [SerializeField] protected string path;
         [SerializeField] protected int index;
         [SerializeField] protected float duration;
 
+        void OnDestroy() => onDestruction?.Invoke(this);
+        
         public void Bootup() { }
         public void Shutdown() => Routines.Start(Routine());
 
@@ -37,5 +44,7 @@ namespace Chrome
                 return true;
             }
         }
+
+
     }
 }

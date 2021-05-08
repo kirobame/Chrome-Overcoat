@@ -2,18 +2,18 @@
 {
     public class Enable : ProxyNode
     {
-        public Enable(bool enabled, IValue<IEnable> component)
+        public Enable(bool enabled, IValue<IEnabler> enabler)
         {
             this.enabled = enabled;
-            this.component = component;
+            this.enabler = enabler;
         }
         
-        private IValue<IEnable> component;
+        private IValue<IEnabler> enabler;
         private bool enabled;
         
         protected override void OnUpdate(Packet packet)
         {
-            if (component.IsValid(packet)) component.Value.Enable(enabled);
+            if (enabler.IsValid(packet)) enabler.Value.Enable(enabled);
             isDone = true;
         }
     }

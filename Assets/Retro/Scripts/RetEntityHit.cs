@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Chrome.Retro
 {
-    public class RetEntityHit : MonoBehaviour, IDamageable, ILink<IIdentity>
+    public class RetEntityHit : MonoBehaviour, ILink<IIdentity>
     {
         public IIdentity Identity => identity;
         IIdentity ILink<IIdentity>.Link

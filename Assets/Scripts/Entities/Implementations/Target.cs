@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using Flux.Data;
 using Flux.Event;
 using Sirenix.OdinInspector;
@@ -7,17 +8,21 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class Target : MonoBehaviour, IDamageable, ILink<IIdentity>
+    public class Target : MonoBehaviour, IDamageable, IInjectable
     {
-        public IIdentity Identity => identity;
-        IIdentity ILink<IIdentity>.Link
-        {
-            set => identity = value;
-        }
-        private IIdentity identity;
+        IReadOnlyList<IValue> IInjectable.Injections => injections;
+        private IValue[] injections;
         
+        void IInjectable.OnInjectionDone(IRoot source) { }
+        
+        //--------------------------------------------------------------------------------------------------------------/
+
+        public event Action<IInteraction> onDestruction;
+        
+        public IIdentity Identity => identity.Value;
         public bool IsAlive => health > 0.0f;
-        
+        public bool IsActive => enabled;
+
         [BoxGroup("Dependencies"), SerializeField] private new Collider collider;
         
         [FoldoutGroup("Values"), SerializeField] private float maxHealth;
@@ -29,12 +34,20 @@ namespace Chrome
         [FoldoutGroup("Feedbacks"), SerializeField] private PoolableVfx hitVfx;
         [FoldoutGroup("Feedbacks"), SerializeField] private PoolableVfx deathVfx;
 
+        private IValue<IIdentity> identity;
         private float health;
 
         //--------------------------------------------------------------------------------------------------------------/
         
-        void Awake() => health = maxHealth;
-
+        void Awake()
+        {
+            identity = new AnyValue<IIdentity>();
+            injections = new IValue[] { identity };
+            
+            health = maxHealth;
+        }
+        void OnDestroy() => onDestruction?.Invoke(this);
+        
         public void Hit(IIdentity source, float damage, Packet packet)
         {
             health -= damage;
@@ -56,7 +69,7 @@ namespace Chrome
             
             if (source.Faction == Faction.Player)
             {
-                var type = identity.Packet.Get<byte>();
+                var type = identity.Value.Packet.Get<byte>();
                 
                 Events.ZipCall<byte,float>(GaugeEvent.OnDamageInflicted, type, damage);
                 if (health <= 0.0f) Events.ZipCall<byte>(GaugeEvent.OnKill, type);

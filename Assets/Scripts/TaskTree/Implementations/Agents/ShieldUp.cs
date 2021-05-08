@@ -14,7 +14,7 @@ namespace Chrome
         protected override void OnUpdate(Packet packet)
         {
             if (shield.IsValid(packet))
-                if (!shield.Value.IsBroken())
+                if (!shield.Value.IsBroken)
                     shield.Value.Up();
 
             isDone = true;

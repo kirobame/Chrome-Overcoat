@@ -4,16 +4,16 @@ namespace Chrome
 {
     public class AttackCac : ProxyNode
     {
-        public AttackCac(IIdentity source, IValue<Transform> aimTr, float damages)
+        public AttackCac(IIdentity source, IValue<Transform> aimTr, float damage)
         {
             origin = aimTr;
             identity = source;
-            this.damages = damages;
+            this.damage = damage;
         }
 
         private IValue<Transform> origin;
         private IIdentity identity;
-        private float damages;
+        private float damage;
 
         protected override void OnUpdate(Packet packet)
         {
@@ -31,12 +31,7 @@ namespace Chrome
             if (hit.collider.TryGetComponent<InteractionHub>(out var hub))
             {
                 identity.Packet.Set(hit);
-
-                hub.Relay<IDamageable>(damageable =>
-                {
-                    if (damageable.Identity.Faction == identity.Faction) return;
-                    damageable.Hit(identity, damages, identity.Packet);
-                });
+                hub.RelayDamage(identity, damage);
             }
         }
     }

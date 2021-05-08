@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Chrome.Retro
 {
-    public class RetGauge : MonoBehaviour, ILifebound
+    public class RetGauge : MonoBehaviour
     {
         public float Value => value;
         public float Max => max;
@@ -41,7 +41,7 @@ namespace Chrome.Retro
         void Update()
         {
             var playerBoard = Blackboard.Global.Get<RetPlayerBoard>(RetPlayerBoard.REF_SELF);
-            if (!playerBoard.Identity.Root.gameObject.activeInHierarchy) return;
+            if (!playerBoard.Identity.Transform.gameObject.activeInHierarchy) return;
             
             value = Mathf.Clamp(value, 0.0f, max);
 

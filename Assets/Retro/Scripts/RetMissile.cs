@@ -109,12 +109,7 @@ namespace Chrome.Retro
             if (hit.collider == target || hit.collider.TryGetComponent<InteractionHub>(out hub) && hub.Identity.Faction != identity.Faction)
             {
                 identity.Packet.Set(hit);
-                    
-                hub.Relay<IDamageable>(damageable =>
-                {
-                    if (damageable.Identity.Faction == identity.Faction) return;
-                    damageable.Hit(identity, damage, identity.Packet);
-                });
+                hub.RelayDamage(identity, damage);
                 
                 vfxPoolable.transform.SetParent(hit.transform);
             }

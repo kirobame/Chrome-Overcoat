@@ -10,7 +10,7 @@ using Random = UnityEngine.Random;
 
 namespace Chrome.Retro
 {
-    public class RetGunControl : RetBaseGunControl, ILifebound, ILink<IIdentity>
+    public class RetGunControl : RetBaseGunControl, ILink<IIdentity>
     {
         IIdentity ILink<IIdentity>.Link
         {

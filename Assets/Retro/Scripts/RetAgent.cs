@@ -7,7 +7,7 @@ using UnityEngine.AI;
 
 namespace Chrome.Retro
 {
-    public class RetAgent : MonoBehaviour, ILifebound, ILink<IIdentity>
+    public class RetAgent : MonoBehaviour, ILink<IIdentity>
     {
         public const string REF_ROOT = "self";
         public const string REF_HEAD = "self.head";
@@ -58,13 +58,13 @@ namespace Chrome.Retro
             identity.Packet.Set(lookAt);
 
             var board = identity.Packet.Get<IBlackboard>();
-            board.Set(REF_ROOT, identity.Root);
+            board.Set(REF_ROOT, identity.Transform);
             board.Set(REF_HEAD, head);
             board.Set(REF_PIVOT, pivot);
             board.Set(REF_FIREANCHOR, fireAnchor);
             
             var playerBoard = Blackboard.Global.Get<IBlackboard>(RetPlayerBoard.REF_SELF);
-            var targetTransform = playerBoard.Get<IIdentity>(RetPlayerBoard.REF_IDENTITY).Root;
+            var targetTransform = playerBoard.Get<IIdentity>(RetPlayerBoard.REF_IDENTITY).Transform;
             var targetCollider = playerBoard.Get<Collider>(RetPlayerBoard.REF_COLLIDER);
             
             board.Set(REF_TARGET, targetTransform);

@@ -76,12 +76,7 @@ namespace Chrome.Retro
                 var distance = Vector3.Distance(transform.position, result.transform.position);
                 var ratio = Mathf.Clamp01(distance / splash);
                 
-                hub.Relay<IDamageable>(damageable =>
-                {
-                    if (damageable.Identity.Faction == identity.Faction) return;
-                    damageable.Hit(identity, falloff.Evaluate(ratio) * damage, identity.Packet);
-                });
-
+                hub.RelayDamage(identity, damage);
                 success = true;
             }
 
@@ -105,11 +100,7 @@ namespace Chrome.Retro
                 var distance = Vector3.Distance(transform.position, result.transform.position);
                 var ratio = Mathf.Clamp01(distance / splash);
                 
-                hub.Relay<IDamageable>(damageable =>
-                {
-                    if (damageable.Identity.Faction == identity.Faction) return;
-                    damageable.Hit(identity, falloff.Evaluate(ratio) * damage, identity.Packet);
-                });
+                hub.RelayDamage(identity, damage);
             }
 
             Hit(hit.point);

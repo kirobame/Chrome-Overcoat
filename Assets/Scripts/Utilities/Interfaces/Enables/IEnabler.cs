@@ -1,6 +1,6 @@
 ﻿namespace Chrome
 {
-    public interface IEnable
+    public interface IEnabler
     {
         void Enable(bool state);
     }

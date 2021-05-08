@@ -124,12 +124,7 @@ namespace Chrome
             if (hit.collider.TryGetComponent<InteractionHub>(out var hub))
             {
                 identity.Packet.Set(hit);
-                    
-                hub.Relay<IDamageable>(damageable =>
-                {
-                    if (damageable.Identity.Faction == identity.Faction) return;
-                    damageable.Hit(identity, damage, identity.Packet);
-                });
+                hub.RelayDamage(identity, damage);
                     
                 vfx.transform.SetParent(hit.transform);
             }

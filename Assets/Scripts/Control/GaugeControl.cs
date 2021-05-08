@@ -17,11 +17,16 @@ namespace Chrome
         }
 
         #endregion
+        
+        public event Action<ILifebound> onDestruction;
+        
+        public bool IsActive => true;
 
         [SerializeField] private GaugeResetInfo[] resetInfos;
          
         void Start() => ResetGauges();
-        
+        void OnDestroy() => onDestruction?.Invoke(this);
+
         public void Bootup() { }
         public void Shutdown() => ResetGauges();
 

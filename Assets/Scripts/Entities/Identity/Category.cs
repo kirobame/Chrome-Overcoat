@@ -3,16 +3,14 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class Category : MonoBehaviour, ILink<IIdentity>
+    public class Category : MonoBehaviour, IInstaller
     {
-        IIdentity ILink<IIdentity>.Link
-        {
-            set => identity = value;
-        }
-        private IIdentity identity;
-        
         [FoldoutGroup("Values"), SerializeField] private byte value;
+        
+        //--------------------------------------------------------------------------------------------------------------/
 
-        void Start() => identity.Packet.Set(value);
+        int IInstaller.Priority => 1;
+
+        void IInstaller.InstallDependenciesOn(Packet packet) => packet.Set(value);
     }
 }

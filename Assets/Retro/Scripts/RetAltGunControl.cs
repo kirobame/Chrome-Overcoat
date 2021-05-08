@@ -22,7 +22,7 @@ namespace Chrome.Retro
         protected void SignalSwitch(RetGun gun) => onGunSwitch?.Invoke(gun);
     }
     
-    public class RetAltGunControl : RetBaseGunControl, ILifebound, ILink<IIdentity>
+    public class RetAltGunControl : RetBaseGunControl, ILink<IIdentity>
     {
         IIdentity ILink<IIdentity>.Link
         {

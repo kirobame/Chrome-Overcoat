@@ -19,10 +19,12 @@ namespace Chrome
                 if (hit.Collider.TryGetComponent<InteractionHub>(out var hub))
                 {
                     packet.Set(hit);
-                    hub.Relay<IDamageable>(damageable =>
+                    hub.Relay<IDamageable>((damageable, depth) =>
                     {
-                        if (damageable.Identity.Faction == identity.Faction) return;
+                        if (damageable.Identity.Faction == identity.Faction) return false;
+                        
                         damageable.Hit(identity, amount.Value, packet);
+                        return true;
                     });
                 }
             }

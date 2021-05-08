@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Chrome.Retro
 {
-    public class RetEnemyHealthLink : MonoBehaviour, ILifebound
+    public class RetEnemyHealthLink : MonoBehaviour
     {
         [FoldoutGroup("Dependencies"), SerializeField] private Health health;
 

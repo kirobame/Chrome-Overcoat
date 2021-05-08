@@ -39,7 +39,7 @@ namespace Chrome.Retro
                 var enemyPoolable = enemyPool.RequestSinglePoolable(enemyPrefab);
 
                 enemyPoolable.Agent.Warp(anchor.transform.position);
-                enemyPoolable.Lifetime.bypassBootup = true;
+                //enemyPoolable.Lifetime.bypassBootup = true;
                 return enemyPoolable;
             }
         }

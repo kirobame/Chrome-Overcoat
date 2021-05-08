@@ -43,7 +43,7 @@ namespace Chrome.Retro
             var vfxInstance = impactPool.RequestSingle(bloodPool);
 
             var playerBoard = Blackboard.Global.Get<IBlackboard>(RetPlayerBoard.REF_SELF);
-            var playerRoot = playerBoard.Get<IIdentity>(RetPlayerBoard.REF_IDENTITY).Root;
+            var playerRoot = playerBoard.Get<IIdentity>(RetPlayerBoard.REF_IDENTITY).Transform;
             var direction = Vector3.Normalize(transform.position.Flatten() - playerRoot.position.Flatten());
             
             vfxInstance.transform.position = transform.position + offset;

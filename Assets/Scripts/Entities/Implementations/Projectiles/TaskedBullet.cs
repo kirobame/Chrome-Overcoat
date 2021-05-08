@@ -25,10 +25,10 @@ namespace Chrome
         protected override ITaskTree BuildTree()
         {
             var board = identity.Packet.Get<IBlackboard>();
-            board.Set<IEnable>("trail", new RendererEnable(trail));
+            board.Set<IEnabler>("trail", new RendererEnabler(trail));
             board.Set("graph", graph);
             
-            var trailReference = "trail".Reference<IEnable>();
+            var trailReference = "trail".Reference<IEnabler>();
             var graphReference = "graph".Reference<GameObject>();
                 
             return new ProjectileNode().Append(
@@ -37,7 +37,7 @@ namespace Chrome
                         new SetActive(true, graphReference))),
                 new RootNode().Mask(0b_0010).Append(
                     new Timer(5.0f.Cache()).Append(
-                        new SetActive(false, identity.Root.gameObject.Cache()).Mask(0b_0001))),
+                        new SetActive(false, identity.Transform.gameObject.Cache()).Mask(0b_0001))),
                 new LinearMove(0.015f, "dir".Reference<Vector3>(), speed.Cache(), new PackettedValue<HashSet<Collider>>(), "self".Reference<Transform>()).Mask(0b_0010),
                 new Damage(1.0f.Cache()).Mask(0b_0100).Append(
                     new PlayVfxImpact(impactVfx).Append(

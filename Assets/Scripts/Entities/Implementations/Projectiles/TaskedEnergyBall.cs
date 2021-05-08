@@ -46,7 +46,7 @@ namespace Chrome
                 new ScaleBetween(0.3f, "size".Reference<Vector2>(), graph.Cache()).Mask(0b_0001),
                 new RootNode().Mask(0b_0010).Append(
                     new Timer("time".Reference<float>()).Append(
-                        new SetActive(false, identity.Root.gameObject.Cache()).Mask(0b_0001))),
+                        new SetActive(false, identity.Transform.gameObject.Cache()).Mask(0b_0001))),
                 new LinearMove(0.015f, "dir".Reference<Vector3>(), "speed".Reference<float>(), new PackettedValue<HashSet<Collider>>(), "self".Reference<Transform>()).Mask(0b_0010),
                 new Damage("damage".Reference<float>()).Mask(0b_0100).Append(
                     new Counter(3).Append(

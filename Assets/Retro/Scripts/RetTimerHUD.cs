@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Chrome.Retro
 {
-    public class RetTimerHUD : MonoBehaviour, ILifebound
+    public class RetTimerHUD : MonoBehaviour
     {
         public float ElapsedTime => minutes * 60.0f + seconds - value;
         public float Value => value;

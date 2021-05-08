@@ -29,7 +29,7 @@ namespace Chrome.Retro
 
             var snapshot = identity.Packet.Save();
             identity.Packet.Set(category);
-            hub.Relay<IDamageable>(damageable => { damageable.Hit(identity, damage, identity.Packet); });
+            hub.RelayDamage(identity, damage);
             identity.Packet.Load(snapshot);
             
             //sound.Play();

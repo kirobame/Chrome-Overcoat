@@ -2,9 +2,9 @@
 
 namespace Chrome
 {
-    public class RendererEnable : IEnable
+    public class RendererEnabler : IEnabler
     {
-        public RendererEnable(Renderer renderer) => this.renderer = renderer;
+        public RendererEnabler(Renderer renderer) => this.renderer = renderer;
         
         private Renderer renderer;
 

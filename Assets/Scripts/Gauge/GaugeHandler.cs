@@ -8,6 +8,10 @@ namespace Chrome
 {
     public class GaugeHandler : MonoBehaviour, ILifebound
     {
+        public event Action<ILifebound> onDestruction;
+        
+        public virtual bool IsActive => true;
+        
         [SerializeField] private EventHandler handler;
         [SerializeField] private Lifetime lifetime;
 
@@ -33,7 +37,10 @@ namespace Chrome
             
             Bootup();
         }
+        void OnDestroy() => onDestruction?.Invoke(this);
 
+        //--------------------------------------------------------------------------------------------------------------/
+        
         public void Bootup()
         {
             var module = new GaugeInRangeModule(new Vector2(0.0f, 0.01f), (value, percentage, state) =>

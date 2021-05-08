@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Chrome.Retro
 {
-    public class RetPlayerLife : MonoBehaviour, IDamageable, ILifebound, ILink<IIdentity>
+    public class RetPlayerLife : MonoBehaviour, ILink<IIdentity>
     {
         public IIdentity Identity => identity;
         IIdentity ILink<IIdentity>.Link

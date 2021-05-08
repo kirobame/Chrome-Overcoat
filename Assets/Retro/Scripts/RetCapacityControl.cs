@@ -103,11 +103,7 @@ namespace Chrome.Retro
                     var distance = Vector3.Distance(transform.position, result.transform.position);
                     var splashRatio = Mathf.Clamp01(distance / splash);
                 
-                    hub.Relay<IDamageable>(damageable =>
-                    {
-                        if (damageable.Identity.Faction == identity.Faction) return;
-                        damageable.Hit(identity, falloff.Evaluate(splashRatio) * damage, identity.Packet);
-                    });
+                    hub.RelayDamage(identity, damage);
                 }
             
                 var vfxPool = Repository.Get<VfxPool>(Pool.Impact);

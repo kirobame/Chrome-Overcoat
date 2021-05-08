@@ -86,7 +86,7 @@ namespace Chrome
                         Shutdown(packet);
                         
                         var identity = packet.Get<IIdentity>();
-                        identity.Root.gameObject.SetActive(false);
+                        identity.Transform.gameObject.SetActive(false);
                     }
                     break;
             }

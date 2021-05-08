@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Chrome.Retro
 {
-    public class RetLoot : MonoBehaviour, ILifebound
+    public class RetLoot : MonoBehaviour
     {
         [FoldoutGroup("Dependencies"), SerializeField] private Transform source;
         
