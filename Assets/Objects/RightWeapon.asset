@@ -21,4 +21,4 @@ MonoBehaviour:
       data:
         bulletPrefab: {fileID: 4146602574307847993, guid: 97d94cb4623951e499ee0ca4ba18d069, type: 3}
         muzzleFlashPrefab: {fileID: 6581533253750990063, guid: a3bee71f8ad97b94082b82bcbed23d28, type: 3}
-        delay: 0.125
+        delay: 0.35

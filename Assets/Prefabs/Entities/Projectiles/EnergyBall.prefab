@@ -78,7 +78,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 192
   maxSpeed: 16.5
-  damages: {x: 4, y: 12}
+  damages: {x: 3, y: 10}
   bounceCount: 4
   deactivationTime: 7.5
   impactSize: 1
