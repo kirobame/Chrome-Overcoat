@@ -38,7 +38,7 @@ namespace Chrome
             identity.Packet.Set(navMesh);
             identity.Packet.Set(lineOfSight);
 
-            var playerColReference = "player.collider".Reference<Collider>(true);
+            var playerColReference = "player.collider".Reference<Collider>(ReferenceType.Global);
             var fireAnchorReference = "view.fireAnchor".Reference<Transform>();
             var aimReference = "view".Reference<Transform>();
 
@@ -52,7 +52,7 @@ namespace Chrome
                             new ComputeDirectionTo("shootDir", fireAnchorReference, playerColReference),
                             new LookAt(playerColReference, aimReference)), 
                         new PressNode(1.0f).Append(runtimeWeapon)),
-                    new MoveTo(new PackettedValue<NavMeshAgent>(), "player".Reference<Transform>(true), aimReference).Mask(0b_0010).Append(
+                    new MoveTo(new PackettedValue<NavMeshAgent>(), "player".Reference<Transform>(ReferenceType.Global), aimReference).Mask(0b_0010).Append(
                         new Delay(0.5f))));
             
             taskTree.Bootup(identity.Packet);

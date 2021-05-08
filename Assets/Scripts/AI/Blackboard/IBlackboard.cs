@@ -7,6 +7,8 @@
         void Set<T>(string path, T value);
         void SetRegistry(string path, IRegistry registry);
 
+        bool TryGetAny<T>(out T value);
+        
         T Get<T>(string path);
         bool TryGet<T>(string path, out T value);
         

@@ -15,6 +15,11 @@ namespace Chrome
             
         private T value;
 
+        public void FillIn(Packet packet)
+        {
+            var board = packet.Get<IBlackboard>();
+            value = board.Get<T>(path);
+        } 
         public bool IsValid(Packet packet)
         {
             var board = packet.Get<IBlackboard>();

@@ -27,7 +27,7 @@ namespace Chrome.Retro
         {
             var playerBoard = Blackboard.Global.Get<IBlackboard>(RetPlayerBoard.REF_SELF);
             var life = playerBoard.Get<Lifetime>(RetPlayerBoard.REF_LIFE);
-            life.Add(this);
+            //life.Add(this);
             
             Bootup();
         }

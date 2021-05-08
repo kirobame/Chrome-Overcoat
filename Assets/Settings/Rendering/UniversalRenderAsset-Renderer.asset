@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37b77885a91c76e4795fc167748c8c64, type: 3}
   m_Name: NewCRTPostProcess
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
     Event: 550
     blitMaterial: {fileID: 2100000, guid: 91d789430c7a7b84aa81bf43d1d8a2e6, type: 2}

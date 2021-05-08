@@ -13,6 +13,7 @@ namespace Chrome
 
         [SerializeField] private T value;
 
+        public void FillIn(Packet packet) { }
         public bool IsValid(Packet packet) => true;
     }
 }

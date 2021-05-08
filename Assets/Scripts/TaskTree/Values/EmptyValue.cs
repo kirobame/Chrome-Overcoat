@@ -13,6 +13,7 @@
             set { }
         }
 
+        public void FillIn(Packet packet) { }
         public bool IsValid(Packet packet) => false;
     }
 }

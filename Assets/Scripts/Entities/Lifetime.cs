@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Flux.Event;
 using Flux.Feedbacks;
 using UnityEngine;
@@ -17,7 +18,7 @@ namespace Chrome
         private List<ILifebound> lifeboundsList = new List<ILifebound>();
         private List<Lifetime> subLifetimesList = new List<Lifetime>();
 
-        private List<ILifebound> lifebounds;
+        //private List<ILifebound> lifebounds;
         void Awake()
         {
             hasBeenBootedUp = false;

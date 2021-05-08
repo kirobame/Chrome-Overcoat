@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Chrome.Retro
 {
-    public class RetPlayerBoard : ConcreteBoard
+    public class RetPlayerBoard : RuntimeBoard
     {
         public IIdentity Identity => identity;
 
@@ -24,7 +24,7 @@ namespace Chrome.Retro
         [FoldoutGroup("References"), SerializeField] private RetDetectionControl detection;
         [FoldoutGroup("References"), SerializeField] private new Collider collider;
         
-        protected override void BuildBoard()
+        /*protected override void BuildBoard()
         {
             blackboard.Set(REF_BODY, body);
             blackboard.Set(REF_AIM, aim);
@@ -34,6 +34,6 @@ namespace Chrome.Retro
             blackboard.Set(REF_COLLIDER, collider);
             
             Blackboard.Global.Set<IBlackboard>(REF_SELF, this);
-        }
+        }*/
     }
 }

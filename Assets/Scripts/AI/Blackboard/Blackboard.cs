@@ -26,7 +26,7 @@ namespace Chrome
                 Parent = parent;
                 Name = name;
              
-                childs = new List<Entry>();
+                children = new List<Entry>();
             }
 
             public IRegistry Registry { get; set; }
@@ -34,15 +34,34 @@ namespace Chrome
             public string Parent { get; private set; }
             public string Name { get; private set; }
 
-            public IReadOnlyList<Entry> Childs => childs;
-            private List<Entry> childs;
+            public IReadOnlyList<Entry> Children => children;
+            private List<Entry> children;
 
-            public void Remove(string childName) => childs.RemoveAll(child => child.Name == childName);
+            public void Remove(string childName) => children.RemoveAll(child => child.Name == childName);
+            
+            public bool TryGetValue<T>(out T value)
+            {
+                if (Registry is WrapperRegistry<T> wrapper)
+                {
+                    value = wrapper.Value;
+                    return true;
+                }
+                else
+                {
+                    foreach (var child in children)
+                    {
+                        if (child.TryGetValue<T>(out value)) return true;
+                    }
+                }
 
+                value = default;
+                return false;
+            }
+            
             public Entry GetEntryAt(string path) => GetEntryAt(path.Split('.'), 0);
             private Entry GetEntryAt(string[] path, int advancement)
             {
-                foreach (var child in childs)
+                foreach (var child in children)
                 {
                     if (child.Name != path[advancement]) continue;
 
@@ -51,7 +70,7 @@ namespace Chrome
                 }
 
                 var relay = new Entry(Name, path[advancement], new NullRegistry());
-                childs.Add(relay);
+                children.Add(relay);
 
                 if (advancement == path.Length - 1) return relay;
                 else return relay.GetEntryAt(path, advancement + 1);
@@ -60,7 +79,7 @@ namespace Chrome
             public bool TryGetEntryAt(string path, out Entry entry) => TryGetEntryAt(path.Split('.'), 0, out entry);            
             private bool TryGetEntryAt(string[] path, int advancement, out Entry entry)
             {
-                foreach (var child in childs)
+                foreach (var child in children)
                 {
                     if (child.Name != path[advancement]) continue;
 
@@ -111,6 +130,20 @@ namespace Chrome
             entry.Registry = registry;
         }
 
+        public bool TryGetAny<T>(out T value)
+        {
+            if (root.TryGetValue<T>(out var output))
+            {
+                value = output;
+                return true;
+            }
+            else
+            {
+                value = default;
+                return false;
+            }
+        }
+        
         public T Get<T>(string path)
         {
             TryGet<T>(path, out var value);

@@ -15,6 +15,7 @@ namespace Chrome
             
         private T value;
 
+        public void FillIn(Packet packet) => value = Blackboard.Global.Get<T>(path);
         public bool IsValid(Packet packet) => Blackboard.Global.TryGet<T>(path, out value);
     }
 }

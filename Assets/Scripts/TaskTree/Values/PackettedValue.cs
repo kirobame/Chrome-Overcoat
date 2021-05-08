@@ -10,6 +10,7 @@ namespace Chrome
         
         private T value;
 
+        public void FillIn(Packet packet) => value = packet.Get<T>();
         public bool IsValid(Packet packet) => packet.TryGet<T>(out value);
     }
 }

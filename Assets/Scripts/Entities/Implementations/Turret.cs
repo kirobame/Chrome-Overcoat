@@ -31,7 +31,7 @@ namespace Chrome
             
             identity.Packet.Set(lineOfSight);
 
-            var playerColReference = "player.collider".Reference<Collider>(true);
+            var playerColReference = "player.collider".Reference<Collider>(ReferenceType.Global);
             var fireAnchorReference = "aim.fireAnchor".Reference<Transform>();
             var aimReference = "aim".Reference<Transform>();
             

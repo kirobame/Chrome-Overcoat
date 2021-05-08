@@ -50,14 +50,5 @@ namespace Chrome
             
             if (health == 0) link.End();
         }
-
-        public void Bootup()
-        {
-            health = maxHealth;
-        }
-
-        public void Shutdown()
-        {
-        }
     }
 }

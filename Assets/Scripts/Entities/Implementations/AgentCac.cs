@@ -37,9 +37,9 @@ namespace Chrome
             var aimReference = "aim".Reference<Transform>();
             var shieldReference = "shield".Reference<Shield>();
 
-            var player = "player".Reference<Transform>(true);
-            var playerColReference = "player.collider".Reference<Collider>(true);
-            var TargetLineOfSight = "player.lineOfSight".Reference<LineOfSight>(true);
+            var player = "player".Reference<Transform>(ReferenceType.Global);
+            var playerColReference = "player.collider".Reference<Collider>(ReferenceType.Global);
+            var TargetLineOfSight = "player.lineOfSight".Reference<LineOfSight>(ReferenceType.Global);
 
             taskTree = new RootNode();
 
@@ -48,7 +48,7 @@ namespace Chrome
             taskTree.Append(
                 new IsSeen(ColReference, TargetLineOfSight, aimReference).Append(
                     //Seen
-                    new StopMoving().Mask(0b_0001).Append(
+                    new StopMoving(new PackettedValue<NavMeshAgent>()).Mask(0b_0001).Append(
                         new ShieldUp(shieldReference),
                         lookAt
                         ),
