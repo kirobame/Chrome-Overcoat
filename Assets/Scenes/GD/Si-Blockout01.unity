@@ -10898,32 +10898,33 @@ MonoBehaviour:
   handler: {fileID: 2115037599}
   lifetime: {fileID: 1757387381}
   heatDieOnMax: 1
-  heatDieOnMin: 1
-  heatPassiveBehaviours: []
+  heatDieOnMin: 0
+  heatPassiveBehaviours:
+  - {x: 0, y: 1, z: 3, w: 0}
   heatOnGunFired1: 0
   heatOnGunFired2: 0
-  heatOnJetpackUsed: 3
-  heatOnAirControl: 3
-  heatOnDamageInflictedConstant: -1
+  heatOnJetpackUsed: 0
+  heatOnAirControl: 0
+  heatOnDamageInflictedConstant: -4
   heatOnDamageInflictedAmountMultiplier: 0
   heatOnDamageReceivedConstant: 2
   heatOnDamageReceivedAmountMultiplier: 0
-  heatOnKill: -4
+  heatOnKill: 0
   heatOnJump: 0
   heatOnSprint: 0
   heatOnMove: 0
   energyDieOnMax: 0
   energyDieOnMin: 1
   energyPassiveBehaviours: []
-  energyOnGunFired1: 0
-  energyOnGunFired2: 0
+  energyOnGunFired1: -3
+  energyOnGunFired2: -1
   energyOnJetpackUsed: 0
   energyOnAirControl: 0
   energyOnDamageInflictedConstant: 0
   energyOnDamageInflictedAmountMultiplier: 0
   energyOnDamageReceivedConstant: 0
   energyOnDamageReceivedAmountMultiplier: 0
-  energyOnKill: 0
+  energyOnKill: 4
   energyOnJump: 0
   energyOnSprint: 0
   energyOnMove: 0
