@@ -68,6 +68,20 @@ namespace Flux.Data
 
             return false;
         }
+
+        public static bool TryGetAny<T>(out System.Collections.Generic.KeyValuePair<Enum,T> kvp)
+        {
+            foreach (var candidate in registry)
+            {
+                if (!(candidate.Value is T cast)) continue;
+
+                kvp = new System.Collections.Generic.KeyValuePair<Enum,T>(translator.Inverse(candidate.Key), cast);
+                return true;
+            }
+
+            kvp = default;
+            return false;
+        }
         
         public static T Get<T>(Enum flag) => (T)GetRaw(flag);
         public static bool TryGet<T>(Enum flag, out T value)

@@ -8,10 +8,17 @@ namespace Chrome
     public class SubGloballyReferencedValue<T> : IValue<T>
     {
         public SubGloballyReferencedValue(string path) => this.path = path;
-
         
         public object RawValue => value;
-        public T Value => value;
+        public T Value
+        {
+            get => value;
+            set
+            {
+                var board = Blackboard.Global.Get<IBlackboard>(BoardName);
+                board.SetRaw(Path, value);
+            }
+        }
         
         public string BoardName => path.Split('.').First();
         public string Path

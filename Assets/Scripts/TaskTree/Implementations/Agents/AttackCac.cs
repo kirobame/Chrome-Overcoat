@@ -21,8 +21,7 @@ namespace Chrome
             var ray = new Ray(origin.Value.position, origin.Value.forward);
 
             if (Physics.Raycast(ray, out var hit, length)) OnHit(hit);
-
-            Debug.Log("Attack");
+            
             isDone = true;
         }
 

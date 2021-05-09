@@ -12,10 +12,11 @@ namespace Chrome
         
         public void Remove(string path) => blackboard.Remove(path);
 
+        public void SetRaw(string path, object value) => blackboard.SetRaw(path, value);
         public void Set<T>(string path, T value) => blackboard.Set(path, value);
         public void SetRegistry(string path, IRegistry registry) => blackboard.SetRegistry(path, registry);
 
-        public bool TryGetAny<T>(out T value) => blackboard.TryGetAny<T>(out value);
+        public bool TryGetAny<T>(out IRegistry<T> registry) => blackboard.TryGetAny<T>(out registry);
         
         public T Get<T>(string path) => blackboard.Get<T>(path);
         public bool TryGet<T>(string path, out T value) => blackboard.TryGet<T>(path, out value);

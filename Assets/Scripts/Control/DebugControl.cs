@@ -1,12 +1,16 @@
-﻿using Sirenix.OdinInspector;
+﻿using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Chrome
 {
-    public class DebugControl : MonoBehaviour
+    public class DebugControl : MonoBehaviour, IInjectable
     {
-        [BoxGroup("Dependencies"), SerializeField] private CharacterBody body;
+        IReadOnlyList<IValue> IInjectable.Injections => injections;
+        private IValue[] injections;
 
+        //--------------------------------------------------------------------------------------------------------------/
+        
         [FoldoutGroup("Ground"), SerializeField] private Color minGroundColor;
         [FoldoutGroup("Ground"), SerializeField] private Color maxGroundColor;
         [FoldoutGroup("Ground"), SerializeField] private Vector2 groundRange;
@@ -14,14 +18,21 @@ namespace Chrome
         [FoldoutGroup("Airborne"), SerializeField] private Color minAirColor;
         [FoldoutGroup("Airborne"), SerializeField] private Color maxAirColor;
         [FoldoutGroup("Airborne"), SerializeField] private Vector2 airRange;
-        
+
+        private IValue<CharacterBody> body;
         private Vector3 previousPosition;
+
+        void Awake()
+        {
+            body = new AnyValue<CharacterBody>();
+            injections = new IValue[] { body };
+        }
         
         void Update()
         {
-            var delta = body.Delta;
+            var delta = body.Value.Delta;
             
-            if (body.IsGrounded) Display(delta, minGroundColor, maxGroundColor, groundRange);
+            if (body.Value.IsGrounded) Display(delta, minGroundColor, maxGroundColor, groundRange);
             else Display(delta, minAirColor, maxAirColor, airRange);
         }
 

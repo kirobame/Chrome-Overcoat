@@ -6,12 +6,12 @@ using System.Linq;
 
 namespace Chrome
 {
-    public class InteractionHub : MonoBehaviour, IInstaller, IInjectable
+    public class InteractionHub : MonoBehaviour, IInstaller, IInjectable, IInjectionCallbackListener
     {
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         private IValue[] injections;
         
-        void IInjectable.OnInjectionDone(IRoot source)
+        void IInjectionCallbackListener.OnInjectionDone(IRoot source)
         {
             root = source;
             source.onAttachment += OnRootAttachment;

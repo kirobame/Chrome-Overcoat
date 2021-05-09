@@ -44,7 +44,5 @@ namespace Chrome
                 return true;
             }
         }
-
-
     }
 }

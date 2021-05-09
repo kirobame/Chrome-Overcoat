@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Chrome.Retro
 {
-    public class RetAirControl : InputControl
+    public class RetAirControl : InputControl<RetAirControl>
     {
         [FoldoutGroup("Dependencies"), SerializeField] private CharacterBody body;
         [FoldoutGroup("Dependencies"), SerializeField] private Lifetime life;

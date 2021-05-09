@@ -9,7 +9,11 @@ namespace Chrome
         public GloballyReferencedValue(string path) => this.path = path;
         
         public object RawValue => value;
-        public T Value => value;
+        public T Value
+        {
+            get => value;
+            set => Blackboard.Global.SetRaw(path, value);
+        }
 
         [SerializeField] private string path;
             

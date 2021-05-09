@@ -23,11 +23,8 @@ namespace Chrome
 
         protected override bool Check(Packet packet)
         {
-            //var board = packet.Get<IBlackboard>();
             if (!cost.IsValid(packet) || !costLock.IsValid(packet)) return false;
-
-            if (costLock.Value && gauge.Value + cost.Value > gauge.Max)
-                return false;
+            if (costLock.Value && gauge.Value + cost.Value > gauge.Max) return false;
 
             Events.ZipCall(GaugeEvent.OnFrenzyAbilityUsed, (byte)0, cost.Value);
             return true;

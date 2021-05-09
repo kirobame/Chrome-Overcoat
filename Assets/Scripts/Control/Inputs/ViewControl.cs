@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class ViewControl : InputControl
+    public class ViewControl : InputControl<ViewControl>
     {
         public Vector2 Delta => new Vector2(yawKnob.Value, pitchKnob.Value);
         

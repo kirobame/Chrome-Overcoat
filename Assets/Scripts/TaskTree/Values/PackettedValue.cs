@@ -6,11 +6,25 @@ namespace Chrome
     public class PackettedValue<T> : IValue<T>
     {
         public object RawValue => value;
-        public T Value => value;
-        
+        public T Value
+        {
+            get => value;
+            set => packet.Set(value);
+        }
+
+        private Packet packet;
         private T value;
 
-        public void FillIn(Packet packet) => value = packet.Get<T>();
-        public bool IsValid(Packet packet) => packet.TryGet<T>(out value);
+        public void FillIn(Packet packet)
+        {
+            this.packet = packet;
+            value = packet.Get<T>();
+        } 
+
+        public bool IsValid(Packet packet)
+        {
+            this.packet = packet;
+            return packet.TryGet<T>(out value);
+        }
     }
 }

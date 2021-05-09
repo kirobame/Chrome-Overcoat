@@ -41,8 +41,7 @@ namespace Chrome
         {
             base.Update();
 
-            transform.localPosition =
-                Vector3.SmoothDamp(transform.localPosition, anchor + value, ref settle, smoothing);
+            transform.localPosition = Vector3.SmoothDamp(transform.localPosition, anchor + value, ref settle, smoothing);
             value = Vector3.SmoothDamp(value, Vector3.zero, ref zeroed, reduction);
         }
 

@@ -1,4 +1,6 @@
-﻿namespace Chrome
+﻿using UnityEngine;
+
+namespace Chrome
 {
     public interface IValue
     {
@@ -7,8 +9,8 @@
         void FillIn(Packet packet);
         bool IsValid(Packet packet);
     }
-    public interface IValue<out T> : IValue
+    public interface IValue<T> : IValue
     {
-        T Value { get; }
+        T Value { get; set; }
     }
 }

@@ -1,23 +1,39 @@
-﻿using Flux.Data;
+﻿using System.Collections.Generic;
+using Flux.Data;
 using Flux.Event;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Chrome
 {
-    public class ThrusterControl : InputControl
+    public class ThrusterControl : InputControl<ThrusterControl>, IInjectable
     {
-        [BoxGroup("Dependencies"), SerializeField] private CharacterBody body;
-        [BoxGroup("Dependencies"), SerializeField] private Gravity gravity;
+        IReadOnlyList<IValue> IInjectable.Injections => injections;
+        private IValue[] injections;
+
+        //--------------------------------------------------------------------------------------------------------------/
         
         [FoldoutGroup("Values"), SerializeField] private float airTime;
         [FoldoutGroup("Values"), SerializeField] private AnimationCurve map;
         [FoldoutGroup("Values"), SerializeField] private Vector2 input;
         [FoldoutGroup("Values"), SerializeField] private float speed;
 
+        private IValue<CharacterBody> body;
+        private IValue<Gravity> gravity;
+        
         private float airTimer;
         private JetpackHUD HUD;
 
+        void Awake()
+        {
+            body = new AnyValue<CharacterBody>();
+            gravity = new AnyValue<Gravity>();
+            injections = new IValue[]
+            {
+                body, 
+                gravity
+            };
+        }
         void Start()
         {
             airTimer = airTime;
@@ -26,7 +42,7 @@ namespace Chrome
         
         void Update()
         {
-            if (body.IsGrounded)
+            if (body.Value.IsGrounded)
             {
                 airTimer += Time.deltaTime;
                 if (airTimer > airTime) airTimer = airTime;
@@ -48,16 +64,16 @@ namespace Chrome
                             airTimer = 0.0f;
                         }
 
-                        var normalizedGravity = gravity.Value.normalized;
-                        var force = Vector3.Project(body.Delta, normalizedGravity);
+                        var normalizedGravity = gravity.Value.Force.normalized;
+                        var force = Vector3.Project(body.Value.Delta, normalizedGravity);
                         var attraction = force.magnitude * -Vector3.Dot(force.normalized, normalizedGravity);
                     
                         float ratio;
                         if (attraction < 0) ratio = map.Evaluate(Mathf.InverseLerp(input.x, 0.0f, attraction) - 1.0f);
                         else ratio = map.Evaluate(Mathf.InverseLerp(0.0f, input.y, attraction));
 
-                        var delta = -gravity.Value.normalized * (gravity.Value.magnitude + speed * ratio);
-                        body.force += delta;
+                        var delta = -gravity.Value.Force.normalized * (gravity.Value.Force.magnitude + speed * ratio);
+                        body.Value.force += delta;
                     }
                 
                     if (Input.GetKeyUp(KeyCode.Space)) Events.ZipCall(GaugeEvent.OnThrusterUsed, (byte)2);

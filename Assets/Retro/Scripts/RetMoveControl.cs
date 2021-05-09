@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Chrome.Retro
 {
-    public class RetMoveControl : InputControl
+    public class RetMoveControl : InputControl<RetMoveControl>
     {
         public Vector3 Inputs { get; private set; }
         
@@ -34,7 +34,7 @@ namespace Chrome.Retro
             
             var direction = smoothedInputs;
             var slopedDirection = Vector3.ProjectOnPlane(smoothedInputs, planeNormal);
-            if (Vector3.Dot(gravity.Value.normalized, slopedDirection) > 0) direction = slopedDirection.normalized * smoothedInputs.magnitude;
+            if (Vector3.Dot(gravity.Force.normalized, slopedDirection) > 0) direction = slopedDirection.normalized * smoothedInputs.magnitude;
             
             var planarDelta = Vector3.ProjectOnPlane(body.Velocity, planeNormal);
             if (planarDelta.magnitude > speed) planarDelta = planarDelta.normalized * speed;

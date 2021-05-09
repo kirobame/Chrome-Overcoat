@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Chrome.Retro
 {
-    public class RetCapacityControl : InputControl, ILink<IIdentity>
+    public class RetCapacityControl : InputControl<RetCapacityControl>, ILink<IIdentity>
     { 
         IIdentity ILink<IIdentity>.Link
         {

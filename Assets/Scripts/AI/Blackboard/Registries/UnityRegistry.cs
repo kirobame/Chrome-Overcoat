@@ -20,6 +20,8 @@ namespace Chrome
             if (!isGlobal) return;
             Collect(Blackboard.Global, string.Empty);
         }
+        
+        public void Set(object rawValue) => value = (Object)rawValue;
 
         public void Collect(IBlackboard board, string path)
         {

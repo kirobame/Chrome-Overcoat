@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public abstract class PhysicBody : MonoBehaviour, ILifebound
+    public abstract class PhysicBody : MonoBehaviour, IInstaller, ILifebound
     {
         public event Action<ILifebound> onDestruction;
         public event Action<CollisionHit<PhysicBody>> onCollision;
@@ -52,5 +52,12 @@ namespace Chrome
 
         protected abstract Vector3 Move(Vector3 delta);
         protected abstract CollisionHit<PhysicBody> HandleCollisions();
+
+        //--------------------------------------------------------------------------------------------------------------/
+
+        int IInstaller.Priority => 1;
+
+        void IInstaller.InstallDependenciesOn(Packet packet) => InstallDependenciesOn(packet);
+        protected virtual void InstallDependenciesOn(Packet packet) => packet.Set(this);
     }
 }

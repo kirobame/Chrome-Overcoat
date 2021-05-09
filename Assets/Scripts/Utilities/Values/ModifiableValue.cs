@@ -28,7 +28,8 @@ namespace Chrome
                 i--;
             }
         }
-        
+
+        public void Set(object value) => current = (T)value;
         public void Modify(IModification<T> modification) => modifications.Add(modification);
     }
 }

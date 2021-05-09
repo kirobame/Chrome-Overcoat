@@ -12,8 +12,6 @@ namespace Chrome
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         private IValue[] injections;
         
-        void IInjectable.OnInjectionDone(IRoot source) { }
-        
         //--------------------------------------------------------------------------------------------------------------/
         
         private event Action<IInteraction> onInteractionDestruction;

@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Flux;
 using Flux.Data;
@@ -8,11 +9,12 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class JetpackControl : InputControl
+    public class JetpackControl : InputControl<JetpackControl>, IInjectable
     {
-        [BoxGroup("Dependencies"), SerializeField] private CharacterBody body;
-        [BoxGroup("Dependencies"), SerializeField] private Gravity gravity;
-        [BoxGroup("Dependencies"), SerializeField] private MoveControl move;
+        IReadOnlyList<IValue> IInjectable.Injections => injections;
+        private IValue[] injections;
+
+        //--------------------------------------------------------------------------------------------------------------/
         
         [FoldoutGroup("Values"), SerializeField] private float cooldown;
         [FoldoutGroup("Values"), SerializeField] private Vector2 pressRange;
@@ -21,6 +23,10 @@ namespace Chrome
         
         [FoldoutGroup("Feedbacks"), SerializeField] private float shakeFactor;
         [FoldoutGroup("Feedbacks"), SerializeField] private float maxShake;
+
+        private IValue<CharacterBody> body;
+        private IValue<Gravity> gravity;
+        private IValue<MoveControl> move;
         
         private JetpackHUD HUD;
         
@@ -29,11 +35,23 @@ namespace Chrome
         
         //--------------------------------------------------------------------------------------------------------------/
 
+        void Awake()
+        {
+            body = new AnyValue<CharacterBody>();
+            gravity = new AnyValue<Gravity>();
+            move = new AnyValue<MoveControl>();
+            injections = new IValue[]
+            {
+                body, 
+                gravity,
+                move
+            };
+        }
         void Start() => HUD = Repository.Get<JetpackHUD>(Interface.Jetpack);
         
         void Update()
         {
-            if (body.IsGrounded)
+            if (body.Value.IsGrounded)
             {
                 if (Input.GetKey(KeyCode.Space) && cooldownRoutine == null)
                 {
@@ -49,7 +67,7 @@ namespace Chrome
             
             if (pressTime > pressRange.x)
             {
-                var attraction = gravity.Value;
+                var attraction = gravity.Value.Force;
 
                 var ratio = Mathf.InverseLerp(pressRange.x, pressRange.y, pressTime);
                 var height = Mathf.Lerp(heightRange.x, heightRange.y, ratio);
@@ -57,11 +75,11 @@ namespace Chrome
                 
                 var launch = attraction.normalized * length;
 
-                var direction = body.transform.TransformVector(move.Inputs);
-                if (move.IsSprinting) launch += direction * forwards.y;
-                else if (move.IsWalking) launch += direction * forwards.x;
+                var direction = body.Value.transform.TransformVector(move.Value.Inputs);
+                if (move.Value.IsSprinting) launch += direction * forwards.y;
+                else if (move.Value.IsWalking) launch += direction * forwards.x;
 
-                body.velocity += launch;
+                body.Value.velocity += launch;
                 cooldownRoutine = Routines.Start(CooldownRoutine());
                 
                 Events.ZipCall(GaugeEvent.OnJetpackUsed, launch);

@@ -1,23 +1,35 @@
-﻿using Sirenix.OdinInspector;
+﻿using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Chrome
 {
-    public class Gravity : MonoBehaviour
+    public class Gravity : MonoBehaviour, IInstaller, IInjectable
     {
-        public Vector3 Value => bypass ? overridingForce : Physics.gravity;
-        public PhysicBody Body => body;
+        IReadOnlyList<IValue> IInjectable.Injections => injections;
+        private IValue[] injections;
+
+        //--------------------------------------------------------------------------------------------------------------/
         
-        [BoxGroup("Dependencies"), SerializeField] private PhysicBody body;
+        public Vector3 Force => bypass ? overridingForce : Physics.gravity;
+        public PhysicBody Body => body.Value;
 
         [FoldoutGroup("Values"), SerializeField, Range(0.0f, 5.0f)] private float affect;
         [FoldoutGroup("Values"), SerializeField] private bool bypass;
         [FoldoutGroup("Values"), ShowIf("bypass"), SerializeField] private Vector3 overridingForce;
 
+        private IValue<PhysicBody> body;
+
+        void Awake()
+        {
+            body = new AnyValue<PhysicBody>();
+            injections = new IValue[] { body };
+        }
+        
         void FixedUpdate()
         {
-            var force = (bypass ? overridingForce : Physics.gravity) * (affect * body.Mass);
-            body.force += force;
+            var force = (bypass ? overridingForce : Physics.gravity) * (affect * body.Value.Mass);
+            body.Value.force += force;
         }
 
         public void Reset() => bypass = false;
@@ -26,5 +38,11 @@ namespace Chrome
             bypass = true;
             overridingForce = force;
         }
+
+        //--------------------------------------------------------------------------------------------------------------/
+        
+        int IInstaller.Priority => 1;
+
+        void IInstaller.InstallDependenciesOn(Packet packet) => packet.Set(this);
     }
 }

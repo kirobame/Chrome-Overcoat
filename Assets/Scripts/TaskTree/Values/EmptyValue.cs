@@ -2,11 +2,7 @@
 {
     public struct EmptyValue<T> : IValue<T>
     {
-        public object RawValue
-        {
-            get => null;
-            set { }
-        }
+        public object RawValue => null;
         public T Value
         {
             get => default;

@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using Flux.Data;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Chrome
 {
-    public class GunControl : InputControl, ILink<IIdentity>
+    public class GunControl : InputControl<GunControl>, IInjectable
     {
         #region Nested Types
 
@@ -14,49 +15,50 @@ namespace Chrome
             Pressed,
             Released,
         }
-
         #endregion
-        
-        IIdentity ILink<IIdentity>.Link
-        {
-            set => identity = value;
-        }
-        private IIdentity identity;
+
+        //--------------------------------------------------------------------------------------------------------------/
+
+        IReadOnlyList<IValue> IInjectable.Injections => injections;
+        private IValue[] injections;
+
+        //--------------------------------------------------------------------------------------------------------------/
 
         public ITaskTree Current => isLeft ? leftWeapon : rightWeapon;
 
         [FoldoutGroup("Values"), SerializeField] private RemoteTaskTree leftWeapon;
         [FoldoutGroup("Values"), SerializeField] private RemoteTaskTree rightWeapon;
+
+        private Packet packet => identity.Value.Packet;
+        private IValue<IIdentity> identity;
         
         private bool isLeft;
         private PressState state;
 
         private ComputeAimDirection aimCompute;
-        
+
         //--------------------------------------------------------------------------------------------------------------/
 
         void Awake()
         {
-            identity.Packet.Set(false);
+            identity = new AnyValue<IIdentity>();
+            injections = new IValue[] { identity };
+
+            packet.Set(false);
 
             state = PressState.Released;
             isLeft = true;
             
             leftWeapon.Bootup();
             rightWeapon.Bootup();
-
-            var mask = LayerMask.GetMask("Environment", "Entity");
-            var firAnchor = "view.fireAnchor".Reference<Transform>();
-            var view = "view".Reference<Transform>();
-            var collider = "self.collider".Reference<Collider>();
-            aimCompute = new ComputeAimDirection("shootDir", mask, firAnchor, view, collider);
+            aimCompute = ChromeExtensions.CreateComputeAimDirection();
             
-            Current.Bootup(identity.Packet);
+            Current.Bootup(packet);
         }
 
         public override void Bootup()
         {
-            identity.Packet.Set(false);
+            packet.Set(false);
             base.Bootup();
         }
         public override void Shutdown()
@@ -75,7 +77,7 @@ namespace Chrome
         
         void Update()
         {
-            var snapshot = identity.Packet.Save();
+            var snapshot = packet.Save();
 
             if (state == PressState.Released)
             {
@@ -84,37 +86,37 @@ namespace Chrome
                 
                 if (Input.GetMouseButtonDown(0))
                 {
-                    identity.Packet.Set(true);
+                    packet.Set(true);
                     OnMouseDown();
                 }
             }
             else if (state == PressState.Pressed)
             {
-                if (Input.GetMouseButton(0)) identity.Packet.Set(true);
+                if (Input.GetMouseButton(0)) packet.Set(true);
 
                 if (Input.GetMouseButtonUp(0))
                 {
-                    identity.Packet.Set(false);
+                    packet.Set(false);
                     OnMouseUp();
                 }
             }
 
-            aimCompute.Update(identity.Packet);
-            Current.Update(identity.Packet);
+            aimCompute.Update(packet);
+            Current.Update(packet);
 
-            identity.Packet.Load(snapshot);
+            packet.Load(snapshot);
         }
 
         private void OnMouseDown()
         {
-            var board = identity.Packet.Get<IBlackboard>();
+            var board = packet.Get<IBlackboard>();
             board.Get<BusyBool>("canSprint").business++;
             
             state = PressState.Pressed;
         }
         private void OnMouseUp()
         {
-            var board = identity.Packet.Get<IBlackboard>();
+            var board = packet.Get<IBlackboard>();
             board.Get<BusyBool>("canSprint").business--;
             
             state = PressState.Released;
@@ -124,13 +126,13 @@ namespace Chrome
 
         private void ChangeWeapon(bool value)
         {
-            Current.Shutdown(identity.Packet);
+            Current.Shutdown(packet);
             isLeft = value;
             
             var HUD = Repository.Get<GunHUD>(Interface.Gun);
             HUD.Select(isLeft ? 0 : 1);
             
-            Current.Bootup(identity.Packet);
+            Current.Bootup(packet);
         }
     }
 }

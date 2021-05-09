@@ -15,7 +15,6 @@ namespace Chrome
             public float value;
             public bool inPercent;
         }
-
         #endregion
         
         public event Action<ILifebound> onDestruction;

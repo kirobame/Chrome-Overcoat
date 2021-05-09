@@ -8,12 +8,12 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class Lifetime : MonoBehaviour, IInstaller, IInjectable
+    public class Lifetime : MonoBehaviour, IInstaller, IInjectable, IInjectionCallbackListener
     {
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         private IValue[] injections;
         
-        void IInjectable.OnInjectionDone(IRoot source)
+        void IInjectionCallbackListener.OnInjectionDone(IRoot source)
         {
             root = source;
             source.onAttachment += OnRootAttachment;
@@ -109,6 +109,26 @@ namespace Chrome
         {
             var args = new WrapperArgs<byte>(0);
             CallListeners(args, CheckForSpawn);
+            
+            if (countdown == 0) OnBeginComplete();
+        }
+        private void CheckForSpawn(Token token)
+        {
+            token.onConsumption -= CheckForSpawn;
+            
+            countdown--;
+            if (countdown > 0) return;
+
+            OnBeginComplete();
+        }
+        private void OnBeginComplete()
+        {
+            foreach (var lifebound in bounds)
+            {
+                if (!lifebound.IsActive) continue;
+                lifebound.Bootup();
+            }
+            foreach (var child in children) child.Begin();
         }
         
         public void End()
@@ -122,7 +142,19 @@ namespace Chrome
             
             var args = new WrapperArgs<byte>(1);
             CallListeners(args, CheckForDeath);
+            
+            if (countdown == 0) OnEndComplete();
         }
+        private void CheckForDeath(Token token)
+        {
+            token.onConsumption -= CheckForDeath;
+            
+            countdown--;
+            if (countdown > 0) return;
+            
+            OnEndComplete();
+        }
+        private void OnEndComplete() => gameObject.SetActive(false);
 
         private void CallListeners(EventArgs args, Action<Token> callback)
         {
@@ -137,30 +169,6 @@ namespace Chrome
                 countdown++;
                 listener.Execute(token);
             }
-        }
-        
-        private void CheckForSpawn(Token token)
-        {
-            token.onConsumption -= CheckForSpawn;
-            
-            countdown--;
-            if (countdown > 0) return;
-            
-            foreach (var lifebound in bounds)
-            {
-                if (!lifebound.IsActive) continue;
-                lifebound.Bootup();
-            }
-            foreach (var child in children) child.Begin();
-        }
-        private void CheckForDeath(Token token)
-        {
-            token.onConsumption -= CheckForDeath;
-            
-            countdown--;
-            if (countdown > 0) return;
-            
-            gameObject.SetActive(false);
         }
         
         //--------------------------------------------------------------------------------------------------------------/

@@ -13,7 +13,7 @@ namespace Chrome
         public IRoot Parent { get; private set; }
 
         public string Tag => tag.ToString();
-        [SerializeField] private RootType tag;
+        [SerializeField] private new RootType tag;
 
         public Transform Transform => transform;
         public Packet Packet { get; private set; }
@@ -95,7 +95,7 @@ namespace Chrome
             foreach (var injectable in transform.GetComponents<IInjectable>())
             {
                 foreach (var injection in injectable.Injections) injection.FillIn(Packet);
-                injectable.OnInjectionDone(this);
+                if (injectable is IInjectionCallbackListener callbackListener) callbackListener.OnInjectionDone(this);
             }
 
             for (var i = 0; i < transform.childCount; i++)

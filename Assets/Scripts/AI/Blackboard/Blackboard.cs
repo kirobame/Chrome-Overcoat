@@ -39,22 +39,22 @@ namespace Chrome
 
             public void Remove(string childName) => children.RemoveAll(child => child.Name == childName);
             
-            public bool TryGetValue<T>(out T value)
+            public bool TryGetRegistry<T>(out IRegistry<T> registry)
             {
-                if (Registry is WrapperRegistry<T> wrapper)
+                if (Registry is IRegistry<T> match)
                 {
-                    value = wrapper.Value;
+                    registry = match;
                     return true;
                 }
                 else
                 {
                     foreach (var child in children)
                     {
-                        if (child.TryGetValue<T>(out value)) return true;
+                        if (child.TryGetRegistry<T>(out registry)) return true;
                     }
                 }
 
-                value = default;
+                registry = default;
                 return false;
             }
             
@@ -119,6 +119,11 @@ namespace Chrome
             else root.Remove(path);
         }
         
+        public void SetRaw(string path, object value)
+        {
+            var entry = root.GetEntryAt(path);
+            entry.Registry.Set(value);
+        }
         public void Set<T>(string path, T value)
         {
             var entry = root.GetEntryAt(path);
@@ -130,16 +135,16 @@ namespace Chrome
             entry.Registry = registry;
         }
 
-        public bool TryGetAny<T>(out T value)
+        public bool TryGetAny<T>(out IRegistry<T> registry)
         {
-            if (root.TryGetValue<T>(out var output))
+            if (root.TryGetRegistry<T>(out var output))
             {
-                value = output;
+                registry = output;
                 return true;
             }
             else
             {
-                value = default;
+                registry = default;
                 return false;
             }
         }

@@ -28,7 +28,7 @@ namespace Chrome.Retro
             
             if (!Input.GetKeyUp(KeyCode.E) || error > margin || hasJumped) return;
             
-            var attraction = gravity.Value;
+            var attraction = gravity.Force;
             var length = -Mathf.Sqrt(height * 2.0f * attraction.magnitude);
             body.velocity += attraction.normalized * length;
 

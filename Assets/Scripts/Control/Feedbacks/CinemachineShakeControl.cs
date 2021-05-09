@@ -1,22 +1,35 @@
-﻿using Cinemachine;
+﻿using System.Collections.Generic;
+using Cinemachine;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Chrome
 {
-    public class CinemachineShakeControl : BaseShakeControl
+    public class CinemachineShakeControl : BaseShakeControl, IInjectable, IInjectionCallbackListener
     {
-        [FoldoutGroup("Effect"), SerializeField] private new CinemachineVirtualCamera camera;
+        IReadOnlyList<IValue> IInjectable.Injections => injections;
+        private IValue[] injections;
+
+        void IInjectionCallbackListener.OnInjectionDone(IRoot source) => noise = camera.Value.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+
+        //--------------------------------------------------------------------------------------------------------------/
 
         [FoldoutGroup("Amplitude"), SerializeField] private AnimationCurve amplitudeMap;
         [FoldoutGroup("Amplitude"), SerializeField] private float maxAmplitude;
         
         [FoldoutGroup("Frequency"), SerializeField] private AnimationCurve frequencyMap;
         [FoldoutGroup("Frequency"), SerializeField] private float maxFrequency;
-        
+
+        private new IValue<CinemachineVirtualCamera> camera;
         private CinemachineBasicMultiChannelPerlin noise;
 
-        void Start() => noise = camera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        protected override void Awake()
+        {
+            base.Awake();
+            
+            camera = new AnyValue<CinemachineVirtualCamera>();
+            injections = new IValue[] { camera };
+        }
 
         protected override void Settle() { }
         protected override void Compute()

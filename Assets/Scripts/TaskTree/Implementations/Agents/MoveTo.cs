@@ -27,7 +27,7 @@ namespace Chrome
             {
                 navMesh.Value.updateRotation = true;
                 navMesh.Value.isStopped = false;
-
+                
                 navMesh.Value.SetDestination(target.Value.position);
                 
                 if (aim.IsValid(packet)) aim.Value.localRotation = Quaternion.identity;

@@ -41,11 +41,30 @@ namespace Chrome
             value = default;
             return false;
         }
+
+        public bool TryGetThoroughly<T>(out KeyValuePair<Type,T> kvp)
+        {
+            foreach (var candidate in map)
+            {
+                if (!(candidate.Value is T cast)) continue;
+
+                kvp = new KeyValuePair<Type, T>(candidate.Key, cast);
+                return true;
+            }
+
+            kvp = default;
+            return false;
+        }
         
         public void Set<T>(T value)
         {
             if (map.ContainsKey(typeof(T))) map[typeof(T)] = value;
             else map.Add(typeof(T), value);
+        }
+        public void Set(Type type, object value)
+        {
+            if (map.ContainsKey(type)) map[type] = value;
+            else map.Add(type, value);
         }
     }
 }

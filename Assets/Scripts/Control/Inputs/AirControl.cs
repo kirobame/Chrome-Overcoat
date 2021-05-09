@@ -1,11 +1,17 @@
-﻿using Flux.Event;
+﻿using System.Collections.Generic;
+using Flux.Event;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Chrome
 {
-    public class AirControl : InputControl
+    public class AirControl : InputControl<AirControl>, IInjectable
     {
+        IReadOnlyList<IValue> IInjectable.Injections => injections;
+        private IValue[] injections;
+
+        //--------------------------------------------------------------------------------------------------------------/
+        
         public bool IsMoving     
         {
             get => isMoving;
@@ -19,20 +25,26 @@ namespace Chrome
         }
         private bool isMoving;
         
-        [BoxGroup("Dependencies"), SerializeField] private CharacterBody body;
-
         [FoldoutGroup("Values"), SerializeField] private float maxSpeed;
         [FoldoutGroup("Values"), SerializeField] private float speed;
         [FoldoutGroup("Values"), SerializeField] private float smoothing;
 
+        private IValue<CharacterBody> body;
+        
         private Vector3 smoothedInputs;
         private Vector3 damping;
+
+        void Awake()
+        {
+            body = new AnyValue<CharacterBody>();
+            injections = new IValue[] { body };
+        }
         
         void Update()
         {
             if (IsMoving) Events.ZipCall(GaugeEvent.OnAirMove, (byte)1);
             
-            if (body.IsGrounded)
+            if (body.Value.IsGrounded)
             {
                 if (!isMoving) IsMoving = false;
                 smoothedInputs = Vector3.zero;
@@ -46,16 +58,16 @@ namespace Chrome
             else if (inputs == Vector3.zero && IsMoving) IsMoving = false;
             
             smoothedInputs = Vector3.SmoothDamp(smoothedInputs, inputs, ref damping, smoothing);
-            var direction = body.transform.TransformVector(smoothedInputs);
+            var direction = body.Value.transform.TransformVector(smoothedInputs);
 
-            var planarDelta = Vector3.ProjectOnPlane(body.Delta, Vector3.up);
+            var planarDelta = Vector3.ProjectOnPlane(body.Value.Delta, Vector3.up);
             if (planarDelta.magnitude > maxSpeed) planarDelta = planarDelta.normalized * maxSpeed;
 
             var delta = direction * speed;
             var total = planarDelta + delta;
             if (total.magnitude > maxSpeed) delta = (planarDelta + delta).normalized * maxSpeed - planarDelta;
             
-            body.velocity += delta;
+            body.Value.velocity += delta;
         }
     }
 }

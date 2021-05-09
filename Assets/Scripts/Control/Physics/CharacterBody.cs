@@ -41,5 +41,15 @@ namespace Chrome
         }
 
         void OnControllerColliderHit(ControllerColliderHit hit) => this.hit = hit;
+
+        //--------------------------------------------------------------------------------------------------------------/
+
+        protected override void InstallDependenciesOn(Packet packet)
+        {
+            base.InstallDependenciesOn(packet);
+            
+            packet.Set(this);
+            packet.Set(controller);
+        }
     }
 }

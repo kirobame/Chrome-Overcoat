@@ -1,22 +1,20 @@
-﻿using Flux.Event;
+﻿using System.Collections.Generic;
+using Flux.Event;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Chrome
 {
-    public class MoveControl : InputControl, ILink<IIdentity>
+    public class MoveControl : InputControl<MoveControl>, IInjectable
     {
         private const string WALK_STATE = "Walk";
         private const string SPRINT_STATE = "Run";
-        
+
+        IReadOnlyList<IValue> IInjectable.Injections => injections;
+        private IValue[] injections;
+
         //--------------------------------------------------------------------------------------------------------------/
-        
-        IIdentity ILink<IIdentity>.Link
-        {
-            set => identity = value;
-        }
-        protected IIdentity identity;
-        
+
         public ModifiableFloat Speed => speed;
 
         public bool IsSprinting
@@ -57,6 +55,8 @@ namespace Chrome
         [FoldoutGroup("Values"), SerializeField] private float smoothing;
 
         [FoldoutGroup("Feedbacks"), SerializeField] private Animator animator;
+
+        private IValue<IIdentity> identity;
         
         private Vector3 planeNormal;
         private Vector3 smoothedInputs;
@@ -66,6 +66,9 @@ namespace Chrome
 
         void Awake()
         {
+            identity = new AnyValue<IIdentity>();
+            injections = new IValue[] { identity };
+            
             speed.Bootup();
             speed.Modify(new Spring(0.075f));
             
@@ -127,7 +130,7 @@ namespace Chrome
 
         private bool CanSprint()
         {
-            var board = identity.Packet.Get<IBlackboard>();
+            var board = identity.Value.Packet.Get<IBlackboard>();
             return board.Get<BusyBool>("canSprint").Value;
         }
     }

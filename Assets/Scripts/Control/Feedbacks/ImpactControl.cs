@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Flux.Event;
 using Sirenix.OdinInspector;
@@ -7,9 +8,12 @@ using Vector3 = UnityEngine.Vector3;
 
 namespace Chrome
 {
-    public class ImpactControl : MonoBehaviour
+    public class ImpactControl : MonoBehaviour, IInjectable
     {
-        [BoxGroup("Dependencies"), SerializeField] private CharacterBody body;
+        IReadOnlyList<IValue> IInjectable.Injections => injections;
+        private IValue[] injections;
+
+        //--------------------------------------------------------------------------------------------------------------/
 
         [FoldoutGroup("Values"), SerializeField] private float knockback;
         [FoldoutGroup("Values"), SerializeField] private float factor;
@@ -17,6 +21,8 @@ namespace Chrome
         [FoldoutGroup("Values"), SerializeField] private float smoothing;
         [FoldoutGroup("Values"), SerializeField] private float reduction;
 
+        private IValue<CharacterBody> body;
+        
         private Vector3 anchor;
         private Vector3 force;
 
@@ -28,6 +34,9 @@ namespace Chrome
         
         void Awake()
         {
+            body = new AnyValue<CharacterBody>();
+            injections = new IValue[] { body };
+            
             Events.Subscribe<float>(PlayerEvent.OnFire, OnFire);
             anchor = transform.localPosition;
         }
@@ -35,14 +44,14 @@ namespace Chrome
         
         void Update()
         {
-            if (!previousIsGrounded && body.IsGrounded)
+            if (!previousIsGrounded && body.Value.IsGrounded)
             {
                 force = Vector3.down * (Mathf.Abs(previousVelocity.y) * factor);
                 Add(force);
             }
 
-            previousVelocity = body.Delta;
-            previousIsGrounded = body.IsGrounded;
+            previousVelocity = body.Value.Delta;
+            previousIsGrounded = body.Value.IsGrounded;
 
             transform.localPosition = Vector3.SmoothDamp(transform.localPosition, anchor + force, ref velocity, smoothing);
             force = Vector3.SmoothDamp(force, Vector3.zero, ref forceVelocity, reduction);

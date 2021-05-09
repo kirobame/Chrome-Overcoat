@@ -49,6 +49,16 @@ namespace Chrome
             return null;
         }
 
+        public static ComputeAimDirection CreateComputeAimDirection()
+        {
+            var mask = LayerMask.GetMask("Environment", "Entity");
+            var pivot = Refs.PIVOT.Reference<Transform>();
+            var fireAnchor = Refs.FIREANCHOR.Reference<Transform>();
+            var collider = Refs.COLLIDER.Reference<Collider>();
+            
+            return new ComputeAimDirection("shootDir", mask, fireAnchor, pivot, collider);
+        }
+
         public static void RelayDamage(this InteractionHub hub, IIdentity source, float amount)
         {
             hub.Relay<IDamageable>((damageable, depth) =>

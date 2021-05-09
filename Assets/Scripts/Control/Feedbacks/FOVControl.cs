@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Cinemachine;
 using Flux.Data;
 using Sirenix.OdinInspector;
@@ -7,11 +8,13 @@ using UnityEngine.Rendering.Universal;
 
 namespace Chrome
 {
-    public class FOVControl : MonoBehaviour
+    public class FOVControl : MonoBehaviour, IInjectable
     {
-        [BoxGroup("Dependencies"), SerializeField] private CharacterBody body;
-        [BoxGroup("Dependencies"), SerializeField] private new CinemachineVirtualCamera camera;
+        IReadOnlyList<IValue> IInjectable.Injections => injections;
+        private IValue[] injections;
 
+        //--------------------------------------------------------------------------------------------------------------/
+        
         [FoldoutGroup("Values"), SerializeField] private float smoothing;
         [FoldoutGroup("Values"), SerializeField] private Vector2 input;
         [FoldoutGroup("Values"), SerializeField] private AnimationCurve FOVMap;
@@ -20,12 +23,26 @@ namespace Chrome
         [FoldoutGroup("Values"), SerializeField] private AnimationCurve distortionMap;
         [FoldoutGroup("Values"), SerializeField] private float distortionFactor;
 
+        private IValue<CharacterBody> body;
+        private new IValue<CinemachineVirtualCamera> camera;
+        
         private float current;
         private float damping;
+
+        void Awake()
+        {
+            body = new AnyValue<CharacterBody>();
+            camera = new AnyValue<CinemachineVirtualCamera>();
+            injections = new IValue[]
+            {
+                body,
+                camera
+            };
+        }
         
         void Update()
         {
-            var forward = body.transform.InverseTransformVector(body.Delta).z;
+            var forward = body.Value.transform.InverseTransformVector(body.Value.Delta).z;
 
             float ratio;
             if (forward < 0) ratio = Mathf.InverseLerp(input.x, 0.0f, forward) - 1.0f;
@@ -40,7 +57,7 @@ namespace Chrome
                 volume.profile.isDirty = true;
             }
 
-            camera.m_Lens.FieldOfView = FOVMidpoint + FOVMap.Evaluate(current) * FOVFactor;
+            camera.Value.m_Lens.FieldOfView = FOVMidpoint + FOVMap.Evaluate(current) * FOVFactor;
         }
     }
 }

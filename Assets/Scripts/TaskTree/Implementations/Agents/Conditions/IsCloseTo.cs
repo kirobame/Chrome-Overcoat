@@ -22,13 +22,9 @@ namespace Chrome
             if (!target.IsValid(packet) || !transform.IsValid(packet)) return false;
 
             var distance = Vector3.Distance(transform.Value.position, target.Value.position);
-
-            //Debug.Log("Distance from target : " + distance);
-
-            if (distance < distanceMin)
-                return true;
-            else
-                return false;
+            
+            if (distance < distanceMin) return true;
+            else return false;
         }
     }
 }

@@ -8,5 +8,7 @@
         
         public T Value => value;
         private T value;
+
+        public void Set(object rawValue) => value = (T)rawValue;
     }
 }

@@ -4,10 +4,11 @@
     {
         void Remove(string path);
 
+        void SetRaw(string path, object value);
         void Set<T>(string path, T value);
         void SetRegistry(string path, IRegistry registry);
 
-        bool TryGetAny<T>(out T value);
+        bool TryGetAny<T>(out IRegistry<T> registry);
         
         T Get<T>(string path);
         bool TryGet<T>(string path, out T value);

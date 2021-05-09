@@ -6,67 +6,54 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class FrenzyAbilityControl : InputControl, ILink<IIdentity>
+    public class FrenzyAbilityControl : InputControl<FrenzyAbilityControl>, IInjectable
     {
-        #region IdentityLink
-        IIdentity ILink<IIdentity>.Link
-        {
-            set => identity = value;
-        }
-        private IIdentity identity;
-        #endregion
-
+        IReadOnlyList<IValue> IInjectable.Injections => injections;
+        private IValue[] injections;
+        
+        //--------------------------------------------------------------------------------------------------------------/
+        
         [FoldoutGroup("Values"), SerializeField] private RemoteTaskTree frenzyWeapon;
         [FoldoutGroup("Values"), SerializeField] private float heatCost;
         [FoldoutGroup("Values"), SerializeField] private bool lowHeatLock;
 
+        private Packet packet => identity.Value.Packet;
+        private IValue<IIdentity> identity;
+        
         private ComputeAimDirection aimCompute;
 
         void Awake()
         {
+            identity = new AnyValue<IIdentity>();
+            injections = new IValue[] { identity };
 
             frenzyWeapon.Bootup();
+            aimCompute = ChromeExtensions.CreateComputeAimDirection();
 
-            
-            var mask = LayerMask.GetMask("Environment", "Entity");
-            var firAnchor = "view.fireAnchor".Reference<Transform>();
-            var view = "view".Reference<Transform>();
-            var collider = "self.collider".Reference<Collider>();
-            aimCompute = new ComputeAimDirection("shootDir", mask, firAnchor, view, collider);
-
-            var board = identity.Packet.Get<IBlackboard>();
+            var board = packet.Get<IBlackboard>();
             board.Set("frenzy.heatLock", lowHeatLock);
             board.Set("frenzy.heatCost", heatCost);
 
-            frenzyWeapon.Bootup(identity.Packet);
+            frenzyWeapon.Bootup(packet);
         }
 
-        public override void Bootup()
+        void Update()
         {
-            base.Bootup();
-        }
-        public override void Shutdown()
-        {
-            base.Shutdown();
-        }
+            var snapshot = packet.Save();
 
-        private void Update()
-        {
-            var snapshot = identity.Packet.Save();
+            if (Input.GetKeyDown(KeyCode.A)) Activate();
 
-            if (Input.GetKeyDown(KeyCode.A))
-                Activate();
+            aimCompute.Update(packet);
+            frenzyWeapon.Update(packet);
 
-            aimCompute.Update(identity.Packet);
-            frenzyWeapon.Update(identity.Packet);
-
-            identity.Packet.Load(snapshot);
+            packet.Load(snapshot);
         }
 
         private void Activate()
         {
-            identity.Packet.Set(true);
-            var board = identity.Packet.Get<IBlackboard>();
+            packet.Set(true);
+            
+            var board = packet.Get<IBlackboard>();
             board.Get<BusyBool>("canSprint").business++;
         }
     }
