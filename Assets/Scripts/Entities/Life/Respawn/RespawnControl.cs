@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using Flux;
 using UnityEngine;
 
 namespace Chrome
 {
-    public class RespawnControl : MonoBehaviour, ILifebound
+    public class RespawnControl : MonoBehaviour, ILifebound, IInjectable
     {
+        IReadOnlyList<IValue> IInjectable.Injections => injections;
+        private IValue[] injections;
+
+        //--------------------------------------------------------------------------------------------------------------/
+        
         public event Action<ILifebound> onDestruction;
 
         public bool IsActive => true;
@@ -15,6 +21,13 @@ namespace Chrome
         [SerializeField] protected int index;
         [SerializeField] protected float duration;
 
+        private IValue<IRoot> root; 
+        
+        void Awake()
+        {
+            root = new AnyValue<IRoot>();
+            injections = new IValue[] { root };
+        }
         void OnDestroy() => onDestruction?.Invoke(this);
         
         public void Bootup() { }
@@ -27,8 +40,8 @@ namespace Chrome
 
             if (!TryGetRespawnAnchor(out var anchor)) yield break;
 
-            transform.position = anchor.position;
-            gameObject.SetActive(true);
+            root.Value.Transform.position = anchor.position;
+            root.Value.Transform.gameObject.SetActive(true);
         }
 
         protected bool TryGetRespawnAnchor(out Transform anchor)

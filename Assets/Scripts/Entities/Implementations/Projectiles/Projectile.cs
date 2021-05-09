@@ -32,6 +32,7 @@ namespace Chrome
             identity = new AnyValue<IIdentity>();
             injections = new IValue[] { identity };
         }
+        protected virtual void Bootup() { }
         
         public void Shoot(IIdentity source, Vector3 fireAnchor, Vector3 direction, Packet packet)
         {
@@ -50,6 +51,8 @@ namespace Chrome
         private IEnumerator BootupRoutine(IIdentity source, Vector3 fireAnchor, Vector3 direction, Packet packet)
         {
             while (!hasBeenBootedUp) yield return new WaitForEndOfFrame();
+
+            Bootup();
             OnShoot(source, fireAnchor, direction, packet);
         }
     }

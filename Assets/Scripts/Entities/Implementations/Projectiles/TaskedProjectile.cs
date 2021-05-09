@@ -3,23 +3,15 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public abstract class TaskedProjectile : Projectile, IBootable
+    public abstract class TaskedProjectile : Projectile
     {
         private ITaskTree taskTree;
-        private bool hasBeenBootedUp;
-        
-        //--------------------------------------------------------------------------------------------------------------/
 
-        void Start()
-        {
-            if (hasBeenBootedUp) return;
-            
-            Bootup();
-            hasBeenBootedUp = true;
-        }
-        void OnDestroy() => taskTree.Shutdown(packet);
+        //--------------------------------------------------------------------------------------------------------------/
         
-        public void Bootup()
+        void OnDisable() => taskTree.Shutdown(packet);
+        
+        protected override void Bootup()
         {
             packet.Set(ignores);
 
@@ -35,12 +27,7 @@ namespace Chrome
         protected override void OnShoot(IIdentity source, Vector3 fireAnchor, Vector3 direction, Packet packet)
         {
             base.OnShoot(source, fireAnchor, direction, packet);
-
-            if (!hasBeenBootedUp)
-            {
-                Bootup();
-                hasBeenBootedUp = true;
-            }
+            
             taskTree.Bootup(this.packet);
             taskTree.Start(this.packet);
         }

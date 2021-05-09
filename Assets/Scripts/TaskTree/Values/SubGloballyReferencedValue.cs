@@ -25,7 +25,7 @@ namespace Chrome
         {
             get
             {
-                var index = path.IndexOf('.');
+                var index = path.IndexOf('.') + 1;
                 return path.Substring(index, path.Length - index);
             }
         }
