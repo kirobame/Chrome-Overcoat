@@ -75,7 +75,13 @@ namespace Chrome
         
         private void TryFetchParent()
         {
-            parent = transform.GetComponentInParent<Lifetime>();
+            if (transform.parent == null)
+            {
+                parent = null;
+                return;
+            }
+            
+            parent = transform.parent.GetComponentInParent<Lifetime>();
             if (parent != null) parent.AddChild(this);
         }
         

@@ -27,14 +27,12 @@ namespace Chrome
         
         //--------------------------------------------------------------------------------------------------------------/
 
-        public override void Shoot(IIdentity source, Vector3 fireAnchor, Vector3 direction, Packet packet)
+        protected override void OnShoot(IIdentity source, Vector3 fireAnchor, Vector3 direction, Packet packet)
         {
-            identity.Copy(source);
+            base.OnShoot(source, fireAnchor, direction, packet);
             
             deactivationTimer = deactivationTime;
             hasHit = false;
-            
-            base.Shoot(source, fireAnchor, direction, packet);
 
             trail.enabled = true;
             routine = StartCoroutine(Routines.DoAfter(() =>
@@ -73,8 +71,8 @@ namespace Chrome
             sound.Play();
             if (hit.collider.TryGetComponent<InteractionHub>(out var hub))
             {
-                identity.Packet.Set(hit);
-                hub.RelayDamage(identity, damage);
+                packet.Set(hit);
+                hub.RelayDamage(identity.Value, damage);
                     
                 vfxPoolable.transform.SetParent(hit.transform);
             }

@@ -54,7 +54,7 @@ namespace Chrome
             packet.Set(true);
             
             var board = packet.Get<IBlackboard>();
-            board.Get<BusyBool>("canSprint").business++;
+            board.Get<BusyBool>(PlayerRefs.CAN_SPRINT).business++;
         }
     }
 }

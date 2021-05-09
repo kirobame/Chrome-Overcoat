@@ -31,6 +31,7 @@ namespace Flux.Audio
             
             prefab = prefabObject.AddComponent<PoolableAudio>();
             ((IInjectable<AudioSource>)prefab).Inject(audioSource);
+            prefabObject.SetActive(false);
             
             // Pool creation
             var poolObject = new GameObject("AudioPool") {hideFlags = HideFlags.HideInHierarchy};

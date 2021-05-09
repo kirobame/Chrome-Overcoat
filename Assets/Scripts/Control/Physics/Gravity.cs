@@ -26,9 +26,9 @@ namespace Chrome
             injections = new IValue[] { body };
         }
         
-        void FixedUpdate()
+        void Update()
         {
-            var force = (bypass ? overridingForce : Physics.gravity) * (affect * body.Value.Mass);
+            var force = Force * (affect * body.Value.Mass);
             body.Value.force += force;
         }
 

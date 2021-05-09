@@ -14,17 +14,18 @@ namespace Chrome
 
         //--------------------------------------------------------------------------------------------------------------/
         
-        public override void Shoot(IIdentity source, Vector3 fireAnchor, Vector3 direction, Packet packet)
+        protected override void OnShoot(IIdentity source, Vector3 fireAnchor, Vector3 direction, Packet packet)
         {
-            var board = identity.Packet.Get<IBlackboard>();
-            board.Set("dir", direction.normalized);
+            base.OnShoot(source, fireAnchor, direction, packet);
             
-            base.Shoot(source, fireAnchor, direction, packet);
+            var board = this.packet.Get<IBlackboard>();
+            board.Set("dir", direction.normalized);
+            board.Set("time", 5.0f);
         }
 
         protected override ITaskTree BuildTree()
         {
-            var board = identity.Packet.Get<IBlackboard>();
+            var board = packet.Get<IBlackboard>();
             board.Set<IEnabler>("trail", new RendererEnabler(trail));
             board.Set("graph", graph);
             
@@ -36,8 +37,8 @@ namespace Chrome
                     new Delay(0.15f).Append(
                         new SetActive(true, graphReference))),
                 new RootNode().Mask(0b_0010).Append(
-                    new Timer(5.0f.Cache()).Append(
-                        new SetActive(false, identity.Transform.gameObject.Cache()).Mask(0b_0001))),
+                    new Timer("time".Reference<float>()).Append(
+                        new SetActive(false, identity.Value.Transform.gameObject.Cache()).Mask(0b_0001))),
                 new LinearMove(0.015f, "dir".Reference<Vector3>(), speed.Cache(), new PackettedValue<HashSet<Collider>>(), "self".Reference<Transform>()).Mask(0b_0010),
                 new Damage(1.0f.Cache()).Mask(0b_0100).Append(
                     new PlayVfxImpact(impactVfx).Append(

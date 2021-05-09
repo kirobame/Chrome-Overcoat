@@ -28,6 +28,7 @@ namespace Chrome
         {
             Packet = new Packet();
             Packet.Set<IRoot>(this);
+            HandlePacket(Packet);
 
             var installers = transform.Fetch<IInstaller,IRoot>();
             Array.Sort(installers, (first, second) => first.Priority.CompareTo(second.Priority));
@@ -37,6 +38,8 @@ namespace Chrome
             InjectDependencies();
         }
         void OnDestroy() => onDetachment?.Invoke(this);
+        
+        protected virtual void HandlePacket(Packet packet) { }
         
         //--------------------------------------------------------------------------------------------------------------/
         
@@ -82,6 +85,7 @@ namespace Chrome
             foreach (var child in children) child.onDetachment -= OnChildDetachment;
             children.Clear();
             
+            InjectDependenciesOn(transform);
             for (var i = 0; i < transform.childCount; i++)
             {
                 var child = transform.GetChild(i);
@@ -92,16 +96,19 @@ namespace Chrome
         {
             if (transform.HasComponent<IRoot>()) return;
 
-            foreach (var injectable in transform.GetComponents<IInjectable>())
-            {
-                foreach (var injection in injectable.Injections) injection.FillIn(Packet);
-                if (injectable is IInjectionCallbackListener callbackListener) callbackListener.OnInjectionDone(this);
-            }
-
+            InjectDependenciesOn(transform);
             for (var i = 0; i < transform.childCount; i++)
             {
                 var child = transform.GetChild(i);
                 InjectDependenciesFrom(child);
+            }
+        }
+        private void InjectDependenciesOn(Transform transform)
+        {
+            foreach (var injectable in transform.GetComponents<IInjectable>())
+            {
+                foreach (var injection in injectable.Injections) injection.FillIn(Packet);
+                if (injectable is IInjectionCallbackListener callbackListener) callbackListener.OnInjectionDone(this);
             }
         }
 

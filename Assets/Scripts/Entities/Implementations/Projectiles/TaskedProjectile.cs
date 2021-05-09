@@ -17,13 +17,13 @@ namespace Chrome
             Bootup();
             hasBeenBootedUp = true;
         }
-        void OnDestroy() => taskTree.Shutdown(identity.Packet);
+        void OnDestroy() => taskTree.Shutdown(packet);
         
         public void Bootup()
         {
-            identity.Packet.Set(ignores);
+            packet.Set(ignores);
 
-            var board = identity.Packet.Get<IBlackboard>(); 
+            var board = packet.Get<IBlackboard>(); 
             board.Set("self", transform);
             
             taskTree = BuildTree();
@@ -32,21 +32,19 @@ namespace Chrome
         
         //--------------------------------------------------------------------------------------------------------------/
         
-        public override void Shoot(IIdentity source, Vector3 fireAnchor, Vector3 direction, Packet packet)
+        protected override void OnShoot(IIdentity source, Vector3 fireAnchor, Vector3 direction, Packet packet)
         {
-            identity.Copy(source);
+            base.OnShoot(source, fireAnchor, direction, packet);
 
             if (!hasBeenBootedUp)
             {
                 Bootup();
                 hasBeenBootedUp = true;
             }
-            taskTree.Bootup(identity.Packet);
-            taskTree.Start(identity.Packet);
-            
-            base.Shoot(source, fireAnchor, direction, packet);
+            taskTree.Bootup(this.packet);
+            taskTree.Start(this.packet);
         }
 
-        void Update() => taskTree.Update(identity.Packet);
+        void Update() => taskTree.Update(packet);
     }
 }

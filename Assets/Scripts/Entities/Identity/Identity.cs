@@ -9,11 +9,7 @@ namespace Chrome
 
         [SerializeField] private Faction faction;
 
-        protected override void Start()
-        {
-            base.Start();
-            Packet.Set<IIdentity>(this);
-        }
+        protected override void HandlePacket(Packet packet) => packet.Set<IIdentity>(this);
 
         public void Copy(IIdentity identity) => faction = identity.Faction;
     }

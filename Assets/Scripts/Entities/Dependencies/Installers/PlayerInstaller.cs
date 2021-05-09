@@ -6,8 +6,8 @@ namespace Chrome
     public class PlayerInstaller : MonoBehaviour, IInstaller
     {
         [FoldoutGroup("Values"), SerializeField] private Collider self;
-        [FoldoutGroup("Values"), SerializeField] private Transform raypoint;
-        [FoldoutGroup("Values"), SerializeField] private Transform firepoint;
+        [FoldoutGroup("Values"), SerializeField] private Transform pivot;
+        [FoldoutGroup("Values"), SerializeField] private Transform fireAnchor;
         
         //--------------------------------------------------------------------------------------------------------------/
 
@@ -17,12 +17,14 @@ namespace Chrome
         {
             var board = packet.Get<IBlackboard>();
             
-            board.Set("type", (byte)10);
-            board.Set("canSprint", new BusyBool());
-            board.Set("view", raypoint);
-            board.Set("view.fireAnchor", firepoint);
-            board.Set("self", self.transform);
-            board.Set("self.collider", self);
+            board.Set(Refs.TYPE, (byte)10);
+            
+            board.Set(Refs.PIVOT, pivot);
+            board.Set(Refs.FIREANCHOR, fireAnchor);
+            board.Set(Refs.ROOT, self.transform);
+            board.Set(Refs.COLLIDER, self);
+            
+            board.Set(PlayerRefs.CAN_SPRINT, new BusyBool());
         }
     }
 }

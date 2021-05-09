@@ -65,9 +65,9 @@ namespace Chrome
 
             if (packet.TryGetThoroughly<T>(out var kvp))
             {
-                mode = Mode.ThoroughPacket;
-                
                 value = kvp.Value;
+                
+                mode = Mode.ThoroughPacket;
                 helper = (packet, kvp.Key);
 
                 return true;
@@ -75,9 +75,9 @@ namespace Chrome
 
             if (packet.TryGet<IBlackboard>(out var board) && board.TryGetAny<T>(out var registry))
             {
-                mode = Mode.LocalBoard;
-
                 value = registry.Value;
+                
+                mode = Mode.LocalBoard;
                 helper = registry;
                 
                 return true;
@@ -85,9 +85,9 @@ namespace Chrome
             
             if (Blackboard.Global.TryGetAny<T>(out registry))
             {
-                mode = Mode.GlobalBoard;
-
                 value = registry.Value;
+                
+                mode = Mode.GlobalBoard;
                 helper = registry;
                 
                 return true;
@@ -95,6 +95,8 @@ namespace Chrome
 
             if (Repository.TryGetAny<T>(out var repoKvp))
             {
+                value = repoKvp.Value;
+                
                 mode = Mode.Repository;
                 helper = repoKvp.Key;
                 

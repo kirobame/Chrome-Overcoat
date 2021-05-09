@@ -12,8 +12,8 @@ namespace Chrome
         
         public ITaskTree Build()
         {
-            var fireAnchorReference = "view.fireAnchor".Reference<Transform>();
-            var colliderReference = "self.collider".Reference<Collider>();
+            var fireAnchorReference = Refs.FIREANCHOR.Reference<Transform>();
+            var colliderReference = Refs.COLLIDER.Reference<Collider>();
 
             return new GunNode().Append(
                 new Charge(1.0f, 2.5f, 2.0f).Mask(0b_0001),

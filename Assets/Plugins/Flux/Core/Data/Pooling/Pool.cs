@@ -24,20 +24,19 @@ namespace Flux.Data
 
         private Dictionary<TPoolable, Queue<TPoolable>> availableInstances = new Dictionary<TPoolable, Queue<TPoolable>>();
         private HashSet<TPoolable> usedInstances = new HashSet<TPoolable>();
-
-        private bool hasBeenBootedUp;
+        
         private byte readiness;
         
         void Awake()
         {
             IsOperational = false;
+
+            readiness = (byte)Providers.Count;
             foreach (var provider in Providers) PrepareProvider(provider);
         }
 
         private void PrepareProvider(Provider<T, TPoolable> provider)
         {
-            readiness++;
-                
             provider.onLoaded += OnProviderReady;
             provider.Bootup();
         }
@@ -48,37 +47,17 @@ namespace Flux.Data
             readiness--;
             if (readiness == 0)
             {
-                IsOperational = true;
-                onReady?.Invoke();
-
-                if (hasBeenBootedUp) return;
-                
                 foreach (var provider in Providers)
                 {
                     var queue = new Queue<TPoolable>(provider.Instances);
                     availableInstances.Add(provider.Prefab, queue);
                 }
-
-                hasBeenBootedUp = true;
-                StartCoroutine(BootupRoutine());
+                
+                IsOperational = true;
+                onReady?.Invoke();
             }
         }
         
-        private IEnumerator BootupRoutine()
-        {
-            foreach (var availableInstance in availableInstances.SelectMany(kvp => kvp.Value))
-            {
-                availableInstance.gameObject.SetActive(true);
-            }
-            
-            yield return new WaitForEndOfFrame();
-            
-            foreach (var availableInstance in availableInstances.SelectMany(kvp => kvp.Value))
-            {
-                availableInstance.gameObject.SetActive(false);
-            }
-        }
-
         public virtual void AddProvider(Provider<T, TPoolable> provider) { }
 
         public T RequestSingle() => RequestSinglePoolable().Value;
@@ -93,6 +72,12 @@ namespace Flux.Data
         public TPoolable[] RequestPoolable(int count) => RequestPoolable(Providers[0].Prefab, count);
         public TPoolable[] RequestPoolable(TPoolable key, int count)
         {
+            if (!IsOperational)
+            {
+                throw new InvalidOperationException($"The Pool : {this} is not operational !");
+                return null;
+            }
+            
             var request = new TPoolable[count];
             if (availableInstances.TryGetValue(key, out var queue))
             {
@@ -100,7 +85,6 @@ namespace Flux.Data
                 for (index = 0; index < count - queue.Count; index++)
                 {
                     var instance = Instantiate(key, transform);
-                    instance.BypassBootup();
                     Claim(instance, key);
                     
                     request[index] = instance;
@@ -121,7 +105,6 @@ namespace Flux.Data
                 for (var i = 0; i < count; i++)
                 {
                     var instance = Instantiate(key);
-                    instance.BypassBootup();
                     Claim(instance, key);
                     
                     request[i] = instance;

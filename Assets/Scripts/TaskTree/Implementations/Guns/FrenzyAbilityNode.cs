@@ -46,7 +46,7 @@ namespace Chrome
                 base.Update(packet);
 
                 packet.Set(false);
-                board.Get<BusyBool>("canSprint").business--;
+                board.Get<BusyBool>(PlayerRefs.CAN_SPRINT).business--;
             }
             
             return null;

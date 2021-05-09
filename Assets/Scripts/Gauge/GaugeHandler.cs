@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Flux.Data;
 using Flux.Event;
 using UnityEngine;
@@ -6,19 +7,29 @@ using EventHandler = Flux.Event.EventHandler;
 
 namespace Chrome
 {
-    public class GaugeHandler : MonoBehaviour, ILifebound
+    public class GaugeHandler : MonoBehaviour, ILifebound, IInjectable
     {
+        IReadOnlyList<IValue> IInjectable.Injections => injections;
+        private IValue[] injections;
+
+        //--------------------------------------------------------------------------------------------------------------/
+        
         public event Action<ILifebound> onDestruction;
         
         public virtual bool IsActive => true;
         
         [SerializeField] private EventHandler handler;
-        [SerializeField] private Lifetime lifetime;
 
+        private IValue<Lifetime> lifetime;
         private Gauge firstGauge;
         
         //--------------------------------------------------------------------------------------------------------------/
-        
+
+        void Awake()
+        {
+            lifetime = new AnyValue<Lifetime>();
+            injections = new IValue[] { lifetime };
+        }
         void Start()
         {
             firstGauge = Repository.Get<Gauge>(Gauges.One);
@@ -45,7 +56,7 @@ namespace Chrome
         {
             var module = new GaugeInRangeModule(new Vector2(0.0f, 0.01f), (value, percentage, state) =>
             {
-                if (state == GaugeInRangeModule.State.EnteredRange) lifetime.End();
+                if (state == GaugeInRangeModule.State.EnteredRange) lifetime.Value.End();
             });
             
             module.lifetime = new ConstantModuleLifetime();
@@ -71,7 +82,6 @@ namespace Chrome
         }
         void OnFrenzyAbilityUsed(byte type, float cost)
         {
-            Debug.Log("OnFrenzyAbilityUsed");
             firstGauge.ADD(-cost);
             switch (type)
             {

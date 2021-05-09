@@ -12,8 +12,8 @@ namespace Chrome
 
         public ITaskTree Build()
         {
-            var fireAnchorReference = "view.fireAnchor".Reference<Transform>();
-            var colliderReference = "self.collider".Reference<Collider>();
+            var fireAnchorReference = Refs.FIREANCHOR.Reference<Transform>();
+            var colliderReference = Refs.COLLIDER.Reference<Collider>();
 
             var gauge = Repository.Get<Gauge>(Gauges.One);
             var costLock = "frenzy.heatLock".Reference<bool>();

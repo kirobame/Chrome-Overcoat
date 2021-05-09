@@ -37,7 +37,7 @@ namespace Flux
                 var offset = (ushort)lookups.Count;
                 lookups.Add((type, offset));
 
-                index = lookups.Count;
+                index = lookups.Count - 1;
             }
 
             return int.MinValue + lookups[index].offset * 255 + value;

@@ -68,7 +68,13 @@ namespace Chrome
         
         private void TryFetchParent()
         {
-            parent = transform.GetComponentInParent<InteractionHub>();
+            if (transform.parent == null)
+            {
+                parent = null;
+                return;
+            }
+            
+            parent = transform.parent.GetComponentInParent<InteractionHub>();
             if (parent != null) parent.AddChild(this);
         }
         

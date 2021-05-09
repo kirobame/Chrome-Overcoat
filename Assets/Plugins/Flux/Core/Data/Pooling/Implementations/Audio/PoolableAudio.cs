@@ -12,7 +12,7 @@ namespace Flux.Data
 
         void Update()
         {
-            if (!hasBeenBootedUp || Value.loop || deactivationRoutine != null) return;
+            if (Value.loop || deactivationRoutine != null) return;
 
             if (Value.clip.length - Value.time <= 0.1f)
             {

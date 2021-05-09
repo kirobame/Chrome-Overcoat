@@ -37,8 +37,8 @@ namespace Chrome
             {
                 if (entity.TryGetComponent<InteractionHub>(out var hub) && transform.CanSee(entity, hitMask))
                 {
-                    identity.Packet.Set(hit);
-                    hub.RelayDamage(identity, damage);
+                    packet.Set(hit);
+                    hub.RelayDamage(identity.Value, damage);
 
                     vfx.transform.SetParent(hit.transform);
                 }

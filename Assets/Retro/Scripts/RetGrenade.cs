@@ -34,11 +34,11 @@ namespace Chrome.Retro
             cachedSpeed = speed;
         }
         
-        public override void Shoot(IIdentity source, Vector3 fireAnchor, Vector3 direction, Packet packet)
+        protected override void OnShoot(IIdentity source, Vector3 fireAnchor, Vector3 direction, Packet packet)
         {
             speed = cachedSpeed;
             
-            identity.Copy(source);
+            identity.Value.Copy(source);
             timer = duration;
             hasHit = false;
             
@@ -71,12 +71,12 @@ namespace Chrome.Retro
             var results = Physics.OverlapSphere(transform.position, 0.25f, LayerMask.GetMask("Entity"));
             foreach (var result in results)
             {
-                if (!result.TryGetComponent<InteractionHub>(out var hub) || hub.Identity.Faction == identity.Faction) continue;
+                if (!result.TryGetComponent<InteractionHub>(out var hub) || hub.Identity.Faction == identity.Value.Faction) continue;
                 
                 var distance = Vector3.Distance(transform.position, result.transform.position);
                 var ratio = Mathf.Clamp01(distance / splash);
                 
-                hub.RelayDamage(identity, damage);
+                hub.RelayDamage(identity.Value, damage);
                 success = true;
             }
 
@@ -95,12 +95,12 @@ namespace Chrome.Retro
             var results = Physics.OverlapSphere(transform.position, splash, LayerMask.GetMask("Entity"));
             foreach (var result in results)
             {
-                if (!result.TryGetComponent<InteractionHub>(out var hub) || hub.Identity.Faction == identity.Faction) continue;
+                if (!result.TryGetComponent<InteractionHub>(out var hub) || hub.Identity.Faction == identity.Value.Faction) continue;
                 
                 var distance = Vector3.Distance(transform.position, result.transform.position);
                 var ratio = Mathf.Clamp01(distance / splash);
                 
-                hub.RelayDamage(identity, damage);
+                hub.RelayDamage(identity.Value, damage);
             }
 
             Hit(hit.point);

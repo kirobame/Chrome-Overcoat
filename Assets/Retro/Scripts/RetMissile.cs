@@ -34,9 +34,9 @@ namespace Chrome.Retro
             results = new Collider[3];
         }
 
-        public override void Shoot(IIdentity source, Vector3 fireAnchor, Vector3 direction, Packet packet)
+        protected override void OnShoot(IIdentity source, Vector3 fireAnchor, Vector3 direction, Packet packet)
         {
-            identity.Copy(source);
+            identity.Value.Copy(source);
             
             base.Shoot(source, fireAnchor, direction, packet);
             
@@ -86,7 +86,7 @@ namespace Chrome.Retro
             {
                 for (var i = 0; i < count; i++)
                 {
-                    if (!results[i].TryGetComponent<InteractionHub>(out hub) || hub.Identity.Faction == identity.Faction) continue;
+                    if (!results[i].TryGetComponent<InteractionHub>(out hub) || hub.Identity.Faction == identity.Value.Faction) continue;
                 
                     hasTarget = true;
                     target = results[i];
@@ -106,10 +106,10 @@ namespace Chrome.Retro
             vfxPoolable.transform.localScale = Vector3.one;
 
             sound.Play();
-            if (hit.collider == target || hit.collider.TryGetComponent<InteractionHub>(out hub) && hub.Identity.Faction != identity.Faction)
+            if (hit.collider == target || hit.collider.TryGetComponent<InteractionHub>(out hub) && hub.Identity.Faction != identity.Value.Faction)
             {
-                identity.Packet.Set(hit);
-                hub.RelayDamage(identity, damage);
+                packet.Set(hit);
+                hub.RelayDamage(identity.Value, damage);
                 
                 vfxPoolable.transform.SetParent(hit.transform);
             }

@@ -4,13 +4,8 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class SwaveControl : TiltControl, IInjectable
+    public class SwaveControl : TiltControl
     {
-        IReadOnlyList<IValue> IInjectable.Injections => injections;
-        private IValue[] injections;
-
-        //--------------------------------------------------------------------------------------------------------------/
-
         [FoldoutGroup("Pitch"), SerializeField] private float pitchViewAffect;
 
         [FoldoutGroup("Yaw"), SerializeField] private Knob yawKnob;
@@ -18,10 +13,12 @@ namespace Chrome
 
         private IValue<ViewControl> view;
 
-        void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+            
             view = new AnyValue<ViewControl>();
-            injections = new IValue[] { view };
+            injections.Add(view);
         }
         
         protected override float ComputePitch(Vector3 bodyDelta)

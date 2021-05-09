@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class GunControl : InputControl<GunControl>, IInjectable
+    public class GunControl : InputControl<GunControl>, IInjectable, IInjectionCallbackListener
     {
         #region Nested Types
 
@@ -21,6 +21,12 @@ namespace Chrome
 
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         private IValue[] injections;
+
+        void IInjectionCallbackListener.OnInjectionDone(IRoot source)
+        {
+            packet.Set(false);
+            Current.Bootup(packet);
+        }
 
         //--------------------------------------------------------------------------------------------------------------/
 
@@ -44,16 +50,12 @@ namespace Chrome
             identity = new AnyValue<IIdentity>();
             injections = new IValue[] { identity };
 
-            packet.Set(false);
-
             state = PressState.Released;
             isLeft = true;
             
             leftWeapon.Bootup();
             rightWeapon.Bootup();
             aimCompute = ChromeExtensions.CreateComputeAimDirection();
-            
-            Current.Bootup(packet);
         }
 
         public override void Bootup()
@@ -110,14 +112,14 @@ namespace Chrome
         private void OnMouseDown()
         {
             var board = packet.Get<IBlackboard>();
-            board.Get<BusyBool>("canSprint").business++;
+            board.Get<BusyBool>(PlayerRefs.CAN_SPRINT).business++;
             
             state = PressState.Pressed;
         }
         private void OnMouseUp()
         {
             var board = packet.Get<IBlackboard>();
-            board.Get<BusyBool>("canSprint").business--;
+            board.Get<BusyBool>(PlayerRefs.CAN_SPRINT).business--;
             
             state = PressState.Released;
         }

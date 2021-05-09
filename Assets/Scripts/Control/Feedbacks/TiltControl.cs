@@ -8,7 +8,7 @@ namespace Chrome
     public class TiltControl : MonoBehaviour, IInjectable
     {
         IReadOnlyList<IValue> IInjectable.Injections => injections;
-        private IValue[] injections;
+        protected List<IValue> injections;
 
         //--------------------------------------------------------------------------------------------------------------/
         
@@ -26,10 +26,11 @@ namespace Chrome
         private float pitchAdd;
         private float reduction;
 
-        void Awake()
+        protected virtual void Awake()
         {
             body = new AnyValue<CharacterBody>();
-            injections = new IValue[] { body };
+            injections = new List<IValue>();
+            injections.Add(body);
             
             Events.Subscribe<float>(PlayerEvent.OnFire, OnFire);
             airPitchSmoothing = pitchKnob.Smoothing;

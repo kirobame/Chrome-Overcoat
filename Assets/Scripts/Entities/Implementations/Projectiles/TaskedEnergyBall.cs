@@ -16,9 +16,11 @@ namespace Chrome
 
         //--------------------------------------------------------------------------------------------------------------/
         
-        public override void Shoot(IIdentity source, Vector3 fireAnchor, Vector3 direction, Packet packet)
+        protected override void OnShoot(IIdentity source, Vector3 fireAnchor, Vector3 direction, Packet packet)
         {
-            var board = identity.Packet.Get<IBlackboard>();
+            base.OnShoot(source, fireAnchor, direction, packet);
+            
+            var board = this.packet.Get<IBlackboard>();
             board.Set("dir", direction.normalized);
             
             if (packet.TryGet<float>(out var charge))
@@ -33,20 +35,18 @@ namespace Chrome
                 board.Set("speed", otherSpeed.x);
                 board.Set("size", new Vector2(size.x, size.x));
             }
-            
-            base.Shoot(source, fireAnchor, direction, packet);
         }
 
         protected override ITaskTree BuildTree()
         {
-            var board = identity.Packet.Get<IBlackboard>();
+            var board = packet.Get<IBlackboard>();
             board.Set("time", 5.0f);
 
             return new ProjectileNode().Append(
                 new ScaleBetween(0.3f, "size".Reference<Vector2>(), graph.Cache()).Mask(0b_0001),
                 new RootNode().Mask(0b_0010).Append(
                     new Timer("time".Reference<float>()).Append(
-                        new SetActive(false, identity.Transform.gameObject.Cache()).Mask(0b_0001))),
+                        new SetActive(false, identity.Value.Transform.gameObject.Cache()).Mask(0b_0001))),
                 new LinearMove(0.015f, "dir".Reference<Vector3>(), "speed".Reference<float>(), new PackettedValue<HashSet<Collider>>(), "self".Reference<Transform>()).Mask(0b_0010),
                 new Damage("damage".Reference<float>()).Mask(0b_0100).Append(
                     new Counter(3).Append(
