@@ -6,16 +6,12 @@ using Flux.Data;
 using Flux.Event;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Chrome
 {
-    public class JetpackControl : InputControl<JetpackControl>, IInjectable
+    public class JetpackControl : InputControl<JetpackControl>
     {
-        IReadOnlyList<IValue> IInjectable.Injections => injections;
-        private IValue[] injections;
-
-        //--------------------------------------------------------------------------------------------------------------/
-        
         [FoldoutGroup("Values"), SerializeField] private float cooldown;
         [FoldoutGroup("Values"), SerializeField] private Vector2 pressRange;
         [FoldoutGroup("Values"), SerializeField] private Vector2 heightRange;
@@ -32,28 +28,37 @@ namespace Chrome
         
         private Coroutine cooldownRoutine;
         private float pressTime;
+        private Key key;
         
         //--------------------------------------------------------------------------------------------------------------/
 
-        void Awake()
+        protected override void Awake()
         {
+            key = Key.Default;
+            
+            base.Awake();
+            
             body = new AnyValue<CharacterBody>();
+            injections.Add(body);
+            
             gravity = new AnyValue<Gravity>();
+            injections.Add(gravity);
+            
             move = new AnyValue<MoveControl>();
-            injections = new IValue[]
-            {
-                body, 
-                gravity,
-                move
-            };
+            injections.Add(move);
         }
         void Start() => HUD = Repository.Get<JetpackHUD>(Interface.Jetpack);
+        
+        protected override void SetupInputs() => input.Value.Bind(InputRefs.JUMP, this, OnJumpInput, true);
+        void OnJumpInput(InputAction.CallbackContext context, InputCallbackType type) => key.Update(type);
+        
+        //--------------------------------------------------------------------------------------------------------------/
         
         void Update()
         {
             if (body.Value.IsGrounded)
             {
-                if (Input.GetKey(KeyCode.Space) && cooldownRoutine == null)
+                if (key.State == KeyState.On && cooldownRoutine == null)
                 {
                     pressTime += Time.deltaTime;
                     var ratio = Mathf.InverseLerp(pressRange.x, pressRange.y, pressTime);
@@ -63,7 +68,7 @@ namespace Chrome
                 }
             }
 
-            if (!Input.GetKeyUp(KeyCode.Space) || cooldownRoutine != null) return;
+            if (key.State != KeyState.Up || cooldownRoutine != null) return;
             
             if (pressTime > pressRange.x)
             {

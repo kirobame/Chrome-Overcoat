@@ -3,29 +3,32 @@ using System.Collections.Generic;
 using Flux.Data;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Chrome
 {
     public class FrenzyAbilityControl : InputControl<FrenzyAbilityControl>, IInjectable
     {
-        IReadOnlyList<IValue> IInjectable.Injections => injections;
-        private IValue[] injections;
-        
-        //--------------------------------------------------------------------------------------------------------------/
-        
         [FoldoutGroup("Values"), SerializeField] private RemoteTaskTree frenzyWeapon;
         [FoldoutGroup("Values"), SerializeField] private float heatCost;
         [FoldoutGroup("Values"), SerializeField] private bool lowHeatLock;
 
         private Packet packet => identity.Value.Packet;
         private IValue<IIdentity> identity;
-        
+
+        private Key key;
         private ComputeAimDirection aimCompute;
 
-        void Awake()
+        //--------------------------------------------------------------------------------------------------------------/
+
+        protected override void Awake()
         {
+            key = Key.Default;
+            
+            base.Awake();
+            
             identity = new AnyValue<IIdentity>();
-            injections = new IValue[] { identity };
+            injections.Add(identity);
 
             frenzyWeapon.Bootup();
             aimCompute = ChromeExtensions.CreateComputeAimDirection();
@@ -36,12 +39,16 @@ namespace Chrome
 
             frenzyWeapon.Bootup(packet);
         }
+        
+        protected override void SetupInputs() => input.Value.Bind(InputRefs.CAST, this, OnCastInput, true);
+        void OnCastInput(InputAction.CallbackContext context, InputCallbackType type) => key.Update(type);
+
+        //--------------------------------------------------------------------------------------------------------------/
 
         void Update()
         {
             var snapshot = packet.Save();
-
-            if (Input.GetKeyDown(KeyCode.A)) Activate();
+            if (key.State == KeyState.Down) Activate();
 
             aimCompute.Update(packet);
             frenzyWeapon.Update(packet);

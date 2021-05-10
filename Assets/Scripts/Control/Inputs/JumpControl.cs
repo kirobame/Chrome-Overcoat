@@ -2,16 +2,12 @@
 using Flux.Event;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Chrome
 {
-    public class JumpControl : InputControl<JumpControl>, IInjectable
+    public class JumpControl : InputControl<JumpControl>
     {
-        IReadOnlyList<IValue> IInjectable.Injections => injections;
-        private IValue[] injections;
-
-        //--------------------------------------------------------------------------------------------------------------/
-        
         [FoldoutGroup("Values"), SerializeField] private float margin;
         [FoldoutGroup("Values"), SerializeField] private float height;
         [FoldoutGroup("Values"), SerializeField] private float pressThreshold;
@@ -22,26 +18,37 @@ namespace Chrome
         private float pressTime;
         private float error;
 
-        void Awake()
+        private Key key;
+
+        protected override void Awake()
         {
+            key = Key.Default;
+            
+            base.Awake();
+            
             body = new AnyValue<CharacterBody>();
+            injections.Add(body);
+            
             gravity = new AnyValue<Gravity>();
-            injections = new IValue[]
-            {
-                body, 
-                gravity
-            };
+            injections.Add(gravity);
         }
         
+        protected override void SetupInputs() => input.Value.Bind(InputRefs.JUMP, this, OnJumpInput, true);
+        void OnJumpInput(InputAction.CallbackContext context, InputCallbackType type)
+        {
+            Debug.Log($"Jumping : {type}");
+            key.Update(type);
+        }
+
         void Update()
         {
-            if (Input.GetKey(KeyCode.Space)) pressTime += Time.deltaTime;
+            if (key.State == KeyState.On) pressTime += Time.deltaTime;
 
             if (body.Value.IsGrounded) error = 0.0f;
             else error += Time.deltaTime;
             
-            if (!Input.GetKeyUp(KeyCode.Space)) return;
-
+            if (key.State != KeyState.Up) return;
+            
             if (error <= margin && pressTime <= pressThreshold)
             {
                 Events.Call(GaugeEvent.OnJump);

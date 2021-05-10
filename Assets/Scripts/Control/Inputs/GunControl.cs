@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using Flux.Data;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Chrome
 {
-    public class GunControl : InputControl<GunControl>, IInjectable, IInjectionCallbackListener
+    public class GunControl : InputControl<GunControl>
     {
         #region Nested Types
 
@@ -17,12 +18,7 @@ namespace Chrome
         }
         #endregion
 
-        //--------------------------------------------------------------------------------------------------------------/
-
-        IReadOnlyList<IValue> IInjectable.Injections => injections;
-        private IValue[] injections;
-
-        void IInjectionCallbackListener.OnInjectionDone(IRoot source)
+        protected override void OnInjectionDone(IRoot source)
         {
             packet.Set(false);
             Current.Bootup(packet);
@@ -39,16 +35,21 @@ namespace Chrome
         private IValue<IIdentity> identity;
         
         private bool isLeft;
+        private Key shootKey;
         private PressState state;
 
         private ComputeAimDirection aimCompute;
 
         //--------------------------------------------------------------------------------------------------------------/
 
-        void Awake()
+        protected override void Awake()
         {
+            shootKey = Key.Default;
+            
+            base.Awake();
+            
             identity = new AnyValue<IIdentity>();
-            injections = new IValue[] { identity };
+            injections.Add(identity);
 
             state = PressState.Released;
             isLeft = true;
@@ -68,6 +69,24 @@ namespace Chrome
             base.Shutdown();
             if (state == PressState.Pressed) OnMouseUp();
         }
+        
+        protected override void SetupInputs()
+        {
+            input.Value.Bind(InputRefs.PICK_WP_01, this, OnPickWeapon01Input);
+            input.Value.Bind(InputRefs.PICK_WP_02, this, OnPickWeapon02Input);
+            input.Value.Bind(InputRefs.SHOOT, this, OnShootInput, true);
+        }
+        void OnPickWeapon01Input(InputAction.CallbackContext context, InputCallbackType type)
+        {
+            if (state != PressState.Released) return;
+            if (type == InputCallbackType.Cancelled && !isLeft) ChangeWeapon(true);
+        }
+        void OnPickWeapon02Input(InputAction.CallbackContext context, InputCallbackType type)
+        {
+            if (state != PressState.Released) return;
+            if (type == InputCallbackType.Cancelled && isLeft) ChangeWeapon(false);
+        }
+        void OnShootInput(InputAction.CallbackContext context, InputCallbackType type) => shootKey.Update(type);
 
         //--------------------------------------------------------------------------------------------------------------/
 
@@ -83,10 +102,7 @@ namespace Chrome
 
             if (state == PressState.Released)
             {
-                if (Input.GetKeyDown(KeyCode.E) && !isLeft) ChangeWeapon(true);
-                if (Input.GetKeyDown(KeyCode.R) && isLeft) ChangeWeapon(false);
-                
-                if (Input.GetMouseButtonDown(0))
+                if (shootKey.State == KeyState.Down)
                 {
                     packet.Set(true);
                     OnMouseDown();
@@ -94,9 +110,9 @@ namespace Chrome
             }
             else if (state == PressState.Pressed)
             {
-                if (Input.GetMouseButton(0)) packet.Set(true);
+                if (shootKey.State == KeyState.Active) packet.Set(true);
 
-                if (Input.GetMouseButtonUp(0))
+                if (shootKey.State == KeyState.Up)
                 {
                     packet.Set(false);
                     OnMouseUp();

@@ -15,9 +15,9 @@
                 },
                 {
                     "name": "Jump",
-                    "type": "Button",
+                    "type": "PassThrough",
                     "id": "14f486c4-2986-4d13-8ddc-d89eaf83daaf",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "DiscreteButton",
                     "processors": "",
                     "interactions": ""
                 },
@@ -26,6 +26,46 @@
                     "type": "Button",
                     "id": "fc0dc6d6-0ff8-4d8f-a6c0-e786cab6dd62",
                     "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Sprint",
+                    "type": "Button",
+                    "id": "0c925930-98d3-40a1-b861-bc7a880bc837",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press"
+                },
+                {
+                    "name": "PickFirstWeapon",
+                    "type": "Button",
+                    "id": "2ead60d1-69d5-4f27-a1ca-d6f01a63876f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press"
+                },
+                {
+                    "name": "PickSecondWeapon",
+                    "type": "Button",
+                    "id": "93ea10d7-a8ee-4b56-8a05-0305532bbf1e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press"
+                },
+                {
+                    "name": "Cast",
+                    "type": "Button",
+                    "id": "49aa11e4-0a12-44ed-a668-760e25c60532",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "View",
+                    "type": "Value",
+                    "id": "0b2e8f14-40b7-4389-9715-fef981a9e36a",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": ""
                 }
@@ -105,6 +145,61 @@
                     "processors": "",
                     "groups": "",
                     "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cb0f4779-deb2-487e-86f0-828ba4e3d6fc",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Sprint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2cc55bbc-b2fd-4a44-b559-c27d93022c04",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PickFirstWeapon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9bfe8e31-4854-4017-b3a2-7bbffc7426bf",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PickSecondWeapon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c5093e19-f7c0-4128-be77-296147a8eaf6",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Cast",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3d0ff62c-0333-48e6-8f06-88c410b795a7",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "View",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

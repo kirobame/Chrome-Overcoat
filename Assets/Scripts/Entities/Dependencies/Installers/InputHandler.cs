@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Flux;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Object = UnityEngine.Object;
@@ -31,30 +32,61 @@ namespace Chrome
             public bool isActive;
             public bool isLocked;
 
-            private InputAction action;
-            private Action<InputAction.CallbackContext, InputCallbackType> method;
-
+            protected InputAction action;
+            protected Action<InputAction.CallbackContext, InputCallbackType> method;
+            
             public void Unbind()
             {
                 action.started -= OnStarted;
                 action.performed -= OnPerformed;
                 action.canceled -= OnCancelled;
             }
+
+            protected virtual void OnStarted(InputAction.CallbackContext context)
+            {
+                if (!isActive || isLocked) return;
+                method(context, InputCallbackType.Started);
+            }
+            protected virtual void OnPerformed(InputAction.CallbackContext context)
+            {
+                if (!isActive || isLocked) return;
+                method(context, InputCallbackType.Performed);
+            }
+            protected virtual void OnCancelled(InputAction.CallbackContext context)
+            {
+                if (!isActive || isLocked) return;
+                method(context, InputCallbackType.Cancelled);
+            }
+        }
+
+        private class ExtendedEntry : Entry
+        {
+            public ExtendedEntry(Object key, InputAction action, Action<InputAction.CallbackContext, InputCallbackType> method) : base(key, action, method) { }
+         
+            protected InputCallbackType callbackType;
             
-            private void OnStarted(InputAction.CallbackContext context)
+            public void OnFrameEnd()
             {
-                if (!isActive || isLocked) return;
-                method(context, InputCallbackType.Started);
+                if (callbackType != InputCallbackType.Cancelled) return;
+                
+                method(default, InputCallbackType.Ended);
+                callbackType = InputCallbackType.Ended;
             }
-            private void OnPerformed(InputAction.CallbackContext context)
+
+            protected override void OnStarted(InputAction.CallbackContext context)
             {
-                if (!isActive || isLocked) return;
-                method(context, InputCallbackType.Started);
+                base.OnStarted(context);
+                callbackType = InputCallbackType.Started;
             }
-            private void OnCancelled(InputAction.CallbackContext context)
+            protected override void OnPerformed(InputAction.CallbackContext context)
             {
-                if (!isActive || isLocked) return;
-                method(context, InputCallbackType.Started);
+                base.OnPerformed(context);
+                callbackType = InputCallbackType.Performed;
+            }
+            protected override void OnCancelled(InputAction.CallbackContext context)
+            {
+                base.OnCancelled(context);
+                callbackType = InputCallbackType.Cancelled;
             }
         }
         #endregion
@@ -70,18 +102,28 @@ namespace Chrome
             repository.Clear();
         }
         
-        void OnEnable() { foreach (var entry in repository.SelectMany(kvp => kvp.Value)) entry.isLocked = true; }
-        void OnDisable() { foreach (var entry in repository.SelectMany(kvp => kvp.Value)) entry.isLocked = false; }
+        void OnEnable() { foreach (var entry in repository.SelectMany(kvp => kvp.Value)) entry.isLocked = false; }
+        void OnDisable() { foreach (var entry in repository.SelectMany(kvp => kvp.Value)) entry.isLocked = true; }
 
+        void LateUpdate()
+        {
+            foreach (var entry in repository.SelectMany(kvp => kvp.Value))
+            {
+                if (!(entry is ExtendedEntry extendedEntry)) continue;
+                extendedEntry.OnFrameEnd();
+            }
+        }
+        
         //--------------------------------------------------------------------------------------------------------------/
         
-        public void Bind(string reference, Object key, Action<InputAction.CallbackContext, InputCallbackType> method)
+        public void Bind(string reference, Object key, Action<InputAction.CallbackContext, InputCallbackType> method, bool fully = false)
         {
             var action = GetAction(reference);
             
-            var entry = new Entry(key, action, method);
-            entry.isLocked = enabled;
+            var entry = fully ? new ExtendedEntry(key, action, method) : new Entry(key, action, method);
+            entry.isLocked = !enabled;
 
+            Debug.Log($"BINDING {action} to {method.Method.Name} in {key}");
             if (repository.TryGetValue(action, out var list)) list.Add(entry);
             else repository.Add(action, new List<Entry>() { entry });
         }

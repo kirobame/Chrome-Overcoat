@@ -4,10 +4,19 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public abstract class InputControl<T> : MonoBehaviour, IInstaller, ILifebound, IInjectable where T : MonoBehaviour
+    public abstract class InputControl<T> : MonoBehaviour, IInstaller, ILifebound, IInjectable, IInjectionCallbackListener where T : MonoBehaviour
     {
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         protected List<IValue> injections;
+
+        void IInjectionCallbackListener.OnInjectionDone(IRoot source)
+        {
+            OnInjectionDone(source);
+            SetupInputs();
+        }
+
+        protected virtual void OnInjectionDone(IRoot source) { }
+        protected virtual void SetupInputs() { }
 
         //--------------------------------------------------------------------------------------------------------------/
         
@@ -19,14 +28,23 @@ namespace Chrome
 
         protected virtual void Awake()
         {
-            input = new AnyValue<InputHandler>();
             injections = new List<IValue>();
+            
+            input = new AnyValue<InputHandler>();
             injections.Add(input);
         }
         protected virtual void OnDestroy() => onDestruction?.Invoke(this);
         
-        public virtual void Bootup() => enabled = true;
-        public virtual void Shutdown() => enabled = false;
+        public virtual void Bootup()
+        {
+            input.Value.SetActiveAll(this, true);
+            enabled = true;
+        }
+        public virtual void Shutdown()
+        {
+            input.Value.SetActiveAll(this, false);
+            enabled = false;
+        }
 
         //--------------------------------------------------------------------------------------------------------------/
         

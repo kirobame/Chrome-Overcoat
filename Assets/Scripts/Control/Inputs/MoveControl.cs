@@ -2,18 +2,16 @@
 using Flux.Event;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Chrome
 {
-    public class MoveControl : InputControl<MoveControl>, IInjectable, IInjectionCallbackListener
+    public class MoveControl : InputControl<MoveControl>
     {
         private const string WALK_STATE = "Walk";
         private const string SPRINT_STATE = "Run";
-
-        IReadOnlyList<IValue> IInjectable.Injections => injections;
-        private IValue[] injections;
         
-        void IInjectionCallbackListener.OnInjectionDone(IRoot source) => body.Value.onCollision += OnBodyCollision;
+       protected override void OnInjectionDone(IRoot source) => body.Value.onCollision += OnBodyCollision;
 
         //--------------------------------------------------------------------------------------------------------------/
 
@@ -63,23 +61,43 @@ namespace Chrome
         private Vector3 smoothedInputs;
         private Vector3 damping;
 
+        private Key sprintKey;
+
         //--------------------------------------------------------------------------------------------------------------/
 
-        void Awake()
+        protected override void Awake()
         {
+            sprintKey = Key.Default;
+            
+            base.Awake();
+            
             identity = new AnyValue<IIdentity>();
+            injections.Add(identity);
+            
             body = new AnyValue<CharacterBody>();
-            injections = new IValue[]
-            {
-                identity,
-                body
-            };
+            injections.Add(body);
             
             speed.Bootup();
             speed.Modify(new Spring(0.075f));
         }
-        void OnDestroy() => body.Value.onCollision -= OnBodyCollision;
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            body.Value.onCollision -= OnBodyCollision;
+        }
         
+        protected override void SetupInputs()
+        { 
+            input.Value.Bind(InputRefs.MOVE, this, OnMoveInput);
+            input.Value.Bind(InputRefs.SPRINT, this, OnSprintInput, true);
+        }
+        void OnMoveInput(InputAction.CallbackContext context, InputCallbackType type)
+        {
+            var inputs2D = context.ReadValue<Vector2>();
+            Inputs = new Vector3(inputs2D.x, 0.0f, inputs2D.y);
+        }
+        void OnSprintInput(InputAction.CallbackContext context, InputCallbackType type) => sprintKey.Update(type);
+
         //--------------------------------------------------------------------------------------------------------------/
         
         void Update()
@@ -98,12 +116,11 @@ namespace Chrome
             }
            
             var speed = this.speed.Value;
-            Inputs = new Vector3(Input.GetAxisRaw("Horizontal"), 0.0f, Input.GetAxisRaw("Vertical")).normalized;
-                
+
             if (Inputs != Vector3.zero && !IsWalking) IsWalking = true;
             else if (Inputs == Vector3.zero && IsWalking) IsWalking = false;
             
-            if (Input.GetKey(KeyCode.LeftShift) && CanSprint() && Inputs.z > 0)
+            if (sprintKey.State == KeyState.On && CanSprint() && Inputs.z > 0)
             {
                 if (!IsSprinting) IsSprinting = true;
                 speed += sprint;
