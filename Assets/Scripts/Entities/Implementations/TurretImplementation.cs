@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 namespace Chrome
 {
-    public class Turret : MonoBehaviour, ILink<IIdentity>
+    public class TurretImplementation : MonoBehaviour, ILink<IIdentity>
     {
         IIdentity ILink<IIdentity>.Link
         {

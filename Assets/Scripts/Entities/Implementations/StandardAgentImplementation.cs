@@ -8,7 +8,7 @@ using UnityEngine.AI;
 
 namespace Chrome
 {
-    public class Agent : MonoBehaviour, ILifebound, IInjectable
+    public class StandardAgentImplementation : MonoBehaviour, ILifebound, IInjectable
     {
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         private IValue[] injections;

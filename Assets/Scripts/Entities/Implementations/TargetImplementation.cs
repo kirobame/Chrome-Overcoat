@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class Target : MonoBehaviour, IDamageable, IInjectable
+    public class TargetImplementation : MonoBehaviour, IDamageable, IInjectable
     {
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         private IValue[] injections;

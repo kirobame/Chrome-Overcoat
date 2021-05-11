@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 namespace Chrome
 {
-    public class AgentCac : MonoBehaviour, ILink<IIdentity>
+    public class AgentCacImplementation : MonoBehaviour, ILink<IIdentity>
     {
         IIdentity ILink<IIdentity>.Link
         {
