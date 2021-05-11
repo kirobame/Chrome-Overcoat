@@ -12,6 +12,10 @@ namespace Chrome
 {
     public class JetpackControl : InputControl<JetpackControl>
     {
+        protected override void SetupInputs() => input.Value.BindKey(InputRefs.JUMP, this, key);
+
+        //--------------------------------------------------------------------------------------------------------------/
+        
         [FoldoutGroup("Values"), SerializeField] private float cooldown;
         [FoldoutGroup("Values"), SerializeField] private Vector2 pressRange;
         [FoldoutGroup("Values"), SerializeField] private Vector2 heightRange;
@@ -28,13 +32,13 @@ namespace Chrome
         
         private Coroutine cooldownRoutine;
         private float pressTime;
-        private Key key;
+        private CachedValue<Key> key;
         
         //--------------------------------------------------------------------------------------------------------------/
 
         protected override void Awake()
         {
-            key = Key.Default;
+            key = new CachedValue<Key>(Key.Inactive);
             
             base.Awake();
             
@@ -48,17 +52,14 @@ namespace Chrome
             injections.Add(move);
         }
         void Start() => HUD = Repository.Get<JetpackHUD>(Interface.Jetpack);
-        
-        protected override void SetupInputs() => input.Value.Bind(InputRefs.JUMP, this, OnJumpInput, true);
-        void OnJumpInput(InputAction.CallbackContext context, InputCallbackType type) => key.Update(type);
-        
+
         //--------------------------------------------------------------------------------------------------------------/
         
         void Update()
         {
             if (body.Value.IsGrounded)
             {
-                if (key.State == KeyState.On && cooldownRoutine == null)
+                if (key.IsOn() && cooldownRoutine == null)
                 {
                     pressTime += Time.deltaTime;
                     var ratio = Mathf.InverseLerp(pressRange.x, pressRange.y, pressTime);
@@ -68,7 +69,7 @@ namespace Chrome
                 }
             }
 
-            if (key.State != KeyState.Up || cooldownRoutine != null) return;
+            if (!key.IsUp() || cooldownRoutine != null) return;
             
             if (pressTime > pressRange.x)
             {

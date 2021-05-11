@@ -8,6 +8,10 @@ namespace Chrome
 {
     public class JumpControl : InputControl<JumpControl>
     {
+        protected override void SetupInputs() => input.Value.BindKey(InputRefs.JUMP, this, key);
+
+        //--------------------------------------------------------------------------------------------------------------/
+        
         [FoldoutGroup("Values"), SerializeField] private float margin;
         [FoldoutGroup("Values"), SerializeField] private float height;
         [FoldoutGroup("Values"), SerializeField] private float pressThreshold;
@@ -18,11 +22,11 @@ namespace Chrome
         private float pressTime;
         private float error;
 
-        private Key key;
+        private CachedValue<Key> key;
 
         protected override void Awake()
         {
-            key = Key.Default;
+            key = new CachedValue<Key>(Key.Inactive);
             
             base.Awake();
             
@@ -32,22 +36,15 @@ namespace Chrome
             gravity = new AnyValue<Gravity>();
             injections.Add(gravity);
         }
-        
-        protected override void SetupInputs() => input.Value.Bind(InputRefs.JUMP, this, OnJumpInput, true);
-        void OnJumpInput(InputAction.CallbackContext context, InputCallbackType type)
-        {
-            Debug.Log($"Jumping : {type}");
-            key.Update(type);
-        }
 
         void Update()
         {
-            if (key.State == KeyState.On) pressTime += Time.deltaTime;
+            if (key.IsOn()) pressTime += Time.deltaTime;
 
             if (body.Value.IsGrounded) error = 0.0f;
             else error += Time.deltaTime;
             
-            if (key.State != KeyState.Up) return;
+            if (!key.IsUp()) return;
             
             if (error <= margin && pressTime <= pressThreshold)
             {

@@ -8,6 +8,15 @@ namespace Chrome
 {
     public class AirControl : InputControl<AirControl>
     {
+        protected override void SetupInputs() => input.Value.Bind(InputRefs.MOVE, this, OnMoveInput);
+        void OnMoveInput(InputAction.CallbackContext context, InputCallbackType type)
+        {
+            var inputs2D = context.ReadValue<Vector2>();
+            Inputs = new Vector3(inputs2D.x, 0.0f, inputs2D.y);
+        }
+
+        //--------------------------------------------------------------------------------------------------------------/
+        
         public bool IsMoving     
         {
             get => isMoving;
@@ -33,19 +42,14 @@ namespace Chrome
         private Vector3 smoothedInputs;
         private Vector3 damping;
 
+        //--------------------------------------------------------------------------------------------------------------/
+        
         protected override void Awake()
         {
             base.Awake();
             
             body = new AnyValue<CharacterBody>();
             injections.Add(body);
-        }
-        
-        protected override void SetupInputs() => input.Value.Bind(InputRefs.MOVE, this, OnMoveInput);
-        void OnMoveInput(InputAction.CallbackContext context, InputCallbackType type)
-        {
-            var inputs2D = context.ReadValue<Vector2>();
-            Inputs = new Vector3(inputs2D.x, 0.0f, inputs2D.y);
         }
 
         void Update()

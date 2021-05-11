@@ -6,7 +6,11 @@ namespace Chrome
 {
     public class ViewControl : InputControl<ViewControl>
     {
-        public Vector2 Inputs { get; private set; }
+        protected override void SetupInputs() => input.Value.BindValue<Vector2>(InputRefs.VIEW, this, inputs);
+
+        //--------------------------------------------------------------------------------------------------------------/
+
+        public Vector2 Inputs => inputs.Value;
         public Vector2 Delta => new Vector2(yawKnob.Value, pitchKnob.Value);
         
         [FoldoutGroup("Yaw"), SerializeField] private Transform yawTarget;
@@ -16,6 +20,8 @@ namespace Chrome
         [FoldoutGroup("Pitch"), SerializeField] private Transform pitchTarget;
         [FoldoutGroup("Pitch"), SerializeField] private Knob pitchKnob;
         [FoldoutGroup("Pitch"), SerializeField] private Vector2 pitchRange;
+
+        private CachedValue<Vector2> inputs;
         
         private float yaw;
         private float pitch;
@@ -24,6 +30,8 @@ namespace Chrome
 
         protected override void Awake()
         {
+            inputs = new CachedValue<Vector2>(Vector2.zero);
+            
             base.Awake();
             
             Cursor.visible = false;
@@ -39,10 +47,7 @@ namespace Chrome
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
         }
-
-        protected override void SetupInputs() => input.Value.Bind(InputRefs.VIEW, this, OnViewInput);
-        void OnViewInput(InputAction.CallbackContext context, InputCallbackType type) => Inputs = context.ReadValue<Vector2>();
-
+        
         //--------------------------------------------------------------------------------------------------------------/
         
         void Update()

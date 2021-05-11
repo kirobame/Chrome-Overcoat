@@ -9,6 +9,10 @@ namespace Chrome
 {
     public class FrenzyAbilityControl : InputControl<FrenzyAbilityControl>, IInjectable
     {
+        protected override void SetupInputs() => input.Value.BindKey(InputRefs.CAST, this, key);
+
+        //--------------------------------------------------------------------------------------------------------------/
+        
         [FoldoutGroup("Values"), SerializeField] private RemoteTaskTree frenzyWeapon;
         [FoldoutGroup("Values"), SerializeField] private float heatCost;
         [FoldoutGroup("Values"), SerializeField] private bool lowHeatLock;
@@ -16,14 +20,14 @@ namespace Chrome
         private Packet packet => identity.Value.Packet;
         private IValue<IIdentity> identity;
 
-        private Key key;
+        private CachedValue<Key> key;
         private ComputeAimDirection aimCompute;
 
         //--------------------------------------------------------------------------------------------------------------/
 
         protected override void Awake()
         {
-            key = Key.Default;
+            key = new CachedValue<Key>(Key.Inactive);
             
             base.Awake();
             
@@ -40,15 +44,12 @@ namespace Chrome
             frenzyWeapon.Bootup(packet);
         }
         
-        protected override void SetupInputs() => input.Value.Bind(InputRefs.CAST, this, OnCastInput, true);
-        void OnCastInput(InputAction.CallbackContext context, InputCallbackType type) => key.Update(type);
-
         //--------------------------------------------------------------------------------------------------------------/
 
         void Update()
         {
             var snapshot = packet.Save();
-            if (key.State == KeyState.Down) Activate();
+            if (key.IsDown()) Activate();
 
             aimCompute.Update(packet);
             frenzyWeapon.Update(packet);

@@ -10,8 +10,21 @@ namespace Chrome
     {
         private const string WALK_STATE = "Walk";
         private const string SPRINT_STATE = "Run";
+
+        //--------------------------------------------------------------------------------------------------------------/
         
-       protected override void OnInjectionDone(IRoot source) => body.Value.onCollision += OnBodyCollision;
+        protected override void OnInjectionDone(IRoot source) => body.Value.onCollision += OnBodyCollision;
+       
+        protected override void SetupInputs()
+        { 
+            input.Value.Bind(InputRefs.MOVE, this, OnMoveInput);
+            input.Value.BindKey(InputRefs.SPRINT, this, sprintKey);
+        }
+        void OnMoveInput(InputAction.CallbackContext context, InputCallbackType type)
+        {
+            var inputs2D = context.ReadValue<Vector2>();
+            Inputs = new Vector3(inputs2D.x, 0.0f, inputs2D.y);
+        }
 
         //--------------------------------------------------------------------------------------------------------------/
 
@@ -61,13 +74,13 @@ namespace Chrome
         private Vector3 smoothedInputs;
         private Vector3 damping;
 
-        private Key sprintKey;
+        private CachedValue<Key> sprintKey;
 
         //--------------------------------------------------------------------------------------------------------------/
 
         protected override void Awake()
         {
-            sprintKey = Key.Default;
+            sprintKey = new CachedValue<Key>(Key.Inactive);
             
             base.Awake();
             
@@ -85,18 +98,6 @@ namespace Chrome
             base.OnDestroy();
             body.Value.onCollision -= OnBodyCollision;
         }
-        
-        protected override void SetupInputs()
-        { 
-            input.Value.Bind(InputRefs.MOVE, this, OnMoveInput);
-            input.Value.Bind(InputRefs.SPRINT, this, OnSprintInput, true);
-        }
-        void OnMoveInput(InputAction.CallbackContext context, InputCallbackType type)
-        {
-            var inputs2D = context.ReadValue<Vector2>();
-            Inputs = new Vector3(inputs2D.x, 0.0f, inputs2D.y);
-        }
-        void OnSprintInput(InputAction.CallbackContext context, InputCallbackType type) => sprintKey.Update(type);
 
         //--------------------------------------------------------------------------------------------------------------/
         
@@ -120,7 +121,7 @@ namespace Chrome
             if (Inputs != Vector3.zero && !IsWalking) IsWalking = true;
             else if (Inputs == Vector3.zero && IsWalking) IsWalking = false;
             
-            if (sprintKey.State == KeyState.On && CanSprint() && Inputs.z > 0)
+            if (sprintKey.IsOn() && CanSprint() && Inputs.z > 0)
             {
                 if (!IsSprinting) IsSprinting = true;
                 speed += sprint;

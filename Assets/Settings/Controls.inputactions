@@ -15,9 +15,9 @@
                 },
                 {
                     "name": "Jump",
-                    "type": "PassThrough",
+                    "type": "Button",
                     "id": "14f486c4-2986-4d13-8ddc-d89eaf83daaf",
-                    "expectedControlType": "DiscreteButton",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
                 },
@@ -35,7 +35,7 @@
                     "id": "0c925930-98d3-40a1-b861-bc7a880bc837",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Press"
+                    "interactions": ""
                 },
                 {
                     "name": "PickFirstWeapon",
@@ -43,7 +43,7 @@
                     "id": "2ead60d1-69d5-4f27-a1ca-d6f01a63876f",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Press"
+                    "interactions": ""
                 },
                 {
                     "name": "PickSecondWeapon",
@@ -51,7 +51,7 @@
                     "id": "93ea10d7-a8ee-4b56-8a05-0305532bbf1e",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Press"
+                    "interactions": ""
                 },
                 {
                     "name": "Cast",
@@ -66,7 +66,7 @@
                     "type": "Value",
                     "id": "0b2e8f14-40b7-4389-9715-fef981a9e36a",
                     "expectedControlType": "Vector2",
-                    "processors": "",
+                    "processors": "ScaleVector2(x=0.175,y=0.175)",
                     "interactions": ""
                 }
             ],

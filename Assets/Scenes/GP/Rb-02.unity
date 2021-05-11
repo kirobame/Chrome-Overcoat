@@ -16551,21 +16551,21 @@ MonoBehaviour:
       outWeight: 0.11870441
     - serializedVersion: 3
       time: 0
-      value: 0.2
-      inSlope: -0.2535973
-      outSlope: -0.2535973
+      value: 0.1
+      inSlope: -0.36024806
+      outSlope: -0.36024806
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.25188538
+      inWeight: 0.85673034
       outWeight: 0.2523699
     - serializedVersion: 3
       time: 1
       value: 0
-      inSlope: -0.6774523
-      outSlope: -0.6774523
+      inSlope: -0.15176986
+      outSlope: -0.15176986
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.08806008
+      inWeight: 0.17099237
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -18545,7 +18545,7 @@ MonoBehaviour:
   jump: {fileID: 1415509187962097670, guid: 9c4ffa91a8a8eac4b83aa23e43b754cc, type: 3}
   move: {fileID: 1880976214331960869, guid: 9c4ffa91a8a8eac4b83aa23e43b754cc, type: 3}
   sprint: {fileID: -1717584015249276086, guid: 9c4ffa91a8a8eac4b83aa23e43b754cc, type: 3}
-  shoot: {fileID: 8325351880906797611, guid: 9c4ffa91a8a8eac4b83aa23e43b754cc, type: 3}
+  shoot: {fileID: -8137159021035937980, guid: 9c4ffa91a8a8eac4b83aa23e43b754cc, type: 3}
   cast: {fileID: 8325351880906797611, guid: 9c4ffa91a8a8eac4b83aa23e43b754cc, type: 3}
   pickWeapon01: {fileID: 3893194567086566590, guid: 9c4ffa91a8a8eac4b83aa23e43b754cc, type: 3}
   pickWeapon02: {fileID: -3983517229432364104, guid: 9c4ffa91a8a8eac4b83aa23e43b754cc, type: 3}

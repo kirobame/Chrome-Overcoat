@@ -9,6 +9,10 @@ namespace Chrome
 {
     public class ThrusterControl : InputControl<ThrusterControl>
     {
+        protected override void SetupInputs() => input.Value.BindKey(InputRefs.JUMP, this, key);
+
+        //--------------------------------------------------------------------------------------------------------------/
+        
         [FoldoutGroup("Values"), SerializeField] private float airTime;
         [FoldoutGroup("Values"), SerializeField] private AnimationCurve map;
         [FoldoutGroup("Values"), SerializeField] private Vector2 inputRange;
@@ -20,13 +24,13 @@ namespace Chrome
         private float airTimer;
         private JetpackHUD HUD;
 
-        private Key key;
+        private CachedValue<Key> key;
 
         //--------------------------------------------------------------------------------------------------------------/
 
         protected override void Awake()
         {
-            key = Key.Default;
+            key = new CachedValue<Key>(Key.Inactive);
             
             base.Awake();
             
@@ -42,9 +46,6 @@ namespace Chrome
             HUD = Repository.Get<JetpackHUD>(Interface.Jetpack);
         }
         
-        protected override void SetupInputs() => input.Value.Bind(InputRefs.JUMP, this, OnJumpInput, true);
-        void OnJumpInput(InputAction.CallbackContext context, InputCallbackType type) => key.Update(type);
-
         //--------------------------------------------------------------------------------------------------------------/
         
         void Update()
@@ -58,9 +59,9 @@ namespace Chrome
             {
                 if (airTimer > 0.0f)
                 {
-                    if (key.State == KeyState.Down) Events.ZipCall(GaugeEvent.OnThrusterUsed, (byte)0);
+                    if (key.IsDown()) Events.ZipCall(GaugeEvent.OnThrusterUsed, (byte)0);
                     
-                    if (key.State == KeyState.On)
+                    if (key.IsOn())
                     {
                         Events.ZipCall(GaugeEvent.OnThrusterUsed, (byte)1);
                         
@@ -83,7 +84,7 @@ namespace Chrome
                         body.Value.force += delta;
                     }
                 
-                    if (key.State == KeyState.Up) Events.ZipCall(GaugeEvent.OnThrusterUsed, (byte)2);
+                    if (key.IsUp()) Events.ZipCall(GaugeEvent.OnThrusterUsed, (byte)2);
                 }
             }
             

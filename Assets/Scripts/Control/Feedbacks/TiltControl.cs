@@ -40,7 +40,6 @@ namespace Chrome
         void Update()
         {
             var delta = body.Value.transform.InverseTransformVector(body.Value.Delta);
-            if (delta == Vector3.zero) return;
 
             pitchKnob.Smoothing = body.Value.IsGrounded ? groundPitchSmoothing : airPitchSmoothing;
             var pitch = ComputePitch(delta);
