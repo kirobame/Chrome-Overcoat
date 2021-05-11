@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Chrome
 {
     [Serializable]
-    public class ComputeDirectionTo : ProxyNode
+    public class ComputeDirectionTo : TaskedNode
     {
         public ComputeDirectionTo(string path, IValue<Transform> from, IValue<Collider> target)
         {
@@ -30,7 +30,7 @@ namespace Chrome
 
         private Vector3 offset;
 
-        protected override void OnUpdate(Packet packet)
+        protected override void OnUse(Packet packet)
         {
             if (from.IsValid(packet) && target.IsValid(packet))
             {

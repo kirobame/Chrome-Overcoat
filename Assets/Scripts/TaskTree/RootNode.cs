@@ -29,9 +29,9 @@ namespace Chrome
         
         //--------------------------------------------------------------------------------------------------------------/
 
-        public override void Start(Packet packet)
+        public override void Prepare(Packet packet)
         {
-            base.Start(packet);
+            base.Prepare(packet);
 
             var keys = new List<int>();
             foreach (var branch in Branches)
@@ -44,7 +44,7 @@ namespace Chrome
             {
                 if ((Output | child.Input) != Output) continue;
                 
-                child.Start(packet);
+                child.Prepare(packet);
                 keys.Remove(child.Input);
 
                 if (!branchRegistry.ContainsKey(child.Input)) branchRegistry.Add(child.Input, new Branch(this, child.Input));
@@ -54,16 +54,16 @@ namespace Chrome
             foreach (var key in keys) branchRegistry.Remove(key);
         }
 
-        public override IEnumerable<INode> Update(Packet packet)
+        public override IEnumerable<INode> Use(Packet packet)
         {
-            if (IsDone) Start(packet);
+            if (IsDone) Prepare(packet);
             
             foreach (var branch in Branches) branch.Update(packet);
-            OnUpdate(packet);
+            OnUse(packet);
 
             return null;
         }
-        protected virtual void OnUpdate(Packet packet) { }
+        protected virtual void OnUse(Packet packet) { }
 
         public override void Shutdown(Packet packet)
         {

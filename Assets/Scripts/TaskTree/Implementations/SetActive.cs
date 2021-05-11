@@ -2,7 +2,7 @@
 
 namespace Chrome
 {
-    public class SetActive : ProxyNode
+    public class SetActive : TaskedNode
     {
         public SetActive(bool enabled, IValue<GameObject> target)
         {
@@ -13,7 +13,7 @@ namespace Chrome
         private IValue<GameObject> target;
         private bool enabled;
         
-        protected override void OnUpdate(Packet packet)
+        protected override void OnUse(Packet packet)
         {
             if (target.IsValid(packet)) target.Value.SetActive(enabled);
             isDone = true;

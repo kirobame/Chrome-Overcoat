@@ -49,7 +49,7 @@ namespace Chrome
 
         protected virtual void Open(Packet packet) { }
 
-        public virtual void Start(Packet packet)
+        public virtual void Prepare(Packet packet)
         {
             if (State == NodeState.Inactive)
             {
@@ -57,11 +57,11 @@ namespace Chrome
                 State = NodeState.Active;
             }
             
-            OnStart(packet);
+            OnPrepare(packet);
         }
-        protected virtual void OnStart(Packet packet) { }
+        protected virtual void OnPrepare(Packet packet) { }
         
-        public abstract IEnumerable<INode> Update(Packet packet);
+        public abstract IEnumerable<INode> Use(Packet packet);
 
         public virtual void Close(Packet packet)
         {

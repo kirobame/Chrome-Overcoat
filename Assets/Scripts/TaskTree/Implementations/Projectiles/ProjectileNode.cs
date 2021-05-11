@@ -34,9 +34,9 @@ namespace Chrome
             step = Step.Move;
         }
 
-        public override void Start(Packet packet)
+        public override void Prepare(Packet packet)
         {
-            base.Start(packet);
+            base.Prepare(packet);
             if (!init)
             {
                 Command(packet, new ChannelRemovalCommand(0b_0001));
@@ -44,14 +44,14 @@ namespace Chrome
             }
         }
 
-        public override IEnumerable<INode> Update(Packet packet)
+        public override IEnumerable<INode> Use(Packet packet)
         {
             switch (step)
             {
                 case Step.Move:
 
                     foreach (var branch in Branches) branch.Update(packet);
-                    OnUpdate(packet);
+                    OnUse(packet);
 
                     if (IsDone)
                     {
@@ -63,7 +63,7 @@ namespace Chrome
                             RemoveOutputChannel(packet, 0b_0011);
                             AddOutputChannel(packet, 0b_0100);
 
-                            Start(packet);
+                            Prepare(packet);
                             step = Step.Hit;
                             
                             HandleHit(packet);
@@ -79,7 +79,7 @@ namespace Chrome
                 case Step.End:
                     
                     foreach (var branch in Branches) branch.Update(packet);
-                    OnUpdate(packet);
+                    OnUse(packet);
 
                     if (IsDone)
                     {
@@ -97,7 +97,7 @@ namespace Chrome
         private void HandleHit(Packet packet)
         {
             foreach (var branch in Branches) branch.Update(packet);
-            OnUpdate(packet);
+            OnUse(packet);
                     
             if (IsDone)
             {
@@ -118,7 +118,7 @@ namespace Chrome
                     step = Step.Move;
                 }
                         
-                Start(packet);
+                Prepare(packet);
             }
         }
     }

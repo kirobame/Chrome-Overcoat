@@ -2,9 +2,9 @@
 
 namespace Chrome
 {
-    public abstract class ConditionalNode : ProxyNode
+    public abstract class ConditionalNode : TaskedNode
     {
-        protected override void OnUpdate(Packet packet)
+        protected override void OnUse(Packet packet)
         {
             if (Check(packet)) output = 0b_0001;
             else output = 0b_0010;

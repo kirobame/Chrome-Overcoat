@@ -16,7 +16,7 @@ namespace Chrome
         {
             if (source.IsUpdating(target))
             {
-                target.Start(packet);
+                target.Prepare(packet);
                 return;
             }
                     
@@ -38,7 +38,7 @@ namespace Chrome
             
             if (match != null)
             {
-                target.Start(packet);
+                target.Prepare(packet);
                 match.Add(target);
             }
         }

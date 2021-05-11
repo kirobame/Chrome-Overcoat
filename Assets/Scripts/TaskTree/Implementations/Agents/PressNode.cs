@@ -17,19 +17,19 @@ namespace Chrome
         private bool isDone;
         private float timer;
 
-        protected override void OnStart(Packet packet)
+        protected override void OnPrepare(Packet packet)
         {
             isDone = false;
             timer = duration;
         }
 
-        public override IEnumerable<INode> Update(Packet packet)
+        public override IEnumerable<INode> Use(Packet packet)
         {
             timer -= Time.deltaTime;
             if (timer <= 0)
             {
                 packet.Set(false);
-                base.Update(packet);
+                base.Use(packet);
 
                 if (Children.All(node => node.IsDone)) isDone = true;
                 return null;
@@ -37,7 +37,7 @@ namespace Chrome
             else
             {
                 packet.Set(true);
-                return base.Update(packet);
+                return base.Use(packet);
             }
         }
     }

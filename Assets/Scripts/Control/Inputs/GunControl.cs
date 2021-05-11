@@ -45,10 +45,10 @@ namespace Chrome
 
         //--------------------------------------------------------------------------------------------------------------/
 
-        public ITaskTree Current => isLeft ? leftWeapon : rightWeapon;
+        public Weapon Current => isLeft ? runtimeWeapons[0] : runtimeWeapons[1];
 
-        [FoldoutGroup("Values"), SerializeField] private RemoteTaskTree leftWeapon;
-        [FoldoutGroup("Values"), SerializeField] private RemoteTaskTree rightWeapon;
+        [FoldoutGroup("Values"), SerializeField] private Weapon leftWeapon;
+        [FoldoutGroup("Values"), SerializeField] private Weapon rightWeapon;
 
         private Packet packet => identity.Value.Packet;
         private IValue<IIdentity> identity;
@@ -57,6 +57,7 @@ namespace Chrome
         private PressState state;
         private CachedValue<Key> shootKey;
 
+        private Weapon[] runtimeWeapons;
         private ComputeAimDirection aimCompute;
 
         //--------------------------------------------------------------------------------------------------------------/
@@ -73,8 +74,14 @@ namespace Chrome
             state = PressState.Released;
             isLeft = true;
             
-            leftWeapon.Bootup();
-            rightWeapon.Bootup();
+            runtimeWeapons = new Weapon[2]
+            {
+                Instantiate(leftWeapon),
+                Instantiate(rightWeapon)
+            };
+            runtimeWeapons[0].Build();
+            runtimeWeapons[1].Build();
+            
             aimCompute = ChromeExtensions.CreateComputeAimDirection();
         }
 
@@ -120,8 +127,8 @@ namespace Chrome
                 }
             }
 
-            aimCompute.Update(packet);
-            Current.Update(packet);
+            aimCompute.Use(packet);
+            Current.Actualize(packet);
 
             packet.Load(snapshot);
         }

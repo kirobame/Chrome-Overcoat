@@ -2,13 +2,13 @@
 
 namespace Chrome
 {
-    public class Damage : ProxyNode
+    public class Damage : TaskedNode
     {
         public Damage(IValue<float> amount) => this.amount = amount;
 
         private IValue<float> amount;
   
-        protected override void OnUpdate(Packet packet)
+        protected override void OnUse(Packet packet)
         {
             if (amount.IsValid(packet))
             {

@@ -251,7 +251,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 217e818463ac416fa4ac25fbfa9d4551, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapon: {fileID: 11400000, guid: 26b49fb14e1d9264aaf1fc6f51d85eea, type: 2}
+  weapon: {fileID: 11400000, guid: de04899b7ad279e4fa5963d4aa01027a, type: 2}
 --- !u!195 &4713308752608471010
 NavMeshAgent:
   m_ObjectHideFlags: 0

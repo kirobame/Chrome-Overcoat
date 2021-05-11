@@ -49,9 +49,9 @@ namespace Chrome
                     new Delay(0.5f).Mask(0b_0010));
             
             taskTree.Bootup(identity.Packet);
-            taskTree.Start(identity.Packet);
+            taskTree.Prepare(identity.Packet);
         }
 
-        void Update() => taskTree.Update(identity.Packet);
+        void Update() => taskTree.Use(identity.Packet);
     }
 }

@@ -1,20 +1,17 @@
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using Flux;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Chrome
 {
-    [CreateAssetMenu(fileName = "NewRemoteTaskTree", menuName = "Chrome Overcoat/Task Tree/Remote")]
-    public class RemoteTaskTree : ScriptableObject, ITaskTree, IBootable
+    [CreateAssetMenu(fileName = "NewTaskedWeapon", menuName = "Chrome Overcoat/Weapons/Tasked")]
+    public class TaskedWeapon : Weapon, ITaskTree
     {
         [SerializeReference] private ITreeBuilder builder;
         
         private ITaskTree root;
         
-        public void Bootup() => root = builder.Build();
+        public override void Build() => root = builder.Build();
 
         //--------------------------------------------------------------------------------------------------------------/
         
@@ -44,13 +41,18 @@ namespace Chrome
 
         //--------------------------------------------------------------------------------------------------------------/
         
-        public void Bootup(Packet packet) => root.Bootup(packet);
+        public override void Bootup(Packet packet)
+        {
+            root.Bootup(packet);
+            root.Prepare(packet);
+        }
 
         public void Prepare(Packet packet) => root.Prepare(packet);
+        public override void Actualize(Packet packet) => Use(packet);
         public IEnumerable<INode> Use(Packet packet) => root.Use(packet);
 
         public void Close(Packet packet) => root.Close(packet);
-        public void Shutdown(Packet packet) => root.Shutdown(packet);
+        public override void Shutdown(Packet packet) => root.Shutdown(packet);
 
         //--------------------------------------------------------------------------------------------------------------/
         

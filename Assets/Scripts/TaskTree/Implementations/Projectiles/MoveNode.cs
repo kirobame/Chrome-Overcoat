@@ -2,13 +2,13 @@
 
 namespace Chrome
 {
-    public abstract class MoveNode : ProxyNode
+    public abstract class MoveNode : TaskedNode
     {
         public MoveNode(IValue<Transform> self) => this.self = self;
         
         private IValue<Transform> self;
         
-        protected override void OnUpdate(Packet packet)
+        protected override void OnUse(Packet packet)
         {
             if (!self.IsValid(packet))
             {

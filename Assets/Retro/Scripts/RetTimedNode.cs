@@ -15,13 +15,13 @@ namespace Chrome.Retro
 
         protected override void Open(Packet packet) => timer = duration;
 
-        public override IEnumerable<INode> Update(Packet packet)
+        public override IEnumerable<INode> Use(Packet packet)
         {
-            if (Branches.All(branch => branch.IsDone)) Start(packet);
+            if (Branches.All(branch => branch.IsDone)) Prepare(packet);
 
             timer -= Time.deltaTime;
             foreach (var branch in Branches) branch.Update(packet);
-            OnUpdate(packet);
+            OnUse(packet);
 
             if (IsDone)
             {

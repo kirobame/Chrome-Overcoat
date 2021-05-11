@@ -70,9 +70,9 @@ namespace Chrome
                 );
 
             taskTree.Bootup(identity.Packet);
-            taskTree.Start(identity.Packet);
+            taskTree.Prepare(identity.Packet);
         }
 
-        void Update() => taskTree.Update(identity.Packet);
+        void Update() => taskTree.Use(identity.Packet);
     }
 }

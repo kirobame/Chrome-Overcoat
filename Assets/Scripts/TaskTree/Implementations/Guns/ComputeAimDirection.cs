@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Chrome
 {
     [Serializable]
-    public class ComputeAimDirection : ProxyNode
+    public class ComputeAimDirection : TaskedNode
     {
         public ComputeAimDirection(string path, LayerMask mask, IValue<Transform> from, IValue<Transform> view)
         {
@@ -31,7 +31,7 @@ namespace Chrome
         private IValue<Transform> view;
         private IValue<Collider> collider = new EmptyValue<Collider>();
 
-        protected override void OnUpdate(Packet packet)
+        protected override void OnUse(Packet packet)
         {
             if (from.IsValid(packet) && view.IsValid(packet))
             {

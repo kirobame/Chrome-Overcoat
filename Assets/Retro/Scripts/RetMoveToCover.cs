@@ -3,7 +3,7 @@ using UnityEngine.AI;
 
 namespace Chrome.Retro
 {
-    public class RetMoveToCover : ProxyNode
+    public class RetMoveToCover : TaskedNode
     {
         public RetMoveToCover(IValue<NavMeshAgent> navMesh, IValue<RetCover> cover)
         {
@@ -28,7 +28,7 @@ namespace Chrome.Retro
             if (aim.IsValid(packet)) aim.Value.localRotation = Quaternion.identity;
         }
 
-        protected override void OnStart(Packet packet)
+        protected override void OnPrepare(Packet packet)
         {
             if (!navMesh.IsValid(packet) || !cover.IsValid(packet)) return;
             
@@ -39,7 +39,7 @@ namespace Chrome.Retro
             navMesh.Value.SetDestination(cover.Value.transform.position.Flatten());
         }
 
-        protected override void OnUpdate(Packet packet)
+        protected override void OnUse(Packet packet)
         {
             if (navMesh.IsValid(packet) && cover.IsValid(packet))
             {

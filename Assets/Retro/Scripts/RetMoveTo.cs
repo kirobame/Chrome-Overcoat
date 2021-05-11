@@ -3,7 +3,7 @@ using UnityEngine.AI;
 
 namespace Chrome.Retro
 {
-    public class RetMoveTo : ProxyNode
+    public class RetMoveTo : TaskedNode
     {
         public RetMoveTo(IValue<NavMeshAgent> navMesh, IValue<Transform> target)
         {
@@ -21,7 +21,7 @@ namespace Chrome.Retro
         private IValue<Transform> target;
         private IValue<RetAgentLookAt> aim = new EmptyValue<RetAgentLookAt>();
         
-        protected override void OnUpdate(Packet packet)
+        protected override void OnUse(Packet packet)
         {
             if (navMesh.IsValid(packet) && target.IsValid(packet))
             {

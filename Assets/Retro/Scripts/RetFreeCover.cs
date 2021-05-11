@@ -1,12 +1,12 @@
 ﻿namespace Chrome.Retro
 {
-    public class RetFreeCover : ProxyNode
+    public class RetFreeCover : TaskedNode
     {
         public RetFreeCover(string path) => this.path = path;
         
         private string path;
 
-        protected override void OnUpdate(Packet packet)
+        protected override void OnUse(Packet packet)
         {
             var board = packet.Get<IBlackboard>();
             var cover = board.Get<RetCover>(path);

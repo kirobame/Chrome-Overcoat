@@ -2,7 +2,7 @@
 
 namespace Chrome.Retro
 {
-    public class RetGunNode : ProxyNode
+    public class RetGunNode : TaskedNode
     {
         public RetGunNode(IValue<Vector3> shootDirection, IValue<Transform> fireAnchor, IValue<Collider> target, RetGun gun)
         {
@@ -20,7 +20,7 @@ namespace Chrome.Retro
         private RetGun gun;
         private InteractionHub hub;
 
-        protected override void OnStart(Packet packet)
+        protected override void OnPrepare(Packet packet)
         {
             if (!shootDirection.IsValid(packet) || !fireAnchor.IsValid(packet) || !target.IsValid(packet) || !target.Value.TryGetComponent<InteractionHub>(out hub)) return;
             
@@ -31,7 +31,7 @@ namespace Chrome.Retro
             gun.Begin(identity, target.Value, hub);
         }
 
-        protected override void OnUpdate(Packet packet)
+        protected override void OnUse(Packet packet)
         {
             if (shootDirection.IsValid(packet) && fireAnchor.IsValid(packet) && target.IsValid(packet))
             {

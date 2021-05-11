@@ -20,7 +20,7 @@ namespace Chrome
             var cost = "frenzy.heatCost".Reference<float>();
 
             return new FrenzyAbilityNode().Append(
-                new GaugeCost(costLock, cost, gauge).Append( 
+                new GaugeCost(costLock, cost, gauge).Mask(0b_0001).Append( 
                     new Shoot("shootDir".Reference<Vector3>(), fireAnchorReference, colliderReference, bulletPrefab, muzzleFlashPrefab).Mask(0b_0001)));
         }
     }

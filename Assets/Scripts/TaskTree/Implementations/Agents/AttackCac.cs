@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class AttackCac : ProxyNode
+    public class AttackCac : TaskedNode
     {
         public AttackCac(IIdentity source, IValue<Transform> aimTr, float damage)
         {
@@ -15,7 +15,7 @@ namespace Chrome
         private IIdentity identity;
         private float damage;
 
-        protected override void OnUpdate(Packet packet)
+        protected override void OnUse(Packet packet)
         {
             var length = 3f;
             var ray = new Ray(origin.Value.position, origin.Value.forward);

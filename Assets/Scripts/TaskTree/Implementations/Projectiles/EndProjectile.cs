@@ -1,8 +1,8 @@
 ﻿namespace Chrome
 {
-    public class EndProjectile : ProxyNode
+    public class EndProjectile : TaskedNode
     {
-        protected override void OnUpdate(Packet packet)
+        protected override void OnUse(Packet packet)
         {
             var board = packet.Get<IBlackboard>();
             board.Set("end", true);

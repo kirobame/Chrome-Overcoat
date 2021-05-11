@@ -3,7 +3,7 @@ using UnityEngine.AI;
 
 namespace Chrome
 {
-    public class MoveTo : ProxyNode
+    public class MoveTo : TaskedNode
     {
         public MoveTo(IValue<NavMeshAgent> navMesh, IValue<Transform> target)
         {
@@ -21,7 +21,7 @@ namespace Chrome
         private IValue<Transform> target;
         private IValue<Transform> aim = new EmptyValue<Transform>();
         
-        protected override void OnUpdate(Packet packet)
+        protected override void OnUse(Packet packet)
         {
             if (navMesh.IsValid(packet) && target.IsValid(packet))
             {

@@ -2,20 +2,20 @@
 
 namespace Chrome
 {
-    public abstract class ProxyNode : Node
+    public abstract class TaskedNode : Node
     {
         public override bool IsDone => isDone;
         protected bool isDone;
 
-        public override void Start(Packet packet)
+        public override void Prepare(Packet packet)
         {
             isDone = false;
-            base.Start(packet);
+            base.Prepare(packet);
         }
 
-        public override IEnumerable<INode> Update(Packet packet)
+        public override IEnumerable<INode> Use(Packet packet)
         {
-            OnUpdate(packet);
+            OnUse(packet);
             if (!IsDone) return null;
 
             var selection = new List<INode>();
@@ -23,12 +23,12 @@ namespace Chrome
             {
                 if ((output | child.Input) != output) continue;
                 
-                child.Start(packet);
+                child.Prepare(packet);
                 selection.Add(child);
             }
 
             return selection;
         }
-        protected virtual void OnUpdate(Packet packet) { }
+        protected virtual void OnUse(Packet packet) { }
     }
 }

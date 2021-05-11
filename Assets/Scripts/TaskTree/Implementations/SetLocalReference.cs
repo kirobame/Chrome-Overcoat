@@ -1,6 +1,6 @@
 ﻿namespace Chrome
 {
-    public class SetLocalReference<T> : ProxyNode
+    public class SetLocalReference<T> : TaskedNode
     {
         public SetLocalReference(string path, T value)
         {
@@ -11,7 +11,7 @@
         private string path;
         private T value;
 
-        protected override void OnUpdate(Packet packet)
+        protected override void OnUse(Packet packet)
         {
             var board = packet.Get<IBlackboard>();
             board.Set(path, value);

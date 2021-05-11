@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class Shoot : ProxyNode
+    public class Shoot : TaskedNode
     {
         public Shoot(IValue<Vector3> direction, IValue<Transform> fireAnchor, GenericPoolable projectilePrefab, PoolableVfx muzzleFlashPrefab)
         {
@@ -34,7 +34,7 @@ namespace Chrome
         
         //--------------------------------------------------------------------------------------------------------------/
         
-        protected override void OnUpdate(Packet packet)
+        protected override void OnUse(Packet packet)
         {
             if (direction.IsValid(packet) && fireAnchor.IsValid(packet))
             {

@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Chrome
 {
     [Serializable]
-    public class Delay : ProxyNode
+    public class Delay : TaskedNode
     {
         public Delay(float time) => this.time = time;
 
@@ -12,13 +12,13 @@ namespace Chrome
 
         private float timer;
 
-        protected override void OnStart(Packet packet)
+        protected override void OnPrepare(Packet packet)
         {
             IsLocked = true;
             timer = time;
         }
 
-        protected override void OnUpdate(Packet packet)
+        protected override void OnUse(Packet packet)
         {
             timer -= Time.deltaTime;
             if (timer <= 0)

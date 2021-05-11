@@ -11,7 +11,7 @@ namespace Chrome
 
         protected override void OnBootup(Packet packet) { foreach (var condition in conditions) condition.Bootup(packet); }
         protected override void Open(Packet packet) { foreach (var condition in conditions) condition.Open(packet); }
-        protected override void OnStart(Packet packet) { foreach (var condition in conditions) condition.Start(packet); }
+        protected override void OnPrepare(Packet packet) { foreach (var condition in conditions) condition.Start(packet); }
 
         protected override bool Check(Packet packet)
         {

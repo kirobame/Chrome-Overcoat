@@ -20,8 +20,8 @@ namespace Chrome
 
         void Bootup(Packet packet);
 
-        void Start(Packet packet);
-        IEnumerable<INode> Update(Packet packet);
+        void Prepare(Packet packet);
+        IEnumerable<INode> Use(Packet packet);
 
         void Close(Packet packet);
         void Shutdown(Packet packet);

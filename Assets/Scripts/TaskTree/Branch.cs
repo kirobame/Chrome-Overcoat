@@ -39,7 +39,7 @@ namespace Chrome
             var current = actives[index];
                 
             var snapshot = packet.Save();
-            var result = current.Update(packet);
+            var result = current.Use(packet);
 
             source.ActualizeCommands(packet);
             if (actives.Count == 0) return -1;

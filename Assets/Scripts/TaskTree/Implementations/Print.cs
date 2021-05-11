@@ -4,13 +4,13 @@ using UnityEngine;
 namespace Chrome
 {
     [Serializable]
-    public class Print : ProxyNode
+    public class Print : TaskedNode
     {
         public Print(string message) => this.message = message;
         
         [SerializeField] private string message;
         
-        protected override void OnUpdate(Packet packet)
+        protected override void OnUse(Packet packet)
         {
             Debug.Log(message);
             isDone = true;

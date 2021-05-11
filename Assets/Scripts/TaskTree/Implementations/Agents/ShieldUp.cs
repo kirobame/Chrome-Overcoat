@@ -2,13 +2,13 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class ShieldUp : ProxyNode
+    public class ShieldUp : TaskedNode
     {
         public ShieldUp(IValue<Shield> shield) => this.shield = shield;
 
         private IValue<Shield> shield;
 
-        protected override void OnUpdate(Packet packet)
+        protected override void OnUse(Packet packet)
         {
             if (shield.IsValid(packet))
             {

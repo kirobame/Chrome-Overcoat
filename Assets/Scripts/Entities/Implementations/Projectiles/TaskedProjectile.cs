@@ -29,9 +29,9 @@ namespace Chrome
             base.OnShoot(source, fireAnchor, direction, packet);
             
             taskTree.Bootup(this.packet);
-            taskTree.Start(this.packet);
+            taskTree.Prepare(this.packet);
         }
 
-        void Update() => taskTree.Update(packet);
+        void Update() => taskTree.Use(packet);
     }
 }

@@ -47,7 +47,7 @@ namespace Chrome.Retro
             else
             {
                 taskTree.Bootup(identity.Packet);
-                taskTree.Start(identity.Packet);
+                taskTree.Prepare(identity.Packet);
             }
         }
         public void Shutdown() => taskTree.Shutdown(identity.Packet);
@@ -74,7 +74,7 @@ namespace Chrome.Retro
             Bootup();
         }
         
-        void Update() => taskTree.Update(identity.Packet);
+        void Update() => taskTree.Use(identity.Packet);
 
         protected virtual void BuildTree()
         {

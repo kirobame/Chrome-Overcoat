@@ -13,7 +13,7 @@ namespace Chrome
             output = 0b_0010;
         }
 
-        public override IEnumerable<INode> Update(Packet packet)
+        public override IEnumerable<INode> Use(Packet packet)
         {
             var state = packet.Get<bool>();
             var board = packet.Get<IBlackboard>();
@@ -23,14 +23,14 @@ namespace Chrome
                 if (previousState)
                 {
                     ChangeOutputMask(packet, 0b_0010);
-                    Start(packet);
+                    Prepare(packet);
                 }
                 previousState = false;
                 
                 if (IsDone) return null;
                 
                 foreach (var branch in Branches) branch.Update(packet);
-                OnUpdate(packet);
+                OnUse(packet);
                 
                 if (IsDone) Close(packet);
             }
@@ -39,11 +39,11 @@ namespace Chrome
                 if (!previousState)
                 {
                     ChangeOutputMask(packet, output = 0b_0001);
-                    Start(packet);
+                    Prepare(packet);
                 }
                 previousState = true;
                 
-                base.Update(packet);
+                base.Use(packet);
 
                 packet.Set(false);
                 board.Get<BusyBool>(PlayerRefs.CAN_SPRINT).business--;

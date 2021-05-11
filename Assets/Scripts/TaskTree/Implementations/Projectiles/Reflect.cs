@@ -2,13 +2,13 @@
 
 namespace Chrome
 {
-    public class Reflect : ProxyNode
+    public class Reflect : TaskedNode
     {
         public Reflect(IValue<Vector3> direction) => this.direction = direction;
         
         private IValue<Vector3> direction;
         
-        protected override void OnUpdate(Packet packet)
+        protected override void OnUse(Packet packet)
         {
             if (direction.IsValid(packet))
             {

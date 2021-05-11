@@ -3,13 +3,13 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class PlayVfxImpact : ProxyNode
+    public class PlayVfxImpact : TaskedNode
     {
         public PlayVfxImpact(PoolableVfx impactVfx) => this.impactVfx = impactVfx;
         
         private PoolableVfx impactVfx;
         
-        protected override void OnUpdate(Packet packet)
+        protected override void OnUse(Packet packet)
         {
             var vfxPool = Repository.Get<VfxPool>(Pool.Impact);
             var vfxPoolable = vfxPool.RequestSinglePoolable(impactVfx);

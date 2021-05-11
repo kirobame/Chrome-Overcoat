@@ -2,7 +2,7 @@
 
 namespace Chrome
 {
-    public abstract class LerpNode : ProxyNode
+    public abstract class LerpNode : TaskedNode
     {
         public LerpNode(float time) => this.time = time;
         
@@ -11,7 +11,7 @@ namespace Chrome
 
         protected override void Open(Packet packet) => timer = 0.0f;
 
-        protected override void OnUpdate(Packet packet)
+        protected override void OnUse(Packet packet)
         {
             timer += Time.deltaTime;
             if (timer > time)

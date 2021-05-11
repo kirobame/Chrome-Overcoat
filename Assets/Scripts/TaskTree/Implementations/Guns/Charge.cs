@@ -9,7 +9,7 @@ using UnityEngine;
 namespace Chrome
 {
     [Serializable]
-    public class Charge : ProxyNode
+    public class Charge : TaskedNode
     {
         public Charge(float duration, float shakeFactor, float maxShake)
         {
@@ -32,7 +32,7 @@ namespace Chrome
             timer = 0.0f;
         }
 
-        protected override void OnUpdate(Packet packet)
+        protected override void OnUse(Packet packet)
         {
             var board = packet.Get<IBlackboard>();
             float charge;

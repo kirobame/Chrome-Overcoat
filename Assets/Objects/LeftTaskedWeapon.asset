@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 243915b71bb4c4b4294dd45f49138709, type: 3}
-  m_Name: LeftWeapon
+  m_Script: {fileID: 11500000, guid: b41d0f7962fb41c8b578d27ad5189d0a, type: 3}
+  m_Name: LeftTaskedWeapon
   m_EditorClassIdentifier: 
   builder:
     id: 0

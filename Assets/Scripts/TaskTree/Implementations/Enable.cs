@@ -1,6 +1,6 @@
 ﻿namespace Chrome
 {
-    public class Enable : ProxyNode
+    public class Enable : TaskedNode
     {
         public Enable(bool enabled, IValue<IEnabler> enabler)
         {
@@ -11,7 +11,7 @@
         private IValue<IEnabler> enabler;
         private bool enabled;
         
-        protected override void OnUpdate(Packet packet)
+        protected override void OnUse(Packet packet)
         {
             if (enabler.IsValid(packet)) enabler.Value.Enable(enabled);
             isDone = true;

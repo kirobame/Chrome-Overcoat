@@ -2,7 +2,7 @@
 
 namespace Chrome.Retro
 {
-    public class RetLookAt : ProxyNode
+    public class RetLookAt : TaskedNode
     {
         public RetLookAt(IValue<Collider> target, IValue<RetAgentLookAt> aim)
         {
@@ -13,7 +13,7 @@ namespace Chrome.Retro
         private IValue<Collider> target;
         private IValue<RetAgentLookAt> aim;
 
-        protected override void OnUpdate(Packet packet)
+        protected override void OnUse(Packet packet)
         {
             if (target.IsValid(packet) && aim.IsValid(packet))
             {

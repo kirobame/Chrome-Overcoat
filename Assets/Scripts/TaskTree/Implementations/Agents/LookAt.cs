@@ -2,7 +2,7 @@
 
 namespace Chrome
 {
-    public class LookAt : ProxyNode
+    public class LookAt : TaskedNode
     {
         public LookAt(IValue<Collider> target, IValue<Transform> aim)
         {
@@ -13,7 +13,7 @@ namespace Chrome
         private IValue<Collider> target;
         private IValue<Transform> aim;
         
-        protected override void OnUpdate(Packet packet)
+        protected override void OnUse(Packet packet)
         {
             if (target.IsValid(packet) && aim.IsValid(packet))
             {

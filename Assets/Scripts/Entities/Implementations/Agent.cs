@@ -19,14 +19,12 @@ namespace Chrome
 
         public bool IsActive => true;
         
-        [FoldoutGroup("Values"), SerializeField] private RemoteTaskTree weapon;
+        [FoldoutGroup("Values"), SerializeField] private Weapon weapon;
 
         private Packet packet => identity.Value.Packet;
         private IValue<IIdentity> identity;
-        
-        private RemoteTaskTree runtimeWeapon;
-        private ITaskTree taskTree;
 
+        private ITaskTree taskTree;
         private bool hasBeenBootedUp;
 
         //--------------------------------------------------------------------------------------------------------------/
@@ -45,7 +43,7 @@ namespace Chrome
             hasBeenBootedUp = true;
             
             taskTree.Bootup(packet);
-            taskTree.Start(packet);
+            taskTree.Prepare(packet);
         }
         public void Shutdown()
         {
@@ -57,9 +55,6 @@ namespace Chrome
         
         void Start()
         {
-            runtimeWeapon = Instantiate(weapon);
-            runtimeWeapon.Bootup();
-
             var navReference = AgentRefs.NAV.Reference<NavMeshAgent>();
             var playerColReference = $"{PlayerRefs.BOARD}.{Refs.COLLIDER}".Reference<Collider>(ReferenceType.SubGlobal);
             var pivotReference = Refs.PIVOT.Reference<Transform>();
@@ -74,7 +69,8 @@ namespace Chrome
                         new RootNode().Append(
                             new ComputeDirectionTo("shootDir", fireAnchorReference, playerColReference),
                             new LookAt(playerColReference, pivotReference)), 
-                        new PressNode(1.0f).Append(runtimeWeapon)),
+                        new PressNode(1.0f).Append(
+                            new WeaponNode(weapon))),
                     new MoveTo(navReference, $"{PlayerRefs.BOARD}.{Refs.ROOT}".Reference<Transform>(ReferenceType.SubGlobal), pivotReference).Mask(0b_0010).Append(
                         new Delay(0.5f))));
         }
@@ -82,7 +78,7 @@ namespace Chrome
         void Update()
         {
             if (!hasBeenBootedUp) return;
-            taskTree.Update(packet);
+            taskTree.Use(packet);
         }
     }
 }
