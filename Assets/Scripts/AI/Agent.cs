@@ -6,141 +6,15 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public static class Hive
-    {
-        public const char STREAM_SEPARATOR = '-';
-        
-        private static Dictionary<string, List<IAgent>> repository;
-
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        private static void Bootup() => repository = new Dictionary<string, List<IAgent>>();
-
-        //--------------------------------------------------------------------------------------------------------------/
-        
-        public static void Register(IAgent agent)
-        {
-            AddStreamFor(agent, agent.Stream);
-
-            agent.onStreamChange += OnAgentStreamChange;
-            agent.onDiscard += OnAgentDiscard;
-        }
-
-        //--------------------------------------------------------------------------------------------------------------/
-
-        public static TAgent[] Query<TAgent>(string inclusion, string exclusion) where TAgent : IAgent => Query<TAgent>(inclusion, agent => true, exclusion, agent => false);
-        public static TAgent[] Query<TAgent>(string inclusion, Predicate<TAgent> predicate, string exclusion) where TAgent : IAgent => Query<TAgent>(inclusion, predicate, exclusion, agent => false);
-        public static TAgent[] Query<TAgent>(string inclusion, string exclusion, Predicate<TAgent> predicate) where TAgent : IAgent => Query<TAgent>(inclusion, agent => true, exclusion, predicate);
-        public static TAgent[] Query<TAgent>(string inclusion, Predicate<TAgent> inclusionPredicate, string exclusion, Predicate<TAgent> exclusionPredicate) where TAgent : IAgent
-        {
-            var inclusionTags = inclusion.Split(STREAM_SEPARATOR);
-            if (inclusionTags.Any(tag => !repository.ContainsKey(tag))) return Array.Empty<TAgent>();
-            
-            var includedAgents = new HashSet<TAgent>();
-            foreach (var tag in inclusionTags) includedAgents.IntersectWith(repository[tag].OfType<TAgent>().Where(agent => inclusionPredicate(agent)));
-
-            var copy = new TAgent[includedAgents.Count];
-            includedAgents.CopyTo(copy);
-
-            var exclusionTags = exclusion.Split(STREAM_SEPARATOR);
-            foreach (var agent in copy)
-            {
-                if (exclusionTags.Any(tag => agent.Stream.Contains(tag)) || exclusionPredicate(agent))
-                {
-                    includedAgents.Remove(agent);
-                    continue;
-                }
-            }
-            
-            return includedAgents.ToArray();
-        }
-
-        //--------------------------------------------------------------------------------------------------------------/
-
-        private static void AddStreamFor(IAgent agent, string stream)
-        {
-            if (stream == string.Empty) return;
-            
-            var tags = stream.Split(STREAM_SEPARATOR);
-            foreach (var tag in tags)
-            {
-                if (repository.TryGetValue(tag, out var list))
-                {
-                    if (list.Contains(agent)) continue;
-                    list.Add(agent);
-                } 
-                else repository.Add(tag, new List<IAgent>() { agent }); 
-            }
-        }
-        private static void RemoveStreamFor(IAgent agent, string stream)
-        {
-            if (stream == string.Empty) return;
-            
-            var tags = stream.Split(STREAM_SEPARATOR);
-            foreach (var tag in tags)
-            {
-                if (!repository.TryGetValue(tag, out var list)) continue;
-
-                list.Remove(agent);
-                if (!list.Any()) repository.Remove(tag);
-            }
-        }
-        
-        static void OnAgentStreamChange(IAgent agent, string addition, string removal)
-        {
-            AddStreamFor(agent, addition);
-            RemoveStreamFor(agent, removal);
-        }
-
-        //--------------------------------------------------------------------------------------------------------------/
-        
-        static void OnAgentDiscard(IAgent agent)
-        {
-            agent.onStreamChange -= OnAgentStreamChange;
-            agent.onDiscard -= OnAgentDiscard;
-
-            RemoveStreamFor(agent, agent.Stream);
-        }
-    }
-    
-    [Flags]
-    public enum AgentDefinition : short
-    {
-        None = 0,
-        
-        Peon = 1,
-        Guard = 2
-    }
-    
-    public interface IAgent
-    {  
-        event Action<IAgent> onSpawn;
-        event Action<IAgent> onDiscard;
-        event Action<IAgent,string,string> onStreamChange;
-
-        IIdentity Identity { get; }
-        bool IsActive { get; }
-        
-        AgentDefinition Definition { get; }
-        string Stream { get; }
-        
-        IEnumerable<IGoal> Goals { get; }
-        
-        void Interrupt(EventArgs args);
-        
-        void AddGoals(params IGoal[] goals);
-        void RemoveGoals(GoalDefinition query);
-
-        void Tag(string partialStream);
-        void Erase(string partialStream);
-    }
-    
-    public class Agent : MonoBehaviour, IAgent, IInjectable
+    public class Agent : MonoBehaviour, IAgent, ILifebound, IInstaller, IInjectable
     {
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         protected List<IValue> injections;
 
         //--------------------------------------------------------------------------------------------------------------/
 
+        public event Action<ILifebound> onDestruction; 
+        
         public event Action<IAgent> onSpawn;
         public event Action<IAgent> onDiscard;
         
@@ -149,11 +23,16 @@ namespace Chrome
         //--------------------------------------------------------------------------------------------------------------/
 
         public IIdentity Identity => identity.Value;
-        public bool IsActive { get; protected set; }
+
+        bool IAgent.IsActive => isOperational;
+        private bool isOperational;
+
+        bool IActive<ILifebound>.IsActive => true;
         
         public AgentDefinition Definition => definition;
         public string Stream => stream;
 
+        public IGoal this[GoalDefinition definition] => goals.First(candidate => candidate.Definition == definition);
         public IEnumerable<IGoal> Goals => goals;
 
         [SerializeField] protected AgentDefinition definition;
@@ -162,33 +41,55 @@ namespace Chrome
         [SerializeReference] protected IGoal[] goals = new IGoal[0];
         [SerializeReference] protected ISolver[] solvers = new ISolver[0];
 
+        private bool hasBeenBootedUp;
         private IValue<IIdentity> identity;
         
         //--------------------------------------------------------------------------------------------------------------/
 
         protected virtual void Awake()
         {
+            hasBeenBootedUp = false;
+            
             identity = new AnyValue<IIdentity>();
             injections = new List<IValue>() { identity };
             
-            foreach (var solver in solvers) solver.Build();
+            foreach (var goal in goals) goal.AssignTo(this);
+            foreach (var solver in solvers) solver.AssignTo(this);
         }
-
-        protected virtual void OnEnable()
+        protected virtual void OnDestroy() => onDestruction?.Invoke(this);
+        
+        public virtual void Bootup()
         {
             Hive.Register(this);
-            foreach (var solver in solvers) solver.Bootup();
             
+            if (!hasBeenBootedUp)
+            {
+                foreach (var solver in solvers)
+                {
+                    solver.Build();
+                    solver.Bootup();
+                }
+
+                hasBeenBootedUp = true;
+            }
+            else foreach (var solver in solvers) solver.Bootup();
+            foreach (var goal in goals) goal.Reset();
+
+            isOperational = true;
             onSpawn?.Invoke(this);
         }
-        protected virtual void OnDisable()
+        public virtual void Shutdown()
         {
             foreach (var solver in solvers) solver.Shutdown();
+
+            isOperational = false;
             onDiscard?.Invoke(this);
         }
 
         protected virtual void Update()
         {
+            if (!hasBeenBootedUp) return;
+            
             foreach (var solver in solvers) solver.Evaluate();
             foreach (var goal in goals)
             {
@@ -213,7 +114,11 @@ namespace Chrome
             var index = this.goals.Length;
             Array.Resize(ref this.goals, this.goals.Length + goals.Length);
 
-            for (int i = index; i < goals.Length; i++) this.goals[i] = goals[i - index];
+            for (int i = index; i < goals.Length; i++)
+            {
+                this.goals[i] = goals[i - index];
+                this.goals[i].Reset();
+            }
         }
         public void RemoveGoals(GoalDefinition query)
         {
@@ -270,39 +175,11 @@ namespace Chrome
             removal = removal.Remove(removal.Length - 1, 1);
             onStreamChange?.Invoke(this, string.Empty, removal);
         }
-    }
 
-    public interface ISolver
-    {
-        IAgent Owner { get; }
+        //--------------------------------------------------------------------------------------------------------------/
 
-        void Build();
+        int IInstaller.Priority => 1;
 
-        void Bootup();
-        void Evaluate();
-        void Shutdown();
-    }
-
-    [Flags]
-    public enum GoalDefinition : short
-    {
-        None = 0,
-        
-        Attack = 1,
-        Flee = 2
-    }
-    
-    public interface IGoal
-    {
-        IAgent Owner { get; }
-        GoalDefinition Definition { get; }
-        
-        bool IsDirty { get; set; }
-        bool IsAccomplished { get; }
-        
-        void Reset();
-        void Evaluate();
-
-        void Accomplish();
+        void IInstaller.InstallDependenciesOn(Packet packet) => packet.Set(this);
     }
 }

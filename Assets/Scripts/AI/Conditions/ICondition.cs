@@ -8,7 +8,7 @@
         void Bootup(Packet packet);
         void Open(Packet packet);
 
-        void Start(Packet packet);
+        void Prepare(Packet packet);
         bool Check(Packet packet);
 
         void Close(Packet packet);

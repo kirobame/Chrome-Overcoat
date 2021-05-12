@@ -31,7 +31,7 @@ namespace Chrome
                 packet.Set(false);
                 base.Use(packet);
 
-                if (Children.All(node => node.IsDone)) isDone = true;
+                isDone = true;
                 return null;
             }
             else

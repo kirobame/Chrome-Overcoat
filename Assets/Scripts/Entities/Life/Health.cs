@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class Health : MonoBehaviour, IDamageable, ILifebound, IInjectable
+    public class Health : MonoBehaviour, IDamageable, ILifebound, IInstaller, IInjectable
     {
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         private IValue[] injections;
@@ -33,11 +33,15 @@ namespace Chrome
         public IIdentity Identity => identity.Value;
         public bool IsActive => true;
 
-        [FoldoutGroup("Values"), SerializeField] private float maxHealth;
+        public float Max => max;
+        public float Amount => amount;
+
+        [FoldoutGroup("Values"), SerializeField] private float max;
 
         private IValue<IIdentity> identity;
         private IValue<Lifetime> lifetime;
-        private float health;
+        
+        private float amount;
 
         //--------------------------------------------------------------------------------------------------------------/
 
@@ -59,18 +63,18 @@ namespace Chrome
             onLifeboundDestruction?.Invoke(this);
         }
 
-        public void Bootup() => health = maxHealth;
+        public void Bootup() => amount = max;
         public void Shutdown() { }
 
         //--------------------------------------------------------------------------------------------------------------/
         
         public void Hit(IIdentity source, float amount, Packet packet)
         {
-            var difference = health - amount;
+            var difference = this.amount - amount;
             var damage = difference < 0 ? amount + difference : amount;
             
-            health = Mathf.Clamp(health - damage, 0.0f, maxHealth);
-            onChange?.Invoke(health, maxHealth);
+            this.amount = Mathf.Clamp(this.amount - damage, 0.0f, max);
+            onChange?.Invoke(this.amount, max);
 
             var sourceType = source.Packet.Get<byte>();
             if (identity.Value.Faction == Faction.Player) Events.ZipCall<float,byte>(GaugeEvent.OnDamageReceived, damage, sourceType);
@@ -79,10 +83,16 @@ namespace Chrome
                 var type = identity.Value.Packet.Get<byte>();
                 
                 Events.ZipCall<byte,float,byte>(GaugeEvent.OnDamageInflicted, type, damage, sourceType);
-                if (health == 0) Events.ZipCall<byte,byte>(GaugeEvent.OnKill, type, sourceType);
+                if (this.amount == 0) Events.ZipCall<byte,byte>(GaugeEvent.OnKill, type, sourceType);
             }
             
-            if (health == 0) lifetime.Value.End();
+            if (this.amount == 0) lifetime.Value.End();
         }
+
+        //--------------------------------------------------------------------------------------------------------------/
+
+        int IInstaller.Priority => 1;
+
+        void IInstaller.InstallDependenciesOn(Packet packet) => packet.Set(this);
     }
 }

@@ -46,10 +46,11 @@ namespace Chrome
             injections.Add(identity);
             
             aimCompute = ChromeExtensions.CreateComputeAimDirection();
+            
             runtimeWeapon = Instantiate(frenzyWeapon);
+            runtimeWeapon.Build();
         }
-        void Start() => runtimeWeapon.Build();
-        
+
         //--------------------------------------------------------------------------------------------------------------/
 
         void Update()

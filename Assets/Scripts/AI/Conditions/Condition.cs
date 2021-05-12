@@ -7,7 +7,7 @@
         
         public virtual void Bootup(Packet packet) { }
         public virtual void Open(Packet packet) { }
-        public virtual void Start(Packet packet) { }
+        public virtual void Prepare(Packet packet) { }
 
         public abstract bool Check(Packet packet);
 

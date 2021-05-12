@@ -41,6 +41,8 @@ namespace Chrome
         {
             packet.Set(false);
             Current.Bootup(packet);
+
+            hasBeenBootedUp = true;
         }
 
         //--------------------------------------------------------------------------------------------------------------/
@@ -60,10 +62,13 @@ namespace Chrome
         private Weapon[] runtimeWeapons;
         private ComputeAimDirection aimCompute;
 
+        private bool hasBeenBootedUp;
+
         //--------------------------------------------------------------------------------------------------------------/
 
         protected override void Awake()
         {
+            hasBeenBootedUp = false;
             shootKey = new CachedValue<Key>(Key.Inactive);
             
             base.Awake();
@@ -100,7 +105,7 @@ namespace Chrome
 
         void OnApplicationFocus(bool hasFocus)
         {
-            if (hasFocus) return;
+            if (hasFocus || !hasBeenBootedUp) return;
             OnMouseDown();
         }
         

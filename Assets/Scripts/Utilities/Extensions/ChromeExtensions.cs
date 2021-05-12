@@ -6,6 +6,18 @@ namespace Chrome
 {
     public static class ChromeExtensions
     {
+        public static TOwner Recurse<TOwner>(this IAssignable assignee, int count = 1)
+        {
+            if (count <= 1) return (TOwner)assignee.Value;
+            else
+            {
+                var current = (IAssignable)assignee.Value;
+                for (var i = 0; i < count - 1; i++) current = (IAssignable)assignee.Value;
+                
+                return (TOwner)current.Value;
+            }
+        }
+        
         public static T[] Fetch<T,TFilter>(this Transform source)
         {
             var values = new List<T>();
