@@ -5,9 +5,7 @@ namespace Chrome
     public interface ITaskTree : INode
     {
         IEnumerable<INode> UpdatedNodes { get; }
-        
         IEnumerable<Branch> Branches { get; }
-        IReadOnlyDictionary<int, Branch> BranchRegistry { get; }
 
         bool IsUpdating(INode node);
         

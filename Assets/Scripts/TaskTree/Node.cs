@@ -16,7 +16,16 @@ namespace Chrome
 
         public abstract bool IsDone { get; }
         public NodeState State { get; protected set; }
+        
+        public INode Parent { get; set; }
 
+        public int Priority
+        {
+            get => priority;
+            set => priority = value;
+        }
+        [SerializeField] protected int priority;
+        
         public int Input
         {
             get => input;
@@ -26,11 +35,6 @@ namespace Chrome
         
         public int Output => output;
         [SerializeField] protected int output;
-        
-        public int Priority => priority;
-        [SerializeField] protected int priority;
-
-        public INode Parent { get; set; }
         
         public IReadOnlyList<INode> Children => children;
         private List<INode> children = new List<INode>();

@@ -9,7 +9,7 @@ namespace Chrome
         bool IsLocked { get; }
         NodeState State { get; }
         
-        int Priority { get; }
+        int Priority { get; set; }
         int Input { get; set; }
         int Output { get; }
         

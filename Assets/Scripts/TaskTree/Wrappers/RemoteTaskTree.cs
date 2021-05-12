@@ -22,7 +22,11 @@ namespace Chrome
         public bool IsLocked => root.IsLocked;
         public NodeState State => root.State;
 
-        public int Priority => root.Priority;
+        public int Priority
+        {
+            get => root.Priority;
+            set => root.Priority = value;
+        }
 
         public int Input
         {
@@ -40,7 +44,6 @@ namespace Chrome
 
         public IEnumerable<INode> UpdatedNodes => root.UpdatedNodes;
         public IEnumerable<Branch> Branches => root.Branches;
-        public IReadOnlyDictionary<int, Branch> BranchRegistry => root.BranchRegistry;
 
         //--------------------------------------------------------------------------------------------------------------/
         

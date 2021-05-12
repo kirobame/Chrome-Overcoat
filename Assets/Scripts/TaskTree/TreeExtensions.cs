@@ -2,6 +2,33 @@
 
 namespace Chrome
 {
+    public static class TT
+    {
+        public static INode IF_TRUE(INode node) => node.Mask(0b_0001);
+        public static INode IF_FALSE(INode node) => node.Mask(0b_0010);
+
+        public static INode WITH_PRIO(int value, INode node)
+        {
+            node.Priority = value;
+            return node;
+        }
+        
+        public static INode BIND_TO(int mask, INode node) => node.Mask(mask);
+        public static INode BIND_TO<TEnum>(TEnum value, INode node) where TEnum : Enum => node.Mask(Convert.ToInt32(value));
+        
+        public static CompositeConditionalNode IF(ICondition condition) => new CompositeConditionalNode(condition);
+        public static CompositeConditionalNode AND(this CompositeConditionalNode node, ICondition condition)
+        {
+            node.Add(ConditionalOperator.AND, condition);
+            return node;
+        } 
+        public static CompositeConditionalNode OR(this CompositeConditionalNode node, ICondition condition)
+        {
+            node.Add(ConditionalOperator.OR, condition);
+            return node;
+        } 
+    }
+    
     public static class TreeExtensions
     {
         public static ICondition Inverse(this ICondition condition)
@@ -54,12 +81,5 @@ namespace Chrome
             node.Input = input;
             return node;
         }
-    }
-
-    public enum ReferenceType : byte
-    {
-        Global,
-        SubGlobal,
-        Local
     }
 }

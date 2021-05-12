@@ -8,23 +8,17 @@ namespace Chrome
 {
     public class RootNode : Node, ITaskTree
     {
-        #region Nested Types
-
-        #endregion
-        
         public override bool IsLocked
         {
             get => isLocked || UpdatedNodes.Any(node => node.IsLocked);
             set => isLocked = value;
         }
-        public override bool IsDone => Branches.All(branch => branch.IsDone);
+        public override bool IsDone => branches.All(branch => branch.IsDone);
 
-        public IEnumerable<INode> UpdatedNodes => branchRegistry.SelectMany(kvp => kvp.Value.Nodes);
-        public IEnumerable<Branch> Branches => branchRegistry.Values;
+        public IEnumerable<INode> UpdatedNodes => branches.SelectMany(branch => branch.Nodes);
+        public IEnumerable<Branch> Branches => branches;
 
-        public IReadOnlyDictionary<int, Branch> BranchRegistry => branchRegistry;
-        protected Dictionary<int, Branch> branchRegistry = new Dictionary<int, Branch>();
-        
+        protected List<Branch> branches = new List<Branch>();
         protected List<ICommand> commands = new List<ICommand>();
         
         //--------------------------------------------------------------------------------------------------------------/
@@ -34,7 +28,7 @@ namespace Chrome
             base.Prepare(packet);
 
             var keys = new List<int>();
-            foreach (var branch in Branches)
+            foreach (var branch in branches)
             {
                 keys.Add(branch.Key);
                 branch.Reset();
@@ -47,18 +41,19 @@ namespace Chrome
                 child.Prepare(packet);
                 keys.Remove(child.Input);
 
-                if (!branchRegistry.ContainsKey(child.Input)) branchRegistry.Add(child.Input, new Branch(this, child.Input));
-                branchRegistry[child.Input].Add(child);
+                var index = branches.FindIndex(branch => branch.Key == child.Input);
+                if (index == -1) branches.Add(new Branch(this, child.Input, child));
+                else branches[index].Add(child);
             }
 
-            foreach (var key in keys) branchRegistry.Remove(key);
+            branches.RemoveAll(branch => keys.Contains(branch.Key));
         }
 
         public override IEnumerable<INode> Use(Packet packet)
         {
             if (IsDone) Prepare(packet);
             
-            foreach (var branch in Branches) branch.Update(packet);
+            foreach (var branch in branches) branch.Update(packet);
             OnUse(packet);
 
             return null;
@@ -67,7 +62,7 @@ namespace Chrome
 
         public override void Shutdown(Packet packet)
         {
-            foreach (var branch in Branches)
+            foreach (var branch in branches)
             {
                 foreach (var node in branch.All) node.Close(packet);
                 branch.Reset();
@@ -121,7 +116,7 @@ namespace Chrome
             var change = output ^ value;
             var subtraction = output & change;
 
-            foreach (var branch in Branches)
+            foreach (var branch in branches)
             {
                 if ((subtraction | branch.Key) != subtraction) continue;
                 

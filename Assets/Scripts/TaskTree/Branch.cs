@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace Chrome
@@ -9,6 +10,15 @@ namespace Chrome
         public Branch(ITaskTree source, int key)
         {
             Key = key;
+            this.source = source;
+        }
+        public Branch(ITaskTree source, int key, params INode[] nodes)
+        {
+            Key = key;
+            
+            actives.AddRange(nodes);
+            actives.Sort(CompareNodes);
+            
             this.source = source;
         }
 
@@ -39,30 +49,37 @@ namespace Chrome
             var current = actives[index];
                 
             var snapshot = packet.Save();
-            var result = current.Use(packet);
+            var results = current.Use(packet);
 
             source.ActualizeCommands(packet);
             if (actives.Count == 0) return -1;
 
-            if (result == null) return index;
+            if (results == null) return index;
             actives.RemoveAt(index);
 
-            var count = result.Count();
+            var count = results.Count();
             if (count == 0)
             {
                 leaves.Add(current);
                 return index - 1;
             }
 
-            actives.InsertRange(index, result);
+            var sortedResults = results.ToList();
+            sortedResults.Sort(CompareNodes);
+            actives.InsertRange(index, results);
+            
             for (var i = 0; i < count; i++) index = UpdateAt(packet, index + i);
 
             packet.Load(snapshot);
             return index;
         }
 
-        public void Add(INode node) => actives.Add(node);
-            
+        public void Add(INode node)
+        {
+            actives.Add(node);
+            actives.Sort(CompareNodes);
+        }
+
         public void Remove(INode node) => actives.Remove(node);
         public void RemoveAt(int index) => actives.RemoveAt(index);
 
@@ -71,5 +88,9 @@ namespace Chrome
             actives.Clear();
             leaves.Clear();
         }
+
+        //--------------------------------------------------------------------------------------------------------------/
+
+        private int CompareNodes(INode first, INode second) => first.Priority.CompareTo(second.Priority);
     }
 }

@@ -12,7 +12,7 @@ namespace Chrome
         
         protected override void OnUse(Packet packet)
         {
-            Debug.Log(message);
+            Debug.Log($"[{Time.frameCount}] {message}");
             isDone = true;
         }
     }

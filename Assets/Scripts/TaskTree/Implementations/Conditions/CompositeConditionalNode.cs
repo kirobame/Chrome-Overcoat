@@ -1,14 +1,25 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Chrome
 {
     public class CompositeConditionalNode : ConditionalNode
     {
-        public CompositeConditionalNode(params ICondition[] conditions) => this.conditions = conditions;
-        
-        private ICondition[] conditions;
+        public CompositeConditionalNode(params ICondition[] conditions)
+        {
+            this.conditions = new List<ICondition>();
+            this.conditions.AddRange(conditions);
+        }
 
+        private List<ICondition> conditions;
+
+        public void Add(ConditionalOperator conditionalOperator, ICondition condition)
+        {
+            if (conditions.Any()) conditions[conditions.Count - 1].Operator = conditionalOperator;
+            conditions.Add(condition);
+        } 
+        
         protected override void OnBootup(Packet packet) { foreach (var condition in conditions) condition.Bootup(packet); }
         protected override void Open(Packet packet) { foreach (var condition in conditions) condition.Open(packet); }
         protected override void OnPrepare(Packet packet) { foreach (var condition in conditions) condition.Prepare(packet); }
@@ -21,7 +32,7 @@ namespace Chrome
             var op = conditions[0].Operator;
             if (op == ConditionalOperator.NONE) return output;
             
-            for (var i = 1; i < conditions.Length; i++)
+            for (var i = 1; i < conditions.Count; i++)
             {
                 switch (op)
                 {
