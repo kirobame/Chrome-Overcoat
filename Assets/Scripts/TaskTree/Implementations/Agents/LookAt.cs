@@ -2,7 +2,7 @@
 
 namespace Chrome
 {
-    public class LookAt : TaskedNode
+    public class LookAt : TaskNode
     {
         public LookAt(IValue<Collider> target, IValue<Transform> aim)
         {

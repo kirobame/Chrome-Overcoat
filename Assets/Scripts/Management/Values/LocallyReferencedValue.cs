@@ -12,7 +12,11 @@ namespace Chrome
         public T Value
         {
             get => value;
-            set => board.SetRaw(path, value);
+            set
+            {
+                this.value = value;
+                board.SetRaw(path, value);
+            }
         }
 
         [SerializeField] private string path;

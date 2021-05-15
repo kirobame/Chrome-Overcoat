@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class Shoot : TaskedNode
+    public class Shoot : TaskNode
     {
         public Shoot(IValue<Vector3> direction, IValue<Transform> fireAnchor, GenericPoolable projectilePrefab, PoolableVfx muzzleFlashPrefab)
         {

@@ -5,6 +5,7 @@
         object RawValue { get; }
 
         void Set(object rawValue);
+        IRegistry Copy();
     }
     public interface IRegistry<out T> : IRegistry
     {

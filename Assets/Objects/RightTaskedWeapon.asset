@@ -16,6 +16,7 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: e11c4f3ee458bf446918382a2f5f9451, type: 2}
   builder:
     id: 0
+  maxAmmo: 100
   references:
     version: 1
     00000000:

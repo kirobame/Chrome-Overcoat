@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Chrome
 {
     [Serializable]
-    public class ComputeDirectionTo : TaskedNode
+    public class ComputeDirectionTo : TaskNode
     {
         public ComputeDirectionTo(string path, IValue<Transform> from, IValue<Collider> target)
         {

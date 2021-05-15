@@ -10,5 +10,6 @@
         private T value;
 
         public void Set(object rawValue) => value = (T)rawValue;
+        public IRegistry Copy() => new WrapperRegistry<T>(value);
     }
 }

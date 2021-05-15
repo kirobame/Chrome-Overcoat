@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Chrome
 {
     [Serializable]
-    public class CheckCharge : ConditionalNode
+    public class CheckCharge : Condition
     {
         public CheckCharge(float minimum, float decrease)
         {
@@ -20,7 +20,7 @@ namespace Chrome
         
         private Coroutine cooldownRoutine;
 
-        protected override void OnBootup(Packet packet)
+        public override void Bootup(Packet packet)
         {
             var identity = packet.Get<IIdentity>();
             if (identity.Faction == Faction.Player)
@@ -28,11 +28,9 @@ namespace Chrome
                 var HUD = Repository.Get<ChargeHUD>(Interface.Charge);
                 HUD.IndicateThreshold(minimum);
             }
-            
-            base.OnBootup(packet);
         }
 
-        protected override bool Check(Packet packet)
+        public override bool Check(Packet packet)
         {
             if (cooldownRoutine != null) return false;
             

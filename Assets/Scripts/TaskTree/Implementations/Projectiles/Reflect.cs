@@ -2,7 +2,7 @@
 
 namespace Chrome
 {
-    public class Reflect : TaskedNode
+    public class Reflect : TaskNode
     {
         public Reflect(IValue<Vector3> direction) => this.direction = direction;
         

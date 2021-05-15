@@ -2,7 +2,7 @@
 
 namespace Chrome
 {
-    public abstract class TaskedNode : Node
+    public abstract class TaskNode : Node
     {
         public override bool IsDone => isDone;
         protected bool isDone;

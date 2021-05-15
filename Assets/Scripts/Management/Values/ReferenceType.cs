@@ -4,6 +4,7 @@
     {
         Global,
         SubGlobal,
-        Local
+        Local,
+        Nested
     }
 }

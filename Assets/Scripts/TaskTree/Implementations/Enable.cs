@@ -1,6 +1,6 @@
 ﻿namespace Chrome
 {
-    public class Enable : TaskedNode
+    public class Enable : TaskNode
     {
         public Enable(bool enabled, IValue<IEnabler> enabler)
         {

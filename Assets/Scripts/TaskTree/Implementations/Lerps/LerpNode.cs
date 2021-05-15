@@ -2,7 +2,7 @@
 
 namespace Chrome
 {
-    public abstract class LerpNode : TaskedNode
+    public abstract class LerpNode : TaskNode
     {
         public LerpNode(float time) => this.time = time;
         

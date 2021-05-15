@@ -2,7 +2,7 @@
 
 namespace Chrome
 {
-    public abstract class MoveNode : TaskedNode
+    public abstract class MoveNode : TaskNode
     {
         public MoveNode(IValue<Transform> self) => this.self = self;
         

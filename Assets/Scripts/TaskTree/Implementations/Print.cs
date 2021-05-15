@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Chrome
 {
     [Serializable]
-    public class Print : TaskedNode
+    public class Print : TaskNode
     {
         public Print(string message) => this.message = message;
         

@@ -1,6 +1,6 @@
 ﻿namespace Chrome
 {
-    public class EndProjectile : TaskedNode
+    public class EndProjectile : TaskNode
     {
         protected override void OnUse(Packet packet)
         {

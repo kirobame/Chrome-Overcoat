@@ -9,7 +9,11 @@ namespace Chrome
         public T Value
         {
             get => value;
-            set => packet.Set(value);
+            set
+            {
+                this.value = value;
+                packet.Set(value);
+            }
         }
 
         private Packet packet;

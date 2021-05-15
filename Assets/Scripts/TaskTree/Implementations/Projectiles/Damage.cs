@@ -2,7 +2,7 @@
 
 namespace Chrome
 {
-    public class Damage : TaskedNode
+    public class Damage : TaskNode
     {
         public Damage(IValue<float> amount) => this.amount = amount;
 

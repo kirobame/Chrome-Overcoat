@@ -2,6 +2,9 @@
 {
     public interface IBlackboard
     {
+        BlackboardSnapshot Save();
+        void Load(BlackboardSnapshot snapshot);
+        
         void Remove(string path);
 
         void SetRaw(string path, object value);

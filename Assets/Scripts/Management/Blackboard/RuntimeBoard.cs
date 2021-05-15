@@ -9,7 +9,12 @@ namespace Chrome
         protected virtual void Awake() => blackboard = new Blackboard();
         
         //--------------------------------------------------------------------------------------------------------------/
+
+        public BlackboardSnapshot Save() => blackboard.Save();
+        public void Load(BlackboardSnapshot snapshot) => blackboard.Load(snapshot);
         
+        //--------------------------------------------------------------------------------------------------------------/
+
         public void Remove(string path) => blackboard.Remove(path);
 
         public void SetRaw(string path, object value) => blackboard.SetRaw(path, value);

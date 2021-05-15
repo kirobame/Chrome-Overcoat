@@ -12,7 +12,11 @@ namespace Chrome
         public T Value
         {
             get => value;
-            set => Repository.Set(address, value);
+            set
+            {
+                this.value = value;
+                Repository.Set(address, value);
+            }
         }
 
         private Enum address;

@@ -11,8 +11,22 @@ namespace Chrome
         
         private ITaskTree root;
         
-        public override void Build() => root = builder.Build();
+        public override void Build()
+        {
+            base.Build();
+            
+            Board.Set(WeaponRefs.AMMO, maxAmmo);
+            root = builder.Build();
+        }
 
+        //--------------------------------------------------------------------------------------------------------------/
+
+        public override bool HasAmmo => Board.Get<float>(WeaponRefs.AMMO) > 0.0f;
+
+        [SerializeField] private float maxAmmo;
+
+        public override void Actualize(Packet packet) => Use(packet);
+        
         //--------------------------------------------------------------------------------------------------------------/
         
         public bool IsDone => root.IsDone;
@@ -51,7 +65,6 @@ namespace Chrome
         }
 
         public void Prepare(Packet packet) => root.Prepare(packet);
-        public override void Actualize(Packet packet) => Use(packet);
         public IEnumerable<INode> Use(Packet packet) => root.Use(packet);
 
         public void Close(Packet packet) => root.Close(packet);

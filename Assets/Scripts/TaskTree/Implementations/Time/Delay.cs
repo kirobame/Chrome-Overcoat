@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Chrome
 {
     [Serializable]
-    public class Delay : TaskedNode
+    public class Delay : TaskNode
     {
         public Delay(float time) => this.time = time;
 

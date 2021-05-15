@@ -3,7 +3,7 @@ using UnityEngine.AI;
 
 namespace Chrome
 {
-    public class StopMoving : TaskedNode
+    public class StopMoving : TaskNode
     {
         public StopMoving(IValue<NavMeshAgent> navMesh) => this.navMesh = navMesh;
         

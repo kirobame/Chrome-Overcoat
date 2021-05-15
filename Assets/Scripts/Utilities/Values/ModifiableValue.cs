@@ -8,16 +8,22 @@ namespace Chrome
     [Serializable]
     public abstract class ModifiableValue<T> : IRegistry<T>, IBootable where T : struct
     {
+        public ModifiableValue(T value) => this.value = value;
+        
         public object RawValue => current;
         public T Value => current;
         
         [SerializeField] private T value;
         private T current;
         
-        private List<IModification<T>> modifications = new List<IModification<T>>();
+        private List<IModification<T>> modifications;
 
-        public void Bootup() => current = value;
-        
+        public void Bootup()
+        {
+            current = value;
+            modifications = new List<IModification<T>>();
+        }
+
         public void Update()
         {
             for (var i = 0; i < modifications.Count; i++)
@@ -30,6 +36,8 @@ namespace Chrome
         }
 
         public void Set(object value) => current = (T)value;
+        public abstract IRegistry Copy();
+
         public void Modify(IModification<T> modification) => modifications.Add(modification);
     }
 }

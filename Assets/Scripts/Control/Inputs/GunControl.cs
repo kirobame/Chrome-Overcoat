@@ -37,9 +37,12 @@ namespace Chrome
 
         protected override void OnInjectionDone(IRoot source)
         {
-            hasBeenBootedUp = true;
-            
             packet.Set(false);
+            
+            onAmmoChangeToken = packet.GetOrCreateValueAt<string, Token>(TokenRefs.ON_AMMO_CHANGE);
+            onAmmoChangeToken.onConsumption += OnAmmoChange;
+
+            hasBeenBootedUp = true;
             SwitchTo(runtimeDefaultWeapon);
         }
 
@@ -68,6 +71,7 @@ namespace Chrome
 
         private Weapon targetWeapon;
         private Weapon runtimeDefaultWeapon;
+        private Token onAmmoChangeToken;
         
         private bool hasBeenBootedUp;
 
@@ -94,6 +98,11 @@ namespace Chrome
             takeOutTimer = 0.0f;
             HasWeapon = false;
         }
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            onAmmoChangeToken.onConsumption -= OnAmmoChange;
+        }
 
         public override void Bootup()
         {
@@ -113,6 +122,7 @@ namespace Chrome
         {
             if (switchState == SwitchState.None) // Launch normally
             {
+                if (Current == weapon) return;
                 targetWeapon = weapon;
 
                 if (HasWeapon) switchRoutine = StartCoroutine(HolsterRoutine());
@@ -198,6 +208,9 @@ namespace Chrome
             
             Current = targetWeapon;
             targetWeapon = null;
+
+            var board = packet.Get<IBlackboard>();
+            board.Set(WeaponRefs.BOARD, Current.Board);
             
             Current.Bootup(packet);
             Current.AssignVisualsTo(visual.Value);
@@ -255,6 +268,14 @@ namespace Chrome
             board.Get<BusyBool>(PlayerRefs.CAN_SPRINT).business--;
             
             pressState = PressState.Released;
+        }
+
+        //--------------------------------------------------------------------------------------------------------------/
+
+        void OnAmmoChange(Token token)
+        {
+            if (Current == runtimeDefaultWeapon || Current.HasAmmo) return;
+            DropCurrent();
         }
     }
 }

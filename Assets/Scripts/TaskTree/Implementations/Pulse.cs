@@ -1,6 +1,6 @@
 ﻿namespace Chrome
 {
-    public class Pulse : TaskedNode
+    public class Pulse : TaskNode
     {
         public Pulse(RootNode root, Node target)
         {

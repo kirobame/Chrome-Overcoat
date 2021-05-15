@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Chrome
 {
     [Serializable]
-    public class ComputeAimDirection : TaskedNode
+    public class ComputeAimDirection : TaskNode
     {
         public ComputeAimDirection(string path, LayerMask mask, IValue<Transform> from, IValue<Transform> view)
         {

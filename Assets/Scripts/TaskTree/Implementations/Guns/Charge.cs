@@ -9,7 +9,7 @@ using UnityEngine;
 namespace Chrome
 {
     [Serializable]
-    public class Charge : TaskedNode
+    public class Charge : TaskNode
     {
         public Charge(float duration, float shakeFactor, float maxShake)
         {

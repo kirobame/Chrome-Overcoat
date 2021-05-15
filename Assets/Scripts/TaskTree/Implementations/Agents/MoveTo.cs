@@ -3,7 +3,7 @@ using UnityEngine.AI;
 
 namespace Chrome
 {
-    public class MoveTo : TaskedNode
+    public class MoveTo : TaskNode
     {
         public MoveTo(IValue<NavMeshAgent> navMesh, IValue<Transform> target)
         {

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class ShieldDown : TaskedNode
+    public class ShieldDown : TaskNode
     {
         public ShieldDown(IValue<Shield> shield) => this.shield = shield;
 

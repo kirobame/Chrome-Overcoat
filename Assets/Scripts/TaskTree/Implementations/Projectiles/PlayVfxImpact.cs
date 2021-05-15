@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class PlayVfxImpact : TaskedNode
+    public class PlayVfxImpact : TaskNode
     {
         public PlayVfxImpact(PoolableVfx impactVfx) => this.impactVfx = impactVfx;
         

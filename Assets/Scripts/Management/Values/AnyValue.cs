@@ -24,6 +24,8 @@ namespace Chrome
             get => value;
             set
             {
+                this.value = value;
+                
                 switch (mode)
                 {
                     case Mode.Packet: ((Packet)helper).Set<T>(value);

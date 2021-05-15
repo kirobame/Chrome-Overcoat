@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class AttackCac : TaskedNode
+    public class AttackCac : TaskNode
     {
         public AttackCac(IIdentity source, IValue<Transform> aimTr, float damage)
         {

@@ -2,7 +2,7 @@
 
 namespace Chrome
 {
-    public class SetActive : TaskedNode
+    public class SetActive : TaskNode
     {
         public SetActive(bool enabled, IValue<GameObject> target)
         {

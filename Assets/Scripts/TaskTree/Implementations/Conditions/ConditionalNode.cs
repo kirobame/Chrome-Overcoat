@@ -2,7 +2,7 @@
 
 namespace Chrome
 {
-    public abstract class ConditionalNode : TaskedNode
+    public abstract class ConditionalNode : TaskNode
     {
         protected override void OnUse(Packet packet)
         {

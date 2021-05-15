@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Flux.EDS;
 using UnityEngine;
 
 namespace Chrome
@@ -62,6 +63,9 @@ namespace Chrome
                 
                 case ReferenceType.Local:
                     return new LocallyReferencedValue<T>(path);
+                
+                case ReferenceType.Nested:
+                    return new NestedReferencedValue<T>(path);
             }
 
             return null;
@@ -86,6 +90,55 @@ namespace Chrome
                 damageable.Hit(source, amount, source.Packet);
                 return true;
             });
+        }
+
+        public static void SetKeyValuePair<TKey, TValue>(this Packet packet, TKey key, TValue value)
+        {
+            if (packet.TryGet<Dictionary<TKey, TValue>>(out var dictionary)) dictionary.Add(key, value);
+            else
+            {
+                dictionary = new Dictionary<TKey, TValue>();
+                dictionary.Add(key, value);
+                
+                packet.Set(dictionary);
+            }
+        }
+        public static bool TryGetValueAt<TKey, TValue>(this Packet packet, TKey key, out TValue value)
+        {
+            if (packet.TryGet<Dictionary<TKey, TValue>>(out var dictionary) && dictionary.TryGetValue(key, out value)) return true;
+            else
+            {
+                value = default;
+                return false;
+            }
+        }
+        public static TValue GetValueAt<TKey, TValue>(this Packet packet, TKey key)
+        {
+            var dictionary = packet.Get<Dictionary<TKey, TValue>>();
+            return dictionary[key];
+        }
+        public static TValue GetOrCreateValueAt<TKey, TValue>(this Packet packet, TKey key) where TValue : new()
+        {
+            if (!packet.TryGet<Dictionary<TKey, TValue>>(out var dictionary))
+            {
+                var value = new TValue();
+                
+                dictionary = new Dictionary<TKey, TValue>();
+                dictionary.Add(key, value);
+                
+                packet.Set(dictionary);
+
+                return value;
+            }
+
+            if (dictionary.TryGetValue(key, out var fetchedValue)) return fetchedValue;
+            else
+            {
+                var value = new TValue();
+                dictionary.Add(key, value);
+
+                return value;
+            }
         }
     }
 }

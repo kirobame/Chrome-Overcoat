@@ -1,6 +1,6 @@
 ﻿namespace Chrome
 {
-    public class SetLocalReference<T> : TaskedNode
+    public class SetLocalReference<T> : TaskNode
     {
         public SetLocalReference(string path, T value)
         {

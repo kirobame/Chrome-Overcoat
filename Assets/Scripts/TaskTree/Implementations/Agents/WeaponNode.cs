@@ -5,7 +5,7 @@ using Object = UnityEngine.Object;
 namespace Chrome
 {
     [Serializable]
-    public class WeaponNode : TaskedNode
+    public class WeaponNode : TaskNode
     {
         public WeaponNode(Weapon weapon)
         {
