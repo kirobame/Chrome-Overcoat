@@ -1,5 +1,4 @@
 ﻿using System;
-using Chrome.Retro;
 using Flux;
 using Flux.Audio;
 using Flux.Data;
@@ -17,9 +16,7 @@ namespace Chrome
         [FoldoutGroup("Feedbacks"), SerializeField] private PoolableVfx impactVfx;
         [FoldoutGroup("Feedbacks"), SerializeField] private GameObject graph;
         [FoldoutGroup("Feedbacks"), SerializeField] private TrailRenderer trail;
-
-        [FoldoutGroup("Feedbacks"), SerializeField] private AudioPackage sound;
-
+        
         private Coroutine routine;
         
         private bool hasHit;
@@ -68,7 +65,6 @@ namespace Chrome
             
             vfxPoolable.transform.localScale = Vector3.one;
             
-            sound.Play();
             if (hit.collider.TryGetComponent<InteractionHub>(out var hub))
             {
                 packet.Set(hit);

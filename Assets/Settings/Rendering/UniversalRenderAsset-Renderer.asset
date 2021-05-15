@@ -31,9 +31,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de640fe3d0db1804a85f9fc8f5cadab6, type: 3}
   m_Name: UniversalRenderAsset-Renderer
   m_EditorClassIdentifier: 
-  m_RendererFeatures:
-  - {fileID: -8135549252251646519}
-  m_RendererFeatureMap: c985d81e0fb9188f
+  m_RendererFeatures: []
+  m_RendererFeatureMap: 
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   shaders:

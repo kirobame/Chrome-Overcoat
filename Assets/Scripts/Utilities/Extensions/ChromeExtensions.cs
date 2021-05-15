@@ -6,6 +6,12 @@ namespace Chrome
 {
     public static class ChromeExtensions
     {
+        public static IValue<T> Register<T>(this List<IValue> injections, IValue<T> value)
+        {
+            injections.Add(value);
+            return value;
+        }
+        
         public static TOwner Recurse<TOwner>(this IAssignable assignee, int count = 1)
         {
             if (count <= 1) return (TOwner)assignee.Value;

@@ -2633,6 +2633,50 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4566176650753290, guid: 9b8802d83e59c8c448a7665322aa7d17, type: 3}
   m_PrefabInstance: {fileID: 329278124}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &338871310
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 338871311}
+  - component: {fileID: 338871312}
+  m_Layer: 7
+  m_Name: Pickup
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &338871311
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 338871310}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1116115624}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &338871312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 338871310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78530ea57c834041b93898e4708456f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weapon: {fileID: 11400000, guid: c0a82067e520f354aacffc7223bf102a, type: 2}
 --- !u!1001 &345382085
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9771,6 +9815,7 @@ Transform:
   - {fileID: 560282137}
   - {fileID: 1317599168}
   - {fileID: 1770030522}
+  - {fileID: 338871311}
   m_Father: {fileID: 0}
   m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
@@ -9894,6 +9939,7 @@ MonoBehaviour:
   self: {fileID: 1116115625}
   pivot: {fileID: 280569047129800818}
   fireAnchor: {fileID: 1637747128}
+  animator: {fileID: 196391311799807002}
 --- !u!114 &1116115633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21267,8 +21313,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 099f626bd3504c9195f1a13c402f20e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  leftWeapon: {fileID: 11400000, guid: c0a82067e520f354aacffc7223bf102a, type: 2}
-  rightWeapon: {fileID: 11400000, guid: de04899b7ad279e4fa5963d4aa01027a, type: 2}
+  defaultWeapon: {fileID: 11400000, guid: de04899b7ad279e4fa5963d4aa01027a, type: 2}
+  switchTiming: {x: 0.5, y: 1}
 --- !u!114 &283606065032798069
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21344,12 +21390,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 283606065032798066}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 96281548edac22c419d87c955c6a2c2f, type: 3}
+  m_Script: {fileID: 11500000, guid: d26c3c95d23247d99c4094ea24847863, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  frenzyWeapon: {fileID: 11400000, guid: 54b251bab650c4944be1650287f45108, type: 2}
-  heatCost: 1
-  lowHeatLock: 0
+  renderer: {fileID: 144952088411063506}
 --- !u!1 &283625572202787916
 GameObject:
   m_ObjectHideFlags: 0
@@ -21752,7 +21796,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &663411688785151063
 MonoBehaviour:
   m_ObjectHideFlags: 0

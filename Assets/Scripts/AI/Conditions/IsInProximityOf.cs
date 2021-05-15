@@ -1,5 +1,4 @@
-﻿using Chrome.Retro;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Chrome
 {
@@ -21,7 +20,7 @@ namespace Chrome
         public override bool Check(Packet packet)
         {
             if (!from.IsValid(packet) || !target.IsValid(packet)) return false;
-            return Vector3.Distance(from.Value.position.Flatten(), target.Value.position.Flatten()) < distance;
+            return Vector3.Distance(from.Value.position, target.Value.position) < distance;
         }
     }
 }
