@@ -33,8 +33,12 @@ namespace Chrome
 
         //--------------------------------------------------------------------------------------------------------------/
         
-        protected override void SetupInputs() => input.Value.BindKey(InputRefs.SHOOT, this, shootKey);
-
+        protected override void PrepareInjection()
+        {
+            identity = injections.Register(new AnyValue<IIdentity>());
+            animator = injections.Register(new AnyValue<Animator>());
+            visual = injections.Register(new AnyValue<WeaponVisual>());
+        }
         protected override void OnInjectionDone(IRoot source)
         {
             packet.Set(false);
@@ -45,7 +49,9 @@ namespace Chrome
             hasBeenBootedUp = true;
             SwitchTo(runtimeDefaultWeapon);
         }
-
+        
+        protected override void SetupInputs() => input.Value.BindKey(InputRefs.SHOOT, this, shootKey);
+        
         //--------------------------------------------------------------------------------------------------------------/
 
         public bool HasWeapon { get; private set; }
@@ -77,17 +83,11 @@ namespace Chrome
 
         //--------------------------------------------------------------------------------------------------------------/
 
-        protected override void Awake()
+        void Awake()
         {
             hasBeenBootedUp = false;
             shootKey = new CachedValue<Key>(Key.Inactive);
             
-            base.Awake();
-            
-            identity = injections.Register(new AnyValue<IIdentity>());
-            animator = injections.Register(new AnyValue<Animator>());
-            visual = injections.Register(new AnyValue<WeaponVisual>());
-
             runtimeDefaultWeapon = Instantiate(defaultWeapon);
             runtimeDefaultWeapon.Build();
             aimCompute = ChromeExtensions.CreateComputeAimDirection();

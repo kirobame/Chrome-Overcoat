@@ -7,5 +7,7 @@ namespace Chrome
     public interface IInjectable
     {
         IReadOnlyList<IValue> Injections { get; }
+
+        void PrepareInjection();
     }
 }

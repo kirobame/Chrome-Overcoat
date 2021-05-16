@@ -10,6 +10,12 @@ namespace Chrome
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         private IValue[] injections;
 
+        void IInjectable.PrepareInjection()
+        {
+            camera = new AnyValue<CinemachineVirtualCamera>();
+            injections = new IValue[] { camera };
+        }
+        
         void IInjectionCallbackListener.OnInjectionDone(IRoot source) => noise = camera.Value.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
 
         //--------------------------------------------------------------------------------------------------------------/
@@ -22,15 +28,7 @@ namespace Chrome
 
         private new IValue<CinemachineVirtualCamera> camera;
         private CinemachineBasicMultiChannelPerlin noise;
-
-        protected override void Awake()
-        {
-            base.Awake();
-            
-            camera = new AnyValue<CinemachineVirtualCamera>();
-            injections = new IValue[] { camera };
-        }
-
+        
         protected override void Settle() { }
         protected override void Compute()
         {

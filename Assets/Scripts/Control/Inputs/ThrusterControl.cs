@@ -9,6 +9,12 @@ namespace Chrome
 {
     public class ThrusterControl : InputControl<ThrusterControl>
     {
+        protected override void PrepareInjection()
+        {
+            body = injections.Register(new AnyValue<CharacterBody>());
+            gravity = injections.Register(new AnyValue<Gravity>());
+        }
+        
         protected override void SetupInputs() => input.Value.BindKey(InputRefs.JUMP, this, key);
 
         //--------------------------------------------------------------------------------------------------------------/
@@ -28,18 +34,7 @@ namespace Chrome
 
         //--------------------------------------------------------------------------------------------------------------/
 
-        protected override void Awake()
-        {
-            key = new CachedValue<Key>(Key.Inactive);
-            
-            base.Awake();
-            
-            body = new AnyValue<CharacterBody>();
-            injections.Add(body);
-            
-            gravity = new AnyValue<Gravity>();
-            injections.Add(gravity);
-        }
+        void Awake() => key = new CachedValue<Key>(Key.Inactive);
         void Start()
         {
             airTimer = airTime;

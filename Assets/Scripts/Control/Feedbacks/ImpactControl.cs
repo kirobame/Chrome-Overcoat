@@ -13,6 +13,11 @@ namespace Chrome
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         private IValue[] injections;
 
+        void IInjectable.PrepareInjection()
+        {
+            
+        }
+
         //--------------------------------------------------------------------------------------------------------------/
 
         [FoldoutGroup("Values"), SerializeField] private float knockback;

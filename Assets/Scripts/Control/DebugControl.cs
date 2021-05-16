@@ -9,6 +9,12 @@ namespace Chrome
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         private IValue[] injections;
 
+        void IInjectable.PrepareInjection()
+        {
+            body = new AnyValue<CharacterBody>();
+            injections = new IValue[] { body };
+        }
+
         //--------------------------------------------------------------------------------------------------------------/
         
         [FoldoutGroup("Ground"), SerializeField] private Color minGroundColor;
@@ -21,12 +27,6 @@ namespace Chrome
 
         private IValue<CharacterBody> body;
         private Vector3 previousPosition;
-
-        void Awake()
-        {
-            body = new AnyValue<CharacterBody>();
-            injections = new IValue[] { body };
-        }
         
         void Update()
         {

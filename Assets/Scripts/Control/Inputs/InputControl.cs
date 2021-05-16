@@ -9,6 +9,17 @@ namespace Chrome
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         protected List<IValue> injections;
 
+        void IInjectable.PrepareInjection()
+        {
+            injections = new List<IValue>();
+            
+            input = new AnyValue<InputHandler>();
+            injections.Add(input);
+
+            PrepareInjection();
+        }
+        protected virtual void PrepareInjection() { }
+
         void IInjectionCallbackListener.OnInjectionDone(IRoot source)
         {
             OnInjectionDone(source);
@@ -26,13 +37,8 @@ namespace Chrome
 
         protected IValue<InputHandler> input;
 
-        protected virtual void Awake()
-        {
-            injections = new List<IValue>();
-            
-            input = new AnyValue<InputHandler>();
-            injections.Add(input);
-        }
+        //--------------------------------------------------------------------------------------------------------------/
+        
         protected virtual void OnDestroy() => onDestruction?.Invoke(this);
         
         public virtual void Bootup()

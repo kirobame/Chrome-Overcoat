@@ -9,6 +9,12 @@ namespace Chrome
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         private IValue[] injections;
 
+        void IInjectable.PrepareInjection()
+        {
+            body = new AnyValue<PhysicBody>();
+            injections = new IValue[] { body };
+        }
+
         //--------------------------------------------------------------------------------------------------------------/
         
         public Vector3 Force => bypass ? overridingForce : Physics.gravity;
@@ -20,12 +26,6 @@ namespace Chrome
 
         private IValue<PhysicBody> body;
 
-        void Awake()
-        {
-            body = new AnyValue<PhysicBody>();
-            injections = new IValue[] { body };
-        }
-        
         void Update()
         {
             var force = Force * (affect * body.Value.Mass);

@@ -11,6 +11,12 @@ namespace Chrome
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         private IValue[] injections;
 
+        void IInjectable.PrepareInjection()
+        {
+            identity = new AnyValue<IIdentity>();
+            injections = new IValue[] { identity };
+        }
+
         void IInjectionCallbackListener.OnInjectionDone(IRoot source) => hasBeenBootedUp = true;
 
         //--------------------------------------------------------------------------------------------------------------/
@@ -25,13 +31,7 @@ namespace Chrome
         
         //--------------------------------------------------------------------------------------------------------------/
 
-        protected virtual void Awake()
-        {
-            hasBeenBootedUp = false;
-            
-            identity = new AnyValue<IIdentity>();
-            injections = new IValue[] { identity };
-        }
+        protected virtual void Awake() => hasBeenBootedUp = false;
         protected virtual void Bootup() { }
         
         public void Shoot(IIdentity source, Vector3 fireAnchor, Vector3 direction, Packet packet)

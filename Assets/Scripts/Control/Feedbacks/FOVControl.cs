@@ -13,6 +13,18 @@ namespace Chrome
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         private IValue[] injections;
 
+        void IInjectable.PrepareInjection()
+        {
+            body = new AnyValue<CharacterBody>();
+            camera = new AnyValue<CinemachineVirtualCamera>();
+            
+            injections = new IValue[]
+            {
+                body,
+                camera
+            };
+        }
+
         //--------------------------------------------------------------------------------------------------------------/
         
         [FoldoutGroup("Values"), SerializeField] private float smoothing;
@@ -29,17 +41,6 @@ namespace Chrome
         private float current;
         private float damping;
 
-        void Awake()
-        {
-            body = new AnyValue<CharacterBody>();
-            camera = new AnyValue<CinemachineVirtualCamera>();
-            injections = new IValue[]
-            {
-                body,
-                camera
-            };
-        }
-        
         void Update()
         {
             var forward = body.Value.transform.InverseTransformVector(body.Value.Delta).z;

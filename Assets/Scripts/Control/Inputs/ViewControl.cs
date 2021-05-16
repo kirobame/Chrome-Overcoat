@@ -28,12 +28,10 @@ namespace Chrome
 
         //--------------------------------------------------------------------------------------------------------------/
 
-        protected override void Awake()
+        void Awake()
         {
             inputs = new CachedValue<Vector2>(Vector2.zero);
-            
-            base.Awake();
-            
+
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
 

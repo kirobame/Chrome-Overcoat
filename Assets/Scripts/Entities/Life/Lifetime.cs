@@ -12,6 +12,12 @@ namespace Chrome
     {
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         private IValue[] injections;
+
+        void IInjectable.PrepareInjection()
+        {
+            identity = new AnyValue<IIdentity>();
+            injections = new IValue[] { identity };
+        }
         
         void IInjectionCallbackListener.OnInjectionDone(IRoot source)
         {
@@ -37,9 +43,6 @@ namespace Chrome
 
         void Awake()
         {
-            identity = new AnyValue<IIdentity>();
-            injections = new IValue[] { identity };
-            
             children = new List<Lifetime>();
             
             bounds = transform.Fetch<ILifebound,Lifetime>().ToList();
@@ -47,9 +50,10 @@ namespace Chrome
             
             listeners = transform.Fetch<IListener<Lifetime>,Lifetime>().ToList();
             foreach (var listener in listeners) listener.onDestruction += RemoveListener;
+            
+            TryFetchParent();
         }
-        void Start() => TryFetchParent();
-        
+
         void OnDestroy()
         {
             root.onAttachment -= OnRootAttachment;

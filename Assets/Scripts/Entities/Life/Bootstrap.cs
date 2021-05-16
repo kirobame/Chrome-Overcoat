@@ -8,6 +8,12 @@ namespace Chrome
     {
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         private IValue[] injections;
+
+        void IInjectable.PrepareInjection()
+        {
+            lifetime = new AnyValue<Lifetime>();
+            injections = new IValue[] { lifetime};
+        }
         
         void IInjectionCallbackListener.OnInjectionDone(IRoot source)
         {
@@ -20,13 +26,7 @@ namespace Chrome
         private bool hasBeenBootedUp;
         private IValue<Lifetime> lifetime;
 
-        void Awake()
-        {
-            hasBeenBootedUp = false;
-            
-            lifetime = new AnyValue<Lifetime>();
-            injections = new IValue[] { lifetime};
-        }
+        void Awake() => hasBeenBootedUp = false;
         void OnEnable()
         {
             if (!hasBeenBootedUp) return;

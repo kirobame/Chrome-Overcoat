@@ -6,6 +6,10 @@ namespace Chrome
 {
     public class SwaveControl : TiltControl
     {
+        protected override void PrepareInjection() => view = injections.Register(new AnyValue<ViewControl>());
+
+        //--------------------------------------------------------------------------------------------------------------/
+        
         [FoldoutGroup("Pitch"), SerializeField] private float pitchViewAffect;
 
         [FoldoutGroup("Yaw"), SerializeField] private Knob yawKnob;
@@ -13,14 +17,8 @@ namespace Chrome
 
         private IValue<ViewControl> view;
 
-        protected override void Awake()
-        {
-            base.Awake();
-            
-            view = new AnyValue<ViewControl>();
-            injections.Add(view);
-        }
-        
+        //--------------------------------------------------------------------------------------------------------------/
+
         protected override float ComputePitch(Vector3 bodyDelta)
         {
             bodyDelta.y += view.Value.Delta.y * pitchViewAffect;

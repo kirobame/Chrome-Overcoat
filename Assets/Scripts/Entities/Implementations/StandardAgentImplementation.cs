@@ -13,8 +13,14 @@ namespace Chrome
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         private IValue[] injections;
 
+        void IInjectable.PrepareInjection()
+        {
+            identity = new AnyValue<IIdentity>();
+            injections = new IValue[] { identity };
+        }
+
         //--------------------------------------------------------------------------------------------------------------/
-//
+
         public event Action<ILifebound> onDestruction;
 
         public bool IsActive => true;
@@ -29,13 +35,7 @@ namespace Chrome
 
         //--------------------------------------------------------------------------------------------------------------/
 
-        void Awake()
-        {
-            hasBeenBootedUp = false;
-            
-            identity = new AnyValue<IIdentity>();
-            injections = new IValue[] { identity };
-        }
+        void Awake() => hasBeenBootedUp = false;
         void OnDestroy() => onDestruction?.Invoke(this);
 
         public void Bootup()

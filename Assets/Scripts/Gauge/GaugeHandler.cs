@@ -12,6 +12,12 @@ namespace Chrome
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         private IValue[] injections;
 
+        void IInjectable.PrepareInjection()
+        {
+            lifetime = new AnyValue<Lifetime>();
+            injections = new IValue[] { lifetime };
+        }
+
         //--------------------------------------------------------------------------------------------------------------/
         
         public event Action<ILifebound> onDestruction;
@@ -24,12 +30,7 @@ namespace Chrome
         private Gauge firstGauge;
         
         //--------------------------------------------------------------------------------------------------------------/
-
-        void Awake()
-        {
-            lifetime = new AnyValue<Lifetime>();
-            injections = new IValue[] { lifetime };
-        }
+        
         void Start()
         {
             firstGauge = Repository.Get<Gauge>(Gauges.One);

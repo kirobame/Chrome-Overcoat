@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Flux.Data;
 using Flux.EDS;
 using UnityEngine;
 
@@ -7,11 +9,33 @@ namespace Chrome
 {
     public static class ChromeExtensions
     {
+        private static SpawnLocations[] allLocations;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
+        static void Bootup() => allLocations = Enum.GetValues(typeof(SpawnLocations)).Cast<SpawnLocations>().ToArray();
+
+        //--------------------------------------------------------------------------------------------------------------/
+    
+        public static IEnumerable<SpawnLocations> Split(this SpawnLocations locations)
+        {
+            var output = new List<SpawnLocations>();
+            foreach(var location in allLocations)
+            {
+                if ((locations & location) != 0) output.Add(location);
+            }
+
+            return output;
+        }
+
+        //--------------------------------------------------------------------------------------------------------------/
+        
         public static IValue<T> Register<T>(this List<IValue> injections, IValue<T> value)
         {
             injections.Add(value);
             return value;
         }
+
+        //--------------------------------------------------------------------------------------------------------------/
         
         public static TOwner Recurse<TOwner>(this IAssignable assignee, int count = 1)
         {
@@ -24,6 +48,8 @@ namespace Chrome
                 return (TOwner)current.Value;
             }
         }
+
+        //--------------------------------------------------------------------------------------------------------------/
         
         public static T[] Fetch<T,TFilter>(this Transform source)
         {
@@ -49,6 +75,8 @@ namespace Chrome
                 FetchFrom<T,TFilter>(child, values);
             }
         }
+
+        //--------------------------------------------------------------------------------------------------------------/
         
         public static IValue<T> Cache<T>(this T value) => new CachedValue<T>(value);
         public static IValue<T> Reference<T>(this string path, ReferenceType type = ReferenceType.Local)
@@ -71,6 +99,8 @@ namespace Chrome
             return null;
         }
 
+        //--------------------------------------------------------------------------------------------------------------/
+
         public static ComputeAimDirection CreateComputeAimDirection()
         {
             var mask = LayerMask.GetMask("Environment", "Entity");
@@ -80,6 +110,8 @@ namespace Chrome
             
             return new ComputeAimDirection("shootDir", mask, fireAnchor, pivot, collider);
         }
+
+        //--------------------------------------------------------------------------------------------------------------/
 
         public static void RelayDamage(this InteractionHub hub, IIdentity source, float amount)
         {
@@ -92,6 +124,18 @@ namespace Chrome
             });
         }
 
+        //--------------------------------------------------------------------------------------------------------------/
+
+        public static void AddElement<TElement>(this Packet packet, TElement element)
+        {
+            if (packet.TryGet<List<TElement>>(out var list)) list.Add(element);
+            else
+            {
+                list = new List<TElement>() { element };
+                packet.Set(list);
+            }
+        }
+        
         public static void SetKeyValuePair<TKey, TValue>(this Packet packet, TKey key, TValue value)
         {
             if (packet.TryGet<Dictionary<TKey, TValue>>(out var dictionary)) dictionary.Add(key, value);
@@ -139,6 +183,14 @@ namespace Chrome
 
                 return value;
             }
+        }
+
+        //--------------------------------------------------------------------------------------------------------------/
+
+        public static void RebootLocally(this Transform transform)
+        {
+            transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.identity;
         }
     }
 }

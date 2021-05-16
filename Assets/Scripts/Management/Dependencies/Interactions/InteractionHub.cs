@@ -10,6 +10,12 @@ namespace Chrome
     {
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         private IValue[] injections;
+
+        void IInjectable.PrepareInjection()
+        {
+            identity = new AnyValue<IIdentity>();
+            injections = new IValue[] { identity };
+        }
         
         void IInjectionCallbackListener.OnInjectionDone(IRoot source)
         {
@@ -31,19 +37,17 @@ namespace Chrome
         private List<InteractionHub> children;
 
         //--------------------------------------------------------------------------------------------------------------/
-        
+
         void Awake()
         {
-            identity = new AnyValue<IIdentity>();
-            injections = new IValue[] { identity };
-            
             children = new List<InteractionHub>();
             
             interactions = transform.Fetch<IInteraction,InteractionHub>().ToList();
             foreach (var interaction in interactions) interaction.onDestruction += RemoveInteraction;
+            
+            TryFetchParent();
         }
-        void Start() => TryFetchParent();
-        
+
         void OnDestroy()
         {
             root.onAttachment -= OnRootAttachment;

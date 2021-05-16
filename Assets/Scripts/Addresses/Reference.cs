@@ -6,6 +6,7 @@ namespace Chrome
     public enum Reference : byte
     {
         Camera,
-        VirtualCamera
+        VirtualCamera,
+        Areas
     }
 }

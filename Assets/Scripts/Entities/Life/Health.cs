@@ -11,7 +11,19 @@ namespace Chrome
     {
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         private IValue[] injections;
-        
+
+        void IInjectable.PrepareInjection()
+        {
+            identity = new AnyValue<IIdentity>();
+            lifetime = new AnyValue<Lifetime>();
+            
+            injections = new IValue[]
+            {
+                identity,
+                lifetime
+            };
+        }
+
         //--------------------------------------------------------------------------------------------------------------/
         
         private event Action<IInteraction> onInteractionDestruction;
@@ -44,19 +56,7 @@ namespace Chrome
         private float amount;
 
         //--------------------------------------------------------------------------------------------------------------/
-
-        void Awake()
-        {
-            identity = new AnyValue<IIdentity>();
-            lifetime = new AnyValue<Lifetime>();
-            injections = new IValue[]
-            {
-                identity,
-                lifetime
-            };
-            
-            Bootup();
-        }
+        
         void OnDestroy()
         {
             onInteractionDestruction?.Invoke(this);

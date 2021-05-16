@@ -12,6 +12,12 @@ namespace Chrome
     {
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         private IValue[] injections;
+
+        void IInjectable.PrepareInjection()
+        {
+            identity = new AnyValue<IIdentity>();
+            injections = new IValue[] { identity };
+        }
         
         //--------------------------------------------------------------------------------------------------------------/
 
@@ -37,13 +43,7 @@ namespace Chrome
 
         //--------------------------------------------------------------------------------------------------------------/
         
-        void Awake()
-        {
-            identity = new AnyValue<IIdentity>();
-            injections = new IValue[] { identity };
-            
-            health = maxHealth;
-        }
+        void Awake() => health = maxHealth;
         void OnDestroy() => onDestruction?.Invoke(this);
         
         public void Hit(IIdentity source, float damage, Packet packet)

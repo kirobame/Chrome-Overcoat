@@ -11,6 +11,12 @@ namespace Chrome
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         private IValue[] injections;
 
+        void IInjectable.PrepareInjection()
+        {
+            root = new AnyValue<IRoot>();
+            injections = new IValue[] { root };
+        }
+
         //--------------------------------------------------------------------------------------------------------------/
         
         public event Action<ILifebound> onDestruction;
@@ -23,11 +29,6 @@ namespace Chrome
 
         private IValue<IRoot> root; 
         
-        void Awake()
-        {
-            root = new AnyValue<IRoot>();
-            injections = new IValue[] { root };
-        }
         void OnDestroy() => onDestruction?.Invoke(this);
         
         public void Bootup() { }

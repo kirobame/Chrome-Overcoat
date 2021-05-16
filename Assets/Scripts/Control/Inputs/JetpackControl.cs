@@ -12,6 +12,13 @@ namespace Chrome
 {
     public class JetpackControl : InputControl<JetpackControl>
     {
+        protected override void PrepareInjection()
+        {
+            body = injections.Register(new AnyValue<CharacterBody>());
+            gravity = injections.Register(new AnyValue<Gravity>());
+            move = injections.Register(new AnyValue<MoveControl>());
+        }
+        
         protected override void SetupInputs() => input.Value.BindKey(InputRefs.JUMP, this, key);
 
         //--------------------------------------------------------------------------------------------------------------/
@@ -36,21 +43,7 @@ namespace Chrome
         
         //--------------------------------------------------------------------------------------------------------------/
 
-        protected override void Awake()
-        {
-            key = new CachedValue<Key>(Key.Inactive);
-            
-            base.Awake();
-            
-            body = new AnyValue<CharacterBody>();
-            injections.Add(body);
-            
-            gravity = new AnyValue<Gravity>();
-            injections.Add(gravity);
-            
-            move = new AnyValue<MoveControl>();
-            injections.Add(move);
-        }
+        void Awake() => key = new CachedValue<Key>(Key.Inactive);
         void Start() => HUD = Repository.Get<JetpackHUD>(Interface.Jetpack);
 
         //--------------------------------------------------------------------------------------------------------------/

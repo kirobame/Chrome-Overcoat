@@ -8,6 +8,8 @@ namespace Chrome
         Projectile,
         MuzzleFlash,
         Impact,
-        Death
+        Death,
+        Agent,
+        Modification
     }
 }

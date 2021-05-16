@@ -11,6 +11,18 @@ namespace Chrome
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         protected List<IValue> injections;
 
+        void IInjectable.PrepareInjection()
+        {
+            identity = new AnyValue<IIdentity>();
+            lifetime = new AnyValue<Lifetime>();
+            
+            injections = new List<IValue>()
+            {
+                identity,
+                lifetime
+            };
+        }
+
         //--------------------------------------------------------------------------------------------------------------/
 
         public event Action<ILifebound> onDestruction; 
@@ -23,6 +35,7 @@ namespace Chrome
         //--------------------------------------------------------------------------------------------------------------/
 
         public IIdentity Identity => identity.Value;
+        public Lifetime Lifetime => lifetime.Value;
 
         bool IAgent.IsActive => isOperational;
         private bool isOperational;
@@ -42,16 +55,15 @@ namespace Chrome
         [SerializeReference] protected ISolver[] solvers = new ISolver[0];
 
         private bool hasBeenBootedUp;
+        
         private IValue<IIdentity> identity;
+        private IValue<Lifetime> lifetime;
         
         //--------------------------------------------------------------------------------------------------------------/
 
         protected virtual void Awake()
         {
             hasBeenBootedUp = false;
-            
-            identity = new AnyValue<IIdentity>();
-            injections = new List<IValue>() { identity };
             
             foreach (var goal in goals) goal.AssignTo(this);
             foreach (var solver in solvers) solver.AssignTo(this);

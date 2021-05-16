@@ -23,7 +23,7 @@ namespace Chrome
 
         //--------------------------------------------------------------------------------------------------------------/
 
-        void Awake() => children = new List<IRoot>();
+        protected virtual void Awake() => children = new List<IRoot>();
         protected virtual void Start()
         {
             Packet = new Packet();
@@ -107,7 +107,9 @@ namespace Chrome
         {
             foreach (var injectable in transform.GetComponents<IInjectable>())
             {
+                injectable.PrepareInjection();
                 foreach (var injection in injectable.Injections) injection.FillIn(Packet);
+                
                 if (injectable is IInjectionCallbackListener callbackListener) callbackListener.OnInjectionDone(this);
             }
         }

@@ -12,7 +12,12 @@ namespace Chrome
         private const string SPRINT_STATE = "Run";
 
         //--------------------------------------------------------------------------------------------------------------/
-        
+
+        protected override void PrepareInjection()
+        {
+            identity = injections.Register(new AnyValue<IIdentity>());
+            body = injections.Register(new AnyValue<CharacterBody>());
+        }
         protected override void OnInjectionDone(IRoot source) => body.Value.onCollision += OnBodyCollision;
        
         protected override void SetupInputs()
@@ -78,18 +83,10 @@ namespace Chrome
 
         //--------------------------------------------------------------------------------------------------------------/
 
-        protected override void Awake()
+        void Awake()
         {
             sprintKey = new CachedValue<Key>(Key.Inactive);
-            
-            base.Awake();
-            
-            identity = new AnyValue<IIdentity>();
-            injections.Add(identity);
-            
-            body = new AnyValue<CharacterBody>();
-            injections.Add(body);
-            
+
             speed.Bootup();
             speed.Modify(new Spring(0.075f));
         }

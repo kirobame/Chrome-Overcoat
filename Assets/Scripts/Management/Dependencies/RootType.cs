@@ -4,6 +4,7 @@
     {
         Entity,
         Weapon,
-        Projectile
+        Projectile,
+        Area
     }
 }

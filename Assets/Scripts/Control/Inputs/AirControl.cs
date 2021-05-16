@@ -8,6 +8,8 @@ namespace Chrome
 {
     public class AirControl : InputControl<AirControl>
     {
+        protected override void PrepareInjection() => body = injections.Register(new AnyValue<CharacterBody>());
+        
         protected override void SetupInputs() => input.Value.Bind(InputRefs.MOVE, this, OnMoveInput);
         void OnMoveInput(InputAction.CallbackContext context, InputCallbackType type)
         {
@@ -44,14 +46,6 @@ namespace Chrome
 
         //--------------------------------------------------------------------------------------------------------------/
         
-        protected override void Awake()
-        {
-            base.Awake();
-            
-            body = new AnyValue<CharacterBody>();
-            injections.Add(body);
-        }
-
         void Update()
         {
             if (IsMoving) Events.ZipCall(GaugeEvent.OnAirMove, (byte)1);

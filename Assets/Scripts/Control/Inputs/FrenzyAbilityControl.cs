@@ -9,6 +9,7 @@ namespace Chrome
 {
     public class FrenzyAbilityControl : InputControl<FrenzyAbilityControl>
     {
+        protected override void PrepareInjection() => identity = injections.Register(new AnyValue<IIdentity>());
         protected override void OnInjectionDone(IRoot source)
         {
             var board = packet.Get<IBlackboard>();
@@ -36,14 +37,9 @@ namespace Chrome
 
         //--------------------------------------------------------------------------------------------------------------/
 
-        protected override void Awake()
+        void Awake()
         {
             key = new CachedValue<Key>(Key.Inactive);
-            
-            base.Awake();
-            
-            identity = new AnyValue<IIdentity>();
-            injections.Add(identity);
             
             aimCompute = ChromeExtensions.CreateComputeAimDirection();
             

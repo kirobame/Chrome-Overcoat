@@ -11,7 +11,13 @@ namespace Chrome
     {
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         private IValue[] injections;
-        
+
+        void IInjectable.PrepareInjection()
+        {
+            identity = new AnyValue<IIdentity>();  
+            injections = new IValue[] { identity };
+        }
+
         //--------------------------------------------------------------------------------------------------------------/
         
         private event Action<IInteraction> onInteractionDestruction;
@@ -44,13 +50,7 @@ namespace Chrome
         public bool IsBroken => isBroken;
         private bool isBroken = false;
 
-        void Awake()
-        {
-            identity = new AnyValue<IIdentity>();  
-            injections = new IValue[] { identity };
-            
-            Bootup();
-        }
+        void Awake() => Bootup();
         void OnDestroy()
         {
             onInteractionDestruction?.Invoke(this);

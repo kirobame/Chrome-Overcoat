@@ -10,6 +10,15 @@ namespace Chrome
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         protected List<IValue> injections;
 
+        void IInjectable.PrepareInjection()
+        {
+            injections = new List<IValue>();
+            body = injections.Register(new AnyValue<CharacterBody>());
+            
+            PrepareInjection();
+        }
+        protected virtual void PrepareInjection() { }
+
         //--------------------------------------------------------------------------------------------------------------/
         
         [FoldoutGroup("Pitch"), SerializeField] private Knob pitchKnob;
@@ -26,12 +35,8 @@ namespace Chrome
         private float pitchAdd;
         private float reduction;
 
-        protected virtual void Awake()
+        void Awake()
         {
-            body = new AnyValue<CharacterBody>();
-            injections = new List<IValue>();
-            injections.Add(body);
-            
             Events.Subscribe<float>(PlayerEvent.OnFire, OnFire);
             airPitchSmoothing = pitchKnob.Smoothing;
         }
