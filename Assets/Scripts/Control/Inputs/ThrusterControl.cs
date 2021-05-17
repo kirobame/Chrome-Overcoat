@@ -15,7 +15,11 @@ namespace Chrome
             gravity = injections.Register(new AnyValue<Gravity>());
         }
         
-        protected override void SetupInputs() => input.Value.BindKey(InputRefs.JUMP, this, key);
+        protected override void SetupInputs()
+        {
+            key = new CachedValue<Key>(Key.Inactive);
+            input.Value.BindKey(InputRefs.JUMP, this, key);
+        }
 
         //--------------------------------------------------------------------------------------------------------------/
         
@@ -33,8 +37,7 @@ namespace Chrome
         private CachedValue<Key> key;
 
         //--------------------------------------------------------------------------------------------------------------/
-
-        void Awake() => key = new CachedValue<Key>(Key.Inactive);
+        
         void Start()
         {
             airTimer = airTime;

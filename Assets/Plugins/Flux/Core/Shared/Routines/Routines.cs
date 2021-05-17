@@ -9,7 +9,7 @@ namespace Flux
     {
         private static Hook hook;
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void Bootup()
         {
             var hookObject = new GameObject("RoutineHook");

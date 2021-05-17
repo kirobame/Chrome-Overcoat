@@ -14,7 +14,11 @@ namespace Chrome
             gravity = injections.Register(new AnyValue<Gravity>());
         }
         
-        protected override void SetupInputs() => input.Value.BindKey(InputRefs.JUMP, this, key);
+        protected override void SetupInputs()
+        {
+            key = new CachedValue<Key>(Key.Inactive);
+            input.Value.BindKey(InputRefs.JUMP, this, key);
+        }
 
         //--------------------------------------------------------------------------------------------------------------/
         
@@ -29,9 +33,7 @@ namespace Chrome
         private float error;
 
         private CachedValue<Key> key;
-
-       void Awake() => key = new CachedValue<Key>(Key.Inactive);
-
+        
         void Update()
         {
             if (key.IsOn()) pressTime += Time.deltaTime;

@@ -14,11 +14,7 @@ namespace Chrome
 
         //--------------------------------------------------------------------------------------------------------------/
 
-        protected override void Awake()
-        {
-            base.Awake();
-            Speed = speed;
-        }
+        void Awake() => Speed = speed;
 
         protected virtual void Update()
         {

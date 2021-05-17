@@ -2,7 +2,7 @@
 
 namespace Chrome
 {
-    public class RuntimeBoard : MonoBehaviour, IBlackboard, IInstaller
+    public class BlackboardInstaller : MonoBehaviour, IBlackboard, IInstaller
     {
         protected Blackboard blackboard;
 

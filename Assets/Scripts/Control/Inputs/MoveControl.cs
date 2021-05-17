@@ -15,6 +15,9 @@ namespace Chrome
 
         protected override void PrepareInjection()
         {
+            speed.Bootup();
+            speed.Modify(new Spring(0.075f));
+            
             identity = injections.Register(new AnyValue<IIdentity>());
             body = injections.Register(new AnyValue<CharacterBody>());
         }
@@ -22,6 +25,8 @@ namespace Chrome
        
         protected override void SetupInputs()
         { 
+            sprintKey = new CachedValue<Key>(Key.Inactive);
+
             input.Value.Bind(InputRefs.MOVE, this, OnMoveInput);
             input.Value.BindKey(InputRefs.SPRINT, this, sprintKey);
         }
@@ -82,14 +87,7 @@ namespace Chrome
         private CachedValue<Key> sprintKey;
 
         //--------------------------------------------------------------------------------------------------------------/
-
-        void Awake()
-        {
-            sprintKey = new CachedValue<Key>(Key.Inactive);
-
-            speed.Bootup();
-            speed.Modify(new Spring(0.075f));
-        }
+        
         protected override void OnDestroy()
         {
             base.OnDestroy();

@@ -23,9 +23,10 @@ namespace Chrome
 
         //--------------------------------------------------------------------------------------------------------------/
 
-        protected virtual void Awake() => children = new List<IRoot>();
-        protected virtual void Start()
+        protected virtual void Awake()
         {
+            children = new List<IRoot>();
+            
             Packet = new Packet();
             Packet.Set<IRoot>(this);
             HandlePacket(Packet);

@@ -6,7 +6,11 @@ namespace Chrome
 {
     public class ViewControl : InputControl<ViewControl>
     {
-        protected override void SetupInputs() => input.Value.BindValue<Vector2>(InputRefs.VIEW, this, inputs);
+        protected override void SetupInputs()
+        {
+            inputs = new CachedValue<Vector2>(Vector2.zero);
+            input.Value.BindValue<Vector2>(InputRefs.VIEW, this, inputs);
+        }
 
         //--------------------------------------------------------------------------------------------------------------/
 
@@ -30,8 +34,6 @@ namespace Chrome
 
         void Awake()
         {
-            inputs = new CachedValue<Vector2>(Vector2.zero);
-
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
 

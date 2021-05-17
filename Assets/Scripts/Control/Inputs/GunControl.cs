@@ -35,6 +35,20 @@ namespace Chrome
         
         protected override void PrepareInjection()
         {
+            hasBeenBootedUp = false;
+ 
+            runtimeDefaultWeapon = Instantiate(defaultWeapon);
+            runtimeDefaultWeapon.Build();
+            aimCompute = ChromeExtensions.CreateComputeAimDirection();
+
+            pressState = PressState.Released;
+            switchState = SwitchState.None;
+            holsterTimer = 0.0f;
+            takeOutTimer = 0.0f;
+            
+            HasWeapon = false;
+            Current = null;
+            
             identity = injections.Register(new AnyValue<IIdentity>());
             animator = injections.Register(new AnyValue<Animator>());
             visual = injections.Register(new AnyValue<WeaponVisual>());
@@ -50,8 +64,12 @@ namespace Chrome
             SwitchTo(runtimeDefaultWeapon);
         }
         
-        protected override void SetupInputs() => input.Value.BindKey(InputRefs.SHOOT, this, shootKey);
-        
+        protected override void SetupInputs()
+        {
+            shootKey = new CachedValue<Key>(Key.Inactive);
+            input.Value.BindKey(InputRefs.SHOOT, this, shootKey);
+        }
+
         //--------------------------------------------------------------------------------------------------------------/
 
         public bool HasWeapon { get; private set; }
@@ -83,21 +101,6 @@ namespace Chrome
 
         //--------------------------------------------------------------------------------------------------------------/
 
-        void Awake()
-        {
-            hasBeenBootedUp = false;
-            shootKey = new CachedValue<Key>(Key.Inactive);
-            
-            runtimeDefaultWeapon = Instantiate(defaultWeapon);
-            runtimeDefaultWeapon.Build();
-            aimCompute = ChromeExtensions.CreateComputeAimDirection();
-
-            pressState = PressState.Released;
-            switchState = SwitchState.None;
-            holsterTimer = 0.0f;
-            takeOutTimer = 0.0f;
-            HasWeapon = false;
-        }
         protected override void OnDestroy()
         {
             base.OnDestroy();

@@ -15,7 +15,8 @@ namespace Chrome
 
         void IInjectable.PrepareInjection()
         {
-            
+            body = new AnyValue<CharacterBody>();
+            injections = new IValue[] { body };
         }
 
         //--------------------------------------------------------------------------------------------------------------/
@@ -39,9 +40,6 @@ namespace Chrome
         
         void Awake()
         {
-            body = new AnyValue<CharacterBody>();
-            injections = new IValue[] { body };
-            
             Events.Subscribe<float>(PlayerEvent.OnFire, OnFire);
             anchor = transform.localPosition;
         }

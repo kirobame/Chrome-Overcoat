@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class Bootstrap : MonoBehaviour, IInjectable, IInjectionCallbackListener
+    public class LifetimeBootstrap : MonoBehaviour, IInjectable
     {
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         private IValue[] injections;
@@ -14,19 +14,18 @@ namespace Chrome
             lifetime = new AnyValue<Lifetime>();
             injections = new IValue[] { lifetime};
         }
-        
-        void IInjectionCallbackListener.OnInjectionDone(IRoot source)
-        {
-            hasBeenBootedUp = true;
-            Routines.Start(Routines.DoAfter(OnEnable, new YieldFrame()));
-        }
-
         //--------------------------------------------------------------------------------------------------------------/
 
         private bool hasBeenBootedUp;
         private IValue<Lifetime> lifetime;
 
         void Awake() => hasBeenBootedUp = false;
+        void Start()
+        {
+            hasBeenBootedUp = true;
+            OnEnable();
+        }
+        
         void OnEnable()
         {
             if (!hasBeenBootedUp) return;

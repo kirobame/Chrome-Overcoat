@@ -17,7 +17,7 @@ namespace Chrome
             injections = new IValue[] { identity };
         }
 
-        void IInjectionCallbackListener.OnInjectionDone(IRoot source) => hasBeenBootedUp = true;
+        void IInjectionCallbackListener.OnInjectionDone(IRoot source) => Bootup();
 
         //--------------------------------------------------------------------------------------------------------------/
         
@@ -27,11 +27,9 @@ namespace Chrome
         protected Packet packet => identity.Value.Packet;
         protected IValue<IIdentity> identity;
 
-        private bool hasBeenBootedUp;
-        
-        //--------------------------------------------------------------------------------------------------------------/
 
-        protected virtual void Awake() => hasBeenBootedUp = false;
+        //--------------------------------------------------------------------------------------------------------------/
+        
         protected virtual void Bootup() { }
         
         public void Shoot(IIdentity source, Vector3 fireAnchor, Vector3 direction, Packet packet)
@@ -41,19 +39,10 @@ namespace Chrome
             transform.position = fireAnchor;
             this.direction = direction;
 
-            if (!hasBeenBootedUp) Routines.Start(BootupRoutine(source, fireAnchor, direction, packet));
-            else OnShoot(source, fireAnchor, direction, packet);
+            OnShoot(source, fireAnchor, direction, packet);
         }
         protected virtual void OnShoot(IIdentity source, Vector3 fireAnchor, Vector3 direction, Packet packet) => identity.Value.Copy(source);
 
         public void Ignore(Collider collider) => ignores.Add(collider);
-
-        private IEnumerator BootupRoutine(IIdentity source, Vector3 fireAnchor, Vector3 direction, Packet packet)
-        {
-            while (!hasBeenBootedUp) yield return new WaitForEndOfFrame();
-
-            Bootup();
-            OnShoot(source, fireAnchor, direction, packet);
-        }
     }
 }

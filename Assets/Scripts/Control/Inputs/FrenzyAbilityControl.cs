@@ -9,7 +9,15 @@ namespace Chrome
 {
     public class FrenzyAbilityControl : InputControl<FrenzyAbilityControl>
     {
-        protected override void PrepareInjection() => identity = injections.Register(new AnyValue<IIdentity>());
+        protected override void PrepareInjection()
+        {
+            aimCompute = ChromeExtensions.CreateComputeAimDirection();
+            
+            runtimeWeapon = Instantiate(frenzyWeapon);
+            runtimeWeapon.Build();
+            
+            identity = injections.Register(new AnyValue<IIdentity>());
+        }
         protected override void OnInjectionDone(IRoot source)
         {
             var board = packet.Get<IBlackboard>();
@@ -19,7 +27,11 @@ namespace Chrome
             runtimeWeapon.Bootup(packet);
         }
 
-        protected override void SetupInputs() => input.Value.BindKey(InputRefs.CAST, this, key);
+        protected override void SetupInputs()
+        {
+            key = new CachedValue<Key>(Key.Inactive);
+            input.Value.BindKey(InputRefs.CAST, this, key);
+        }
 
         //--------------------------------------------------------------------------------------------------------------/
         
@@ -39,12 +51,7 @@ namespace Chrome
 
         void Awake()
         {
-            key = new CachedValue<Key>(Key.Inactive);
-            
-            aimCompute = ChromeExtensions.CreateComputeAimDirection();
-            
-            runtimeWeapon = Instantiate(frenzyWeapon);
-            runtimeWeapon.Build();
+
         }
 
         //--------------------------------------------------------------------------------------------------------------/

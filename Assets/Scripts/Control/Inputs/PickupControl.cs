@@ -5,9 +5,21 @@ namespace Chrome
 {
     public class PickupControl : InputControl<PickupControl>
     {
-        protected override void PrepareInjection() => gun = injections.Register(new AnyValue<GunControl>());
-        
-        protected override void SetupInputs() => input.Value.BindKey(InputRefs.PICK_WP_02, this, key);
+        protected override void PrepareInjection()
+        {
+            state = true;
+            
+            runtimeWeapon = Instantiate(weapon);
+            runtimeWeapon.Build();
+            
+            gun = injections.Register(new AnyValue<GunControl>());
+        }
+
+        protected override void SetupInputs()
+        {
+            key = new CachedValue<Key>(Key.Inactive);
+            input.Value.BindKey(InputRefs.PICK_WP_02, this, key);
+        }
 
         //--------------------------------------------------------------------------------------------------------------/
         
@@ -18,16 +30,7 @@ namespace Chrome
         
         private CachedValue<Key> key;
         private bool state;
-
-        void Awake()
-        {
-            key = new CachedValue<Key>(Key.Inactive);
-            state = true;
-            
-            runtimeWeapon = Instantiate(weapon);
-            runtimeWeapon.Build();
-        }
-
+        
         void Update()
         {
             if (!key.IsDown()) return;
