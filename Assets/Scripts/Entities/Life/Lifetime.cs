@@ -28,6 +28,8 @@ namespace Chrome
         
         //--------------------------------------------------------------------------------------------------------------/
 
+        public bool IsAlive { get; private set; }
+        
         private IRoot root;
         
         public IIdentity Identity => identity.Value;
@@ -43,7 +45,7 @@ namespace Chrome
 
         void Awake()
         {
-            children = new List<Lifetime>();
+            IsAlive = false;
             
             bounds = transform.Fetch<ILifebound,Lifetime>().ToList();
             foreach (var lifebound in bounds) lifebound.onDestruction += RemoveBound;
@@ -51,6 +53,7 @@ namespace Chrome
             listeners = transform.Fetch<IListener<Lifetime>,Lifetime>().ToList();
             foreach (var listener in listeners) listener.onDestruction += RemoveListener;
             
+            children = new List<Lifetime>();
             TryFetchParent();
         }
 
@@ -117,6 +120,11 @@ namespace Chrome
 
         public void Begin()
         {
+            if (IsAlive) return;
+            IsAlive = true;
+            
+            Debug.Log($"[{root.Transform.name}] Lifetime starts");
+            
             var args = new WrapperArgs<byte>(0);
             CallListeners(args, CheckForSpawn);
             
@@ -143,6 +151,11 @@ namespace Chrome
         
         public void End()
         {
+            if (!IsAlive) return;
+            IsAlive = false;
+            
+            Debug.Log($"[{root.Transform.name}] Lifetime ends");
+            
             foreach (var lifebound in bounds)
             {
                 if (!lifebound.IsActive) continue;

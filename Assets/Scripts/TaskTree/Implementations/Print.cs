@@ -12,7 +12,9 @@ namespace Chrome
         
         protected override void OnUse(Packet packet)
         {
-            Debug.Log($"[{Time.frameCount}] {message}");
+            if (packet.TryGet<IIdentity>(out var identity)) Debug.Log($"[{Time.frameCount}][{identity.Transform.gameObject.name}] {message}");
+            else Debug.Log($"[{Time.frameCount}] {message}");
+            
             isDone = true;
         }
     }

@@ -22,7 +22,7 @@ namespace Chrome
         public void Bootup() { }
         public void Shutdown()
         {
-            Debug.Log("DROPPING LOOT !");
+            Debug.Log($"[{transform.root.gameObject.name}] DROPPING LOOT !");
             Routines.Start(Routines.DoAfter(() => Owner.Lifetime.RemoveBound(this), new YieldFrame()));
         }
     }

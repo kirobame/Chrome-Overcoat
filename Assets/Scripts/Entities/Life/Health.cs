@@ -71,6 +71,8 @@ namespace Chrome
         
         public void Hit(IIdentity source, float amount, Packet packet)
         {
+            if (this.amount == 0) return;
+            
             var difference = this.amount - amount;
             var damage = difference < 0 ? amount + difference : amount;
             

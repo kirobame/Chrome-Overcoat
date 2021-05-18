@@ -105,8 +105,9 @@ namespace Chrome
                 if (!interaction.IsActive || !(interaction is T castedInteraction)) continue;
                 if (method(castedInteraction, depth)) match++;
             }
-
+            
             foreach (var child in children) match += child.Relay<T>(method, depth + 1);
+            
             return match;
         }
 

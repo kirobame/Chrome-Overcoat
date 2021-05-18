@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class WaveControl : ScriptableObject, IInstaller, IInjectable, IInjectionCallbackListener
+    public class WaveControl : MonoBehaviour, IInstaller, IInjectable, IInjectionCallbackListener
     {
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         private IValue[] injections;
@@ -94,6 +94,7 @@ namespace Chrome
             {
                 if (conditions.Any(condition => !condition.Check(packet))) return;
                 
+                Debug.Log($"Spawning [{name}] wave in [{Owner.Area.Transform.gameObject.name}] area");
                 foreach (var spawn in spawns) spawn.Execute();
                 HasBeenTriggered = true;
                 
@@ -117,7 +118,7 @@ namespace Chrome
             
             public void Execute()
             {
-                var control = Owner.Recurse<WaveControl>(2);
+                var control = Owner.Recurse<WaveControl>();
                 var agentPool = Repository.Get<AgentPool>(Pool.Agent);
                 
                 foreach (var location in locations.Split())
