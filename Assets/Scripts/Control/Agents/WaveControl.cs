@@ -141,6 +141,7 @@ namespace Chrome
         public Area Area => area.Value;
         public Packet Packet => Area.Packet;
 
+        [SerializeField] private bool isActive = true;
         [SerializeField] private Wave[] waves;
         
         private IValue<Dictionary<SpawnLocations, Spawner>> spawners;
@@ -149,7 +150,7 @@ namespace Chrome
         public Wave this[string name] => waves.First(wave => wave.Name == name);
 
         //--------------------------------------------------------------------------------------------------------------/
-
+        
         void OnDestroy()
         {
             area.Value.onPlayerEntry -= OnPlayerEntry;
@@ -160,6 +161,8 @@ namespace Chrome
 
         void OnPlayerEntry()
         {
+            if (!isActive) return;
+            
             foreach (var wave in waves)
             {
                 if (wave.HasBeenTriggered) continue;
@@ -168,6 +171,8 @@ namespace Chrome
         }
         void OnPlayerExit()
         {
+            if (!isActive) return;
+            
             foreach (var wave in waves)
             {
                 if (wave.HasBeenTriggered) continue;

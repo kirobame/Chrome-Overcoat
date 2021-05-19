@@ -7,6 +7,7 @@ namespace Chrome
     {
         Camera,
         VirtualCamera,
-        Areas
+        Areas,
+        Pickups
     }
 }

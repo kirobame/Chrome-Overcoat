@@ -1,4 +1,6 @@
-﻿using Sirenix.OdinInspector;
+﻿using System.Collections.Generic;
+using Flux.Data;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Chrome
@@ -7,11 +9,7 @@ namespace Chrome
     {
         protected override void PrepareInjection()
         {
-            state = true;
-            
-            runtimeWeapon = Instantiate(weapon);
-            runtimeWeapon.Build();
-            
+            identity = injections.Register(new AnyValue<IIdentity>());
             gun = injections.Register(new AnyValue<GunControl>());
         }
 
@@ -23,28 +21,63 @@ namespace Chrome
 
         //--------------------------------------------------------------------------------------------------------------/
         
-        [FoldoutGroup("Values"), SerializeField] private Weapon weapon;
-
-        private Weapon runtimeWeapon;
-        private IValue<GunControl> gun;
+        public IPickable ClosestPickable { get; private set; }
+        public bool CanPickup { get; private set; }
+        
+        [FoldoutGroup("Values"), SerializeField] private float range;
         
         private CachedValue<Key> key;
-        private bool state;
         
+        private IValue<IIdentity> identity;
+        private IValue<GunControl> gun;
+
+        private HashSet<IPickable> pickables;
+
+        void Awake()
+        {
+            pickables = new HashSet<IPickable>();
+            Repository.Set(Reference.Pickups, new List<IPickable>());
+        }
+
         void Update()
         {
+            CanPickup = false;
+            ClosestPickable = null;
+            
+            var shortestDistance = float.MaxValue;
+            foreach (var pickable in Repository.GetAll<IPickable>(Reference.Pickups))
+            {
+                var distance = Vector3.Distance(transform.position, pickable.Transform.position);
+                if (distance <= range)
+                {
+                    CanPickup = true;
+                    if (distance < shortestDistance)
+                    {
+                        ClosestPickable = pickable;
+                        shortestDistance = distance;
+                    }
+
+                    if (!pickables.Contains(pickable))
+                    {
+                        pickable.OnHoverStart(identity.Value);
+                        pickables.Add(pickable);
+                    }
+                }
+                else if (pickables.Contains(pickable))
+                {
+                    pickable.OnHoverEnd(identity.Value);
+                    pickables.Remove(pickable);
+                }
+            }
+            
             if (!key.IsDown()) return;
 
-            if (!state)
+            if (CanPickup)
             {
-                gun.Value.DropCurrent();
-                state = true;
+                ClosestPickable.Pickup(identity.Value);
+                pickables.Remove(ClosestPickable);
             }
-            else
-            {
-                gun.Value.SwitchTo(runtimeWeapon);
-                state = false;
-            }
+            else if (!gun.Value.HasDefaultWeapon) gun.Value.DropCurrent();
         }
     }
 }

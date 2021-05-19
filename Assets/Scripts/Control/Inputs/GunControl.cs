@@ -72,6 +72,8 @@ namespace Chrome
 
         //--------------------------------------------------------------------------------------------------------------/
 
+        public bool HasDefaultWeapon => Current == runtimeDefaultWeapon;
+        
         public bool HasWeapon { get; private set; }
         public Weapon Current { get; private set; }
         

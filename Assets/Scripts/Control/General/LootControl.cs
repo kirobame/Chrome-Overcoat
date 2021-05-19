@@ -1,5 +1,7 @@
 ﻿using System;
 using Flux;
+using Flux.Data;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Chrome
@@ -13,16 +15,21 @@ namespace Chrome
 
         public bool IsActive => true;
 
-        void OnDestroy() => onDestruction?.Invoke(this);
-
+        [FoldoutGroup("Values"), SerializeField] private GenericPoolable lootPrefab;
+        [FoldoutGroup("Values"), SerializeField] private Vector3 offset;
+        
         //--------------------------------------------------------------------------------------------------------------/
 
+        void OnDestroy() => onDestruction?.Invoke(this);
+        
         public void AssignTo(Agent owner) => Owner = owner;
         
         public void Bootup() { }
         public void Shutdown()
         {
-            Debug.Log($"[{transform.root.gameObject.name}] DROPPING LOOT !");
+            var lootInstance = lootPrefab.GetGenericInstance<Loot>(Pool.Loot);
+            lootInstance.Transform.position = transform.position + offset;
+            
             Routines.Start(Routines.DoAfter(() => Owner.Lifetime.RemoveBound(this), new YieldFrame()));
         }
     }
