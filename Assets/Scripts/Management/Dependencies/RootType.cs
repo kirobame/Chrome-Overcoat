@@ -5,6 +5,7 @@
         Entity,
         Weapon,
         Projectile,
-        Area
+        Area,
+        Pickup
     }
 }

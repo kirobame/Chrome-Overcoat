@@ -4,6 +4,7 @@ using System.Linq;
 using Flux.Data;
 using Flux.EDS;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Chrome
 {
@@ -124,6 +125,19 @@ namespace Chrome
             });
         }
 
+        //--------------------------------------------------------------------------------------------------------------/
+
+        public static T GetGenericInstance<T>(this GenericPoolable prefab, Pool address) where T : Object
+        {
+            var pool = Repository.Get<GenericPool>(address);
+            return pool.CastSingle<T>(prefab);
+        }
+        public static T GeInstance<T, TPool, TPoolable>(this TPoolable poolable, Pool address) where T : Object where TPoolable : Poolable<T> where TPool : Pool<T,TPoolable>
+        {
+            var pool = Repository.Get<TPool>(address);
+            return pool.RequestSingle(poolable);
+        }
+        
         //--------------------------------------------------------------------------------------------------------------/
 
         public static void AddElement<TElement>(this Packet packet, TElement element)

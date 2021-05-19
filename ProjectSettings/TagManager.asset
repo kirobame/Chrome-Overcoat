@@ -37,8 +37,8 @@ TagManager:
   - 
   - 
   - 
-  - RetDeco
-  - RetPickup
+  - Deco
+  - Pickup
   m_SortingLayers:
   - name: Default
     uniqueID: 0

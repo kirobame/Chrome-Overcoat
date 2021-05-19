@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class WaveControl : ScriptableObject, IInstaller, IInjectable, IInjectionCallbackListener
+    public class WaveControl : MonoBehaviour, IInstaller, IInjectable, IInjectionCallbackListener
     {
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         private IValue[] injections;
@@ -94,6 +94,7 @@ namespace Chrome
             {
                 if (conditions.Any(condition => !condition.Check(packet))) return;
                 
+                Debug.Log($"Spawning [{name}] wave in [{Owner.Area.Transform.gameObject.name}] area");
                 foreach (var spawn in spawns) spawn.Execute();
                 HasBeenTriggered = true;
                 
@@ -117,7 +118,7 @@ namespace Chrome
             
             public void Execute()
             {
-                var control = Owner.Recurse<WaveControl>(2);
+                var control = Owner.Recurse<WaveControl>();
                 var agentPool = Repository.Get<AgentPool>(Pool.Agent);
                 
                 foreach (var location in locations.Split())
@@ -140,6 +141,7 @@ namespace Chrome
         public Area Area => area.Value;
         public Packet Packet => Area.Packet;
 
+        [SerializeField] private bool isActive = true;
         [SerializeField] private Wave[] waves;
         
         private IValue<Dictionary<SpawnLocations, Spawner>> spawners;
@@ -148,7 +150,7 @@ namespace Chrome
         public Wave this[string name] => waves.First(wave => wave.Name == name);
 
         //--------------------------------------------------------------------------------------------------------------/
-
+        
         void OnDestroy()
         {
             area.Value.onPlayerEntry -= OnPlayerEntry;
@@ -159,6 +161,8 @@ namespace Chrome
 
         void OnPlayerEntry()
         {
+            if (!isActive) return;
+            
             foreach (var wave in waves)
             {
                 if (wave.HasBeenTriggered) continue;
@@ -167,6 +171,8 @@ namespace Chrome
         }
         void OnPlayerExit()
         {
+            if (!isActive) return;
+            
             foreach (var wave in waves)
             {
                 if (wave.HasBeenTriggered) continue;

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Chrome
 {
@@ -11,16 +13,10 @@ namespace Chrome
         
         public void InstallDependenciesOn(Packet packet)
         {
-            var setMethod = typeof(Packet).GetMethod("Set");
-            var parameter = new object[1];
-            
             foreach (var value in values)
             {
                 var type = value.GetType();
-                var methodInstance = setMethod.MakeGenericMethod(type);
-
-                parameter[0] = value;
-                methodInstance.Invoke(packet, parameter);
+                packet.Set(type, value);
             }
         }
     }

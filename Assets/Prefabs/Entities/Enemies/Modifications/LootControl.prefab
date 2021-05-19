@@ -57,3 +57,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1edd8ba2f7de4d9cb477c22360680faa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lootPrefab: {fileID: 5160929454150984547, guid: c21eea110f1f84d4ca065b34dd8b4d54, type: 3}
+  offset: {x: 0, y: 1, z: 0}

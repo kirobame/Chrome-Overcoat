@@ -41,7 +41,6 @@ Transform:
   - {fileID: 1627768642127883843}
   - {fileID: 1627768642194767726}
   - {fileID: 7550103981866291901}
-  - {fileID: 2279410329471240527}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -99,6 +98,7 @@ MonoBehaviour:
   lineOfSight: {fileID: 1627768641731386857}
   pivot: {fileID: 1627768642194767726}
   fireAnchor: {fileID: 6341059076847180024}
+  collider: {fileID: 1627768641731386859}
 --- !u!114 &6341059077407569188
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -540,57 +540,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &2279410329471240526
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2279410329471240527}
-  - component: {fileID: 2279410329471240524}
-  m_Layer: 7
-  m_Name: Modification
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2279410329471240527
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2279410329471240526}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1627768641731386863}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2279410329471240524
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2279410329471240526}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3bd11d49ae2986a4f8933f31f4b0251f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  modifications:
-  - id: 0
-  references:
-    version: 1
-    00000000:
-      type: {class: LootAgentModification, ns: Chrome, asm: Assembly-CSharp}
-      data:
-        lootPrefab: {fileID: 1585834254977908352, guid: 44cac7b8bb7fe3c4085072e1f59bc81c, type: 3}
 --- !u!1 &5829530316876168042
 GameObject:
   m_ObjectHideFlags: 0
@@ -602,7 +551,6 @@ GameObject:
   - component: {fileID: 7550103981866291901}
   - component: {fileID: 3603484464029844633}
   - component: {fileID: 6042331276161548789}
-  - component: {fileID: 2384791588346567870}
   m_Layer: 7
   m_Name: Life
   m_TagString: Untagged
@@ -649,21 +597,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   max: 8
---- !u!114 &2384791588346567870
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5829530316876168042}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58c92a8047f37fd47b06ce60ea2352d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  path: respawns.enemy
-  index: 0
-  duration: 2.25
 --- !u!1 &6341059076847180031
 GameObject:
   m_ObjectHideFlags: 0
