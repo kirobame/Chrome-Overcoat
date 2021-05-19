@@ -2,11 +2,20 @@
 
 namespace Chrome
 {
-    public class GunHUD : MonoBehaviour
+    public class GunHUD : MonoBehaviour, IHUD
     {
         [SerializeField] private GunPartHUD[] subHUDs;
 
-        public void Select(int index)
+        public void Refresh(object value, string tag)
+        {
+            switch (tag)
+            {
+                default:
+                    Select((int)value);
+                    break;
+            }
+        }
+        private void Select(int index)
         {
             if (index < 0 || index >= subHUDs.Length) return;
             

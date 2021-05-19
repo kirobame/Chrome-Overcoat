@@ -59,8 +59,12 @@ namespace Chrome
             if (identity.Faction == Faction.Player)
             {
                 Events.ZipCall(PlayerEvent.OnShake, shakeFactor * charge, maxShake);
-                var HUD = Repository.Get<ChargeHUD>(Interface.Charge);
-                HUD.Set(charge);
+
+                //var HUD = Repository.Get<ChargeHUD>(Interface.Charge);
+                //HUD.Set(charge);
+
+                var value = Repository.Get<UIValue>(UIValuesReferences.Charge);
+                value.Set(charge, "CHARGE");
             }
             
             isDone = true;

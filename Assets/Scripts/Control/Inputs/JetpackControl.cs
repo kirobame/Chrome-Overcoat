@@ -39,15 +39,20 @@ namespace Chrome
         private IValue<Gravity> gravity;
         private IValue<MoveControl> move;
         
-        private JetpackHUD HUD;
+        //private JetpackHUD HUD;
+        private UIValue jetpackValues;
         
         private Coroutine cooldownRoutine;
         private float pressTime;
         private CachedValue<Key> key;
-        
+
         //--------------------------------------------------------------------------------------------------------------/
-        
-        void Start() => HUD = Repository.Get<JetpackHUD>(Interface.Jetpack);
+
+        void Start()
+        {
+            jetpackValues = Repository.Get<UIValue>(UIValuesReferences.Jetpack);
+            //HUD = Repository.Get<JetpackHUD>(Interface.Jetpack);
+        }
 
         //--------------------------------------------------------------------------------------------------------------/
         
@@ -59,8 +64,10 @@ namespace Chrome
                 {
                     pressTime += Time.deltaTime;
                     var ratio = Mathf.InverseLerp(pressRange.x, pressRange.y, pressTime);
-                    
-                    HUD.IndicateCharge(ratio);
+
+                    jetpackValues.Set(ratio, "CHARGE");
+                    //HUD.IndicateCharge(ratio);
+
                     Events.ZipCall(PlayerEvent.OnShake, ratio * shakeFactor, maxShake);
                 }
             }
@@ -88,7 +95,9 @@ namespace Chrome
             }
 
             pressTime = 0.0f;
-            HUD.IndicateCharge(0.0f);
+
+            jetpackValues.Set(0.0f, "CHARGE");
+            //HUD.IndicateCharge(0.0f);
         }
         
         private IEnumerator CooldownRoutine()
@@ -97,13 +106,15 @@ namespace Chrome
 
             while (time > 0.0f)
             {
-                HUD.IndicateCooldown(time, cooldown);
+                jetpackValues.Set(new System.Collections.Generic.KeyValuePair<float, float>(time, cooldown), "COOLDOWN");
+                //HUD.IndicateCooldown(time, cooldown);
                 
                 yield return new WaitForEndOfFrame();
                 time -= Time.deltaTime;
             }
-            
-            HUD.IndicateCooldown(0.0f, cooldown);
+
+            jetpackValues.Set(new System.Collections.Generic.KeyValuePair<float, float>(0.0f, cooldown), "COOLDOWN");
+            //HUD.IndicateCooldown(0.0f, cooldown);
             cooldownRoutine = null;
         }
     }

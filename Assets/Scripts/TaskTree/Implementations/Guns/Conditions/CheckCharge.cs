@@ -25,8 +25,11 @@ namespace Chrome
             var identity = packet.Get<IIdentity>();
             if (identity.Faction == Faction.Player)
             {
-                var HUD = Repository.Get<ChargeHUD>(Interface.Charge);
-                HUD.IndicateThreshold(minimum);
+                //var HUD = Repository.Get<ChargeHUD>(Interface.Charge);
+                //HUD.IndicateThreshold(minimum);
+
+                var value = Repository.Get<UIValue>(UIValuesReferences.Charge);
+                value.Set(minimum, "THRESHOLD");
             }
         }
 
@@ -50,8 +53,11 @@ namespace Chrome
                 var identity = packet.Get<IIdentity>();
                 if (identity.Faction == Faction.Player)
                 {
-                    var HUD = Repository.Get<ChargeHUD>(Interface.Charge);
-                    HUD.Set(0.0f);
+                    //var HUD = Repository.Get<ChargeHUD>(Interface.Charge);
+                    //HUD.Set(0.0f);
+
+                    var value = Repository.Get<UIValue>(UIValuesReferences.Charge);
+                    value.Set(0.0f, "CHARGE");
                 }
                 
                 return false;
@@ -79,8 +85,11 @@ namespace Chrome
                 board.Set("charge", charge);
                 if (updateHUD)
                 {
-                    var HUD = Repository.Get<ChargeHUD>(Interface.Charge);
-                    HUD.Set(charge);
+                    //var HUD = Repository.Get<ChargeHUD>(Interface.Charge);
+                    //HUD.Set(charge);
+
+                    var value = Repository.Get<UIValue>(UIValuesReferences.Charge);
+                    value.Set(charge, "CHARGE");
                 }
             }
 

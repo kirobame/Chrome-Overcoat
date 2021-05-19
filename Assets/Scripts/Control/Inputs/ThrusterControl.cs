@@ -32,7 +32,8 @@ namespace Chrome
         private IValue<Gravity> gravity;
         
         private float airTimer;
-        private JetpackHUD HUD;
+        //private JetpackHUD HUD;
+        private UIValue jetpackValues;
 
         private CachedValue<Key> key;
 
@@ -41,7 +42,8 @@ namespace Chrome
         void Start()
         {
             airTimer = airTime;
-            HUD = Repository.Get<JetpackHUD>(Interface.Jetpack);
+            //HUD = Repository.Get<JetpackHUD>(Interface.Jetpack);
+            jetpackValues = Repository.Get<UIValue>(UIValuesReferences.Jetpack);
         }
         
         //--------------------------------------------------------------------------------------------------------------/
@@ -85,8 +87,9 @@ namespace Chrome
                     if (key.IsUp()) Events.ZipCall(GaugeEvent.OnThrusterUsed, (byte)2);
                 }
             }
-            
-            HUD.IndicateAirTime(airTimer);
+
+            jetpackValues.Set(airTimer, "AIRTIME");
+            //HUD.IndicateAirTime(airTimer);
         }
     }
 }
