@@ -45,12 +45,16 @@ namespace Chrome
                 if (colliders.Any(collider => collider.bounds.Intersects(player.bounds)))
                 {
                     state = true;
+                    
+                    Events.ZipCall(AreaEvent.OnPlayerEntry, this);
                     onPlayerEntry?.Invoke();
                 }
             }
             else if (colliders.All(collider => !collider.bounds.Intersects(player.bounds)))
             {
                 state = false;
+                
+                Events.ZipCall(AreaEvent.OnPlayerExit, this);
                 onPlayerExit?.Invoke();
             }
         }

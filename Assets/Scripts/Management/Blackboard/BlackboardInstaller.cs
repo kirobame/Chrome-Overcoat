@@ -33,6 +33,10 @@ namespace Chrome
 
         int IInstaller.Priority => 0;
         
-        void IInstaller.InstallDependenciesOn(Packet packet) => packet.Set<IBlackboard>(this);
+        void IInstaller.InstallDependenciesOn(Packet packet)
+        {
+            blackboard.Set(Refs.PACKET, packet);
+            packet.Set<IBlackboard>(this);
+        }
     }
 }
