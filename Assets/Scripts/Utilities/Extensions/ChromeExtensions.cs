@@ -105,11 +105,12 @@ namespace Chrome
         public static ComputeAimDirection CreateComputeAimDirection()
         {
             var mask = LayerMask.GetMask("Environment", "Entity");
-            var pivot = Refs.PIVOT.Reference<Transform>();
-            var fireAnchor = Refs.FIREANCHOR.Reference<Transform>();
-            var collider = Refs.COLLIDER.Reference<Collider>();
+            var pivotRef = Refs.PIVOT.Reference<Transform>();
+            var fireAnchorRef = Refs.FIREANCHOR.Reference<Transform>();
+            var colliderRef = Refs.COLLIDER.Reference<Collider>();
+            var shootDirectionRef = Refs.SHOOT_DIRECTION.Reference<Vector3>();
             
-            return new ComputeAimDirection("shootDir", mask, fireAnchor, pivot, collider);
+            return new ComputeAimDirection(shootDirectionRef, mask, fireAnchorRef, pivotRef, colliderRef);
         }
 
         //--------------------------------------------------------------------------------------------------------------/

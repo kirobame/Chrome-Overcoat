@@ -23,7 +23,7 @@ namespace Chrome
                 lifetime
             };
         }
-
+        
         //--------------------------------------------------------------------------------------------------------------/
         
         private event Action<IInteraction> onInteractionDestruction;
@@ -54,7 +54,7 @@ namespace Chrome
         private IValue<Lifetime> lifetime;
         
         private float amount;
-
+        
         //--------------------------------------------------------------------------------------------------------------/
         
         void OnDestroy()

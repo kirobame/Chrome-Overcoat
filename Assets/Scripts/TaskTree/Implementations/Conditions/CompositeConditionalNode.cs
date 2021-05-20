@@ -1,29 +1,76 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Chrome
 {
+    [Serializable]
     public class CompositeConditionalNode : ConditionalNode
     {
-        public CompositeConditionalNode(params ICondition[] conditions)
+        #region Nested types
+
+        [Serializable]
+        public class ConditionOperatorPair
         {
-            this.conditions = new List<ICondition>();
-            this.conditions.AddRange(conditions);
+            public ConditionOperatorPair(ICondition condition)
+            {
+                this.condition = condition;
+                this.conditionalOperator = ConditionalOperator.NONE;
+            }
+            public ConditionOperatorPair(ICondition condition, ConditionalOperator conditionalOperator)
+            {
+                this.condition = condition;
+                this.conditionalOperator = conditionalOperator;
+            }
+
+            public ConditionalOperator Operator
+            {
+                get => conditionalOperator;
+                set => conditionalOperator = value;
+            }
+            public bool Inverse => inverse;
+            
+            [SerializeReference] private ICondition condition;
+            [SerializeField] private bool inverse;
+            [LabelText("Operator"), SerializeField] private ConditionalOperator conditionalOperator;
+
+            public void Bootup(Packet packet) => condition.Bootup(packet);
+            public void Open(Packet packet) => condition.Open(packet);
+            
+            public void Prepare(Packet packet) => condition.Prepare(packet);
+            public bool Check(Packet packet) => condition.Check(packet);
+            
+            public void Close(Packet packet) => condition.Close(packet);
+            public void Shutdown(Packet packet) => condition.Shutdown(packet);
+        }
+        #endregion
+
+        //--------------------------------------------------------------------------------------------------------------/
+        
+        public CompositeConditionalNode(params (ICondition condition, ConditionalOperator conditionalOperator)[] tuples)
+        {
+           conditions = new List<ConditionOperatorPair>(tuples.Length);
+            foreach (var tuple in tuples) this.conditions.Add(new ConditionOperatorPair(tuple.condition, tuple.conditionalOperator));
         }
 
-        private List<ICondition> conditions;
+        [SerializeField] private List<ConditionOperatorPair> conditions;
+        
+        //--------------------------------------------------------------------------------------------------------------/
 
         public void Add(ConditionalOperator conditionalOperator, ICondition condition)
         {
             if (conditions.Any()) conditions[conditions.Count - 1].Operator = conditionalOperator;
-            conditions.Add(condition);
+            conditions.Add(new ConditionOperatorPair(condition));
         } 
         
         protected override void OnBootup(Packet packet) { foreach (var condition in conditions) condition.Bootup(packet); }
         protected override void Open(Packet packet) { foreach (var condition in conditions) condition.Open(packet); }
         protected override void OnPrepare(Packet packet) { foreach (var condition in conditions) condition.Prepare(packet); }
 
+        //--------------------------------------------------------------------------------------------------------------/
+        
         protected override bool Check(Packet packet)
         {
             if (!conditions.Any()) return false;
@@ -56,8 +103,10 @@ namespace Chrome
             return output;
         }
 
-        private bool HandleCheck(Packet packet, ICondition condition) => condition.Inverse ? !condition.Check(packet) : condition.Check(packet);
+        private bool HandleCheck(Packet packet, ConditionOperatorPair condition) => condition.Inverse ? !condition.Check(packet) : condition.Check(packet);
 
+        //--------------------------------------------------------------------------------------------------------------/
+        
         public override void OnClose(Packet packet) { foreach (var condition in conditions) condition.Close(packet); }
         protected override void OnShutdown(Packet packet) { foreach (var condition in conditions) condition.Shutdown(packet); }
     }

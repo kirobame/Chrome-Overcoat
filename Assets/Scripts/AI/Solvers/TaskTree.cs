@@ -16,7 +16,6 @@ namespace Chrome
         {
             var packet = GetPacket();
             tree.Bootup(packet);
-            tree.Prepare(packet);
         }
 
         public override void Evaluate() => tree.Use(GetPacket());

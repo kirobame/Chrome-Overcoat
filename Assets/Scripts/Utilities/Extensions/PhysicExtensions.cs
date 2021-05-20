@@ -30,12 +30,20 @@ namespace Chrome
         public static bool CanSee(this Transform transform, Collider collider, LayerMask blockingMask)
         {
             var corners = collider.bounds.GetCorners();
-
-            foreach (var corner in corners)
-                if (CanSee(transform, corner, blockingMask))
-                    return true;
+            foreach (var corner in corners) if (CanSee(transform, corner, blockingMask)) return true;
 
             return false;
+        }
+
+        public static bool CastFrom(this Collider collider, Vector3 from, Vector3 displacement, LayerMask mask)
+        {
+            var capsuleCollider = collider as CapsuleCollider;
+            var halfHeight = capsuleCollider.height * 0.5f - capsuleCollider.radius;
+            
+            var p1 = from + capsuleCollider.center + Vector3.up * halfHeight;
+            var p2 = from + capsuleCollider.center + Vector3.down * halfHeight;
+            
+            return Physics.CapsuleCast(p1, p2, capsuleCollider.radius, displacement.normalized, displacement.magnitude, mask);
         }
     }
 }

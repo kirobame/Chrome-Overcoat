@@ -55,6 +55,10 @@ namespace Chrome
             public void Bootup() { foreach (var transition in transitions) transition.Bootup(); }
             public void Open()
             {
+                var agent = Owner.Recurse<IAgent>();
+                var board = agent.Identity.Packet.Get<IBlackboard>();
+                board.Set(Refs.LOCK, false);
+                
                 foreach (var solver in solvers) solver.Bootup();
                 foreach (var transition in transitions) transition.Open();
             }

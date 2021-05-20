@@ -9,7 +9,7 @@ namespace Flux.Event
         public override void TryCall(EventArgs args)
         {
             if (!(args is WrapperArgs<T1> wrapperArgs)) return;
-            callback(wrapperArgs.ArgOne);
+            callback?.Invoke(wrapperArgs.ArgOne);
         }
 
         protected override void OnSubscription(object method) => callback += (Action<T1>)method;
@@ -23,7 +23,7 @@ namespace Flux.Event
         public override void TryCall(EventArgs args)
         {
             if (!(args is WrapperArgs<T1,T2> wrapperArgs)) return;
-            callback(wrapperArgs.ArgOne, wrapperArgs.ArgTwo);
+            callback?.Invoke(wrapperArgs.ArgOne, wrapperArgs.ArgTwo);
         }
 
         protected override void OnSubscription(object method) => callback += (Action<T1,T2>)method;
@@ -37,7 +37,7 @@ namespace Flux.Event
         public override void TryCall(EventArgs args)
         {
             if (!(args is WrapperArgs<T1, T2, T3> wrapperArgs)) return;
-            callback(wrapperArgs.ArgOne, wrapperArgs.ArgTwo, wrapperArgs.ArgThree);
+            callback?.Invoke(wrapperArgs.ArgOne, wrapperArgs.ArgTwo, wrapperArgs.ArgThree);
         }
 
         protected override void OnSubscription(object method) => callback += (Action<T1,T2,T3>)method;
@@ -51,7 +51,7 @@ namespace Flux.Event
         public override void TryCall(EventArgs args)
         {
             if (!(args is WrapperArgs<T1, T2, T3, T4> wrapperArgs)) return;
-            callback(wrapperArgs.ArgOne, wrapperArgs.ArgTwo, wrapperArgs.ArgThree, wrapperArgs.ArgFour);
+            callback?.Invoke(wrapperArgs.ArgOne, wrapperArgs.ArgTwo, wrapperArgs.ArgThree, wrapperArgs.ArgFour);
         }
 
         protected override void OnSubscription(object method) => callback += (Action<T1,T2,T3,T4>)method;

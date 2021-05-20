@@ -26,6 +26,6 @@ namespace Chrome
             visual.Renderer.material = material;
         }
 
-        protected void NotifyAmmoChange() => onAmmoChange?.Invoke();
+        protected void NotifyOfAmmoChange() => onAmmoChange?.Invoke();
     }
 }

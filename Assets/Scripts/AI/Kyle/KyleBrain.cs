@@ -7,7 +7,7 @@ namespace Chrome
     [Serializable]
     public class KyleBrain : Solver
     {
-        [SerializeField] private Vector3 ranges;
+        [SerializeField] private Vector2 ranges;
         [SerializeField] private float commitment;
 
         private IGoal idleGoal;
@@ -17,12 +17,14 @@ namespace Chrome
         
         private Transform self;
         private AreaLink selfLink;
-        
         private Transform player;
 
         private bool isActive;
         private GoalDefinition activeGoal;
+        private bool isActiveGoalBeingHandled;
         private float timer;
+
+        //--------------------------------------------------------------------------------------------------------------/
 
         public override void Build()
         {
@@ -37,29 +39,41 @@ namespace Chrome
             var board = Owner.Identity.Packet.Get<IBlackboard>();
             self = board.Get<Transform>(Refs.ROOT);
             selfLink = Owner.Identity.Packet.Get<AreaLink>();
+            
+            board.Set(KyleRefs.FLEE_COOLDOWN, 0.0f);
         }
 
         public override void Bootup()
         {
             Events.Subscribe<Area>(AreaEvent.OnPlayerEntry, OnPlayerEntry);
             Events.Subscribe<Area>(AreaEvent.OnPlayerExit, OnPlayerExit);
+            Events.Subscribe<GoalDefinition>(AgentEvent.OnGoalHandlingStart, OnGoalHandlingStart);
             
-            isActive = false;
             timer = 0.0f;
-            
-            SwitchTo(GoalDefinition.Idle);
+
+            if (selfLink.Value.IsPlayerInAnyBounds) isActive = true;
+            else
+            {
+                isActive = false;
+                SwitchTo(GoalDefinition.Idle);
+            }
         }
         public override void Shutdown()
         {
             Events.Unsubscribe<Area>(AreaEvent.OnPlayerEntry, OnPlayerEntry);
             Events.Unsubscribe<Area>(AreaEvent.OnPlayerExit, OnPlayerExit);
+            Events.Unsubscribe<GoalDefinition>(AgentEvent.OnGoalHandlingStart, OnGoalHandlingStart);
         }
+
+        //--------------------------------------------------------------------------------------------------------------/
 
         public override void Evaluate()
         {
             if (!isActive) return;
-            
-            if (activeGoal != GoalDefinition.Idle && timer < commitment)
+
+            var board = Owner.Identity.Packet.Get<IBlackboard>();
+            var isLocked = board.Get<bool>(Refs.LOCK);
+            if (isLocked || activeGoal != GoalDefinition.Idle && isActiveGoalBeingHandled && timer < commitment)
             {
                 timer += Mathf.Clamp(timer + Time.deltaTime, 0.0f, commitment);
                 return;
@@ -67,18 +81,27 @@ namespace Chrome
             
             var playerFlatPosition = new Vector2(player.position.x, player.position.z);
             var selfPosition = new Vector2(self.position.x, self.localPosition.z);
-
             var distance = Vector2.Distance(playerFlatPosition, selfPosition);
-            
-            if (distance < ranges.x) SwitchTo(GoalDefinition.Flee);
-            else if (distance < ranges.y) SwitchTo(GoalDefinition.Attack);
-            else SwitchTo(GoalDefinition.Seek);
+
+            if (distance < ranges.x)
+            {
+                if (activeGoal == GoalDefinition.Flee || IsFleeOnCooldown()) return;
+                SwitchTo(GoalDefinition.Flee);
+            }
+            else if (distance < ranges.y)
+            {
+                if (activeGoal == GoalDefinition.Attack) return;
+                SwitchTo(GoalDefinition.Attack);
+            }
+            else if (activeGoal != GoalDefinition.Seek) SwitchTo(GoalDefinition.Seek);
         }
 
         private void SwitchTo(GoalDefinition definition)
         {
             timer = 0.0f;
+            
             activeGoal = definition;
+            isActiveGoalBeingHandled = false;
             
             switch (definition)
             {
@@ -87,7 +110,6 @@ namespace Chrome
                     fleeGoal.Reset();
                     attackGoal.Reset();
                     seekGoal.Reset();
-                    
                     break;
 
                 case GoalDefinition.Flee:
@@ -95,7 +117,6 @@ namespace Chrome
                     idleGoal.Reset();
                     attackGoal.Reset();
                     seekGoal.Reset();
-                    
                     break;
                 
                 case GoalDefinition.Attack:
@@ -103,7 +124,6 @@ namespace Chrome
                     idleGoal.Reset();
                     fleeGoal.Reset();
                     seekGoal.Reset();
-                    
                     break;
                 
                 case GoalDefinition.Seek:
@@ -111,10 +131,26 @@ namespace Chrome
                     idleGoal.Reset();
                     fleeGoal.Reset();
                     attackGoal.Reset();
-
                     break;
             }
         }
+
+        private bool IsFleeOnCooldown()
+        {
+            var board = Owner.Identity.Packet.Get<IBlackboard>();
+            var cooldown = board.Get<float>(KyleRefs.FLEE_COOLDOWN);
+
+            if (cooldown > 0.0f)
+            {
+                cooldown -= Time.deltaTime;
+                board.Set(KyleRefs.FLEE_COOLDOWN, cooldown);
+
+                return true;
+            }
+            else return false;
+        }
+        
+        //--------------------------------------------------------------------------------------------------------------/
 
         void OnPlayerEntry(Area area)
         {
@@ -127,6 +163,12 @@ namespace Chrome
             
             SwitchTo(GoalDefinition.Idle);
             isActive = false;
+        }
+
+        void OnGoalHandlingStart(GoalDefinition definition)
+        {
+            if (definition != activeGoal) return;
+            isActiveGoalBeingHandled = true;
         }
     }
 }

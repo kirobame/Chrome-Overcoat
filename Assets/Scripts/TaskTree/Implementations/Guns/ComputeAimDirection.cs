@@ -6,17 +6,17 @@ namespace Chrome
     [Serializable]
     public class ComputeAimDirection : TaskNode
     {
-        public ComputeAimDirection(string path, LayerMask mask, IValue<Transform> from, IValue<Transform> view)
+        public ComputeAimDirection(IValue<Vector3> direction, LayerMask mask, IValue<Transform> from, IValue<Transform> view)
         {
-            this.path = path;
+            this.direction = direction;
             this.mask = mask;
 
             this.from = from;
             this.view = view;
         }
-        public ComputeAimDirection(string path, LayerMask mask, IValue<Transform> from, IValue<Transform> view, IValue<Collider> collider)
+        public ComputeAimDirection(IValue<Vector3> direction, LayerMask mask, IValue<Transform> from, IValue<Transform> view, IValue<Collider> collider)
         {
-            this.path = path;
+            this.direction = direction;
             this.mask = mask;
 
             this.from = from;
@@ -25,18 +25,16 @@ namespace Chrome
         }
         
         [SerializeField] private LayerMask mask;
-        [SerializeField] private string path;
-        
+
+        private IValue<Vector3> direction;
         private IValue<Transform> from;
         private IValue<Transform> view;
         private IValue<Collider> collider = new EmptyValue<Collider>();
 
         protected override void OnUse(Packet packet)
         {
-            if (from.IsValid(packet) && view.IsValid(packet))
+            if (direction.IsValid(packet) && from.IsValid(packet) && view.IsValid(packet))
             {
-                var board = packet.Get<IBlackboard>();
-
                 var length = 450.0f;
                 var ray = new Ray(view.Value.position, view.Value.forward);
                 Vector3 point;
@@ -54,7 +52,7 @@ namespace Chrome
                 }
                 else point = ray.origin + ray.direction * length;
 
-                board.Set(path, point - from.Value.position);
+                direction.Value = Vector3.Normalize(point - from.Value.position);
             }
 
             isDone = true;

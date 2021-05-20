@@ -19,6 +19,7 @@ namespace Chrome
             packet.Set(animator);
             
             var board = packet.Get<IBlackboard>();
+            board.Set(Refs.SHOOT_DIRECTION, Vector3.zero);
             board.Set(Refs.TYPE, (byte)10);
             board.Set(Refs.PIVOT, pivot);
             board.Set(Refs.FIREANCHOR, fireAnchor);

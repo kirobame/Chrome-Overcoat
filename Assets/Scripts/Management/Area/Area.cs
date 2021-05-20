@@ -13,6 +13,7 @@ namespace Chrome
         public event Action onPlayerExit;
         
         public int Occupancy { get; private set; }
+        public bool IsPlayerInAnyBounds => state;
 
         private bool state;
         private BoxCollider[] colliders;

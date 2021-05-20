@@ -1,6 +1,6 @@
 ﻿namespace Chrome
 {
-    public class PlayerBlackboard : BlackboardInstaller
+    public class PlayerBlackboardInstaller : BlackboardInstaller
     {
         protected override void Awake()
         {
