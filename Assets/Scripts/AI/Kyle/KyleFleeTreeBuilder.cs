@@ -20,13 +20,14 @@ namespace Chrome
             var navRef = AgentRefs.NAV.Reference<NavMeshAgent>();
             var colRef = Refs.COLLIDER.Reference<Collider>();
             var pivotRef = Refs.PIVOT.Reference<Transform>();
-            
+            var viewRef = Refs.VIEW.Reference<Transform>();
+
             return TT.START(GoalDefinition.Flee).Append
             (
                 new SetLocalReference<float>(KyleRefs.FLEE_COOLDOWN, cooldown),
                 new ResetAim(pivotRef).Append
                 (
-                    TT.BLOCK(new LeapOut(speed, range, height, resolution, navRef, colRef, playerRef)).Append
+                    TT.BLOCK(new LeapOut(speed, range, height, resolution, navRef, colRef, playerRef, viewRef)).Append
                     (
                         new Delay(1.5f) // Should directly let go of goal ?
                     )

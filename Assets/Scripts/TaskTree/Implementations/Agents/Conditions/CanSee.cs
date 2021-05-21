@@ -10,18 +10,9 @@ namespace Chrome
             this.source = source;
             this.target = target;
         }
-        public CanSee(IValue<Transform> source, IValue<Collider> target, IValue<Vector3> direction)
-        {
-            this.source = source;
-            this.target = target;
-            
-            this.direction = direction;
-        }
 
         private IValue<Transform> source;
         private IValue<Collider> target;
-        
-        private IValue<Vector3> direction = new EmptyValue<Vector3>();
 
         public override bool Check(Packet packet)
         {
@@ -33,7 +24,7 @@ namespace Chrome
             var point = Vector3.zero;
             for (var i = 0; i < corners.Count; i++)
             {
-                if (source.Value.CanSee(corners[i], mask))
+                if (source.Value.position.CanSee(corners[i], mask))
                 {
                     point += corners[i];
                     continue;
@@ -43,12 +34,7 @@ namespace Chrome
                 i--;
             }
 
-            if (!corners.Any()) return false;
-            
-            point /= corners.Count;
-            if (direction.IsValid(packet)) direction.Value = Vector3.Normalize(point - source.Value.position);
-
-            return true;
+            return corners.Any();
         }
     }
 }

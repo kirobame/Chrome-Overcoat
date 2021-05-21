@@ -20,17 +20,17 @@ namespace Chrome
             };
         }
         
-        public static bool CanSee(this Transform transform, Vector3 point, LayerMask blockingMask)
+        public static bool CanSee(this Vector3 source, Vector3 point, LayerMask blockingMask)
         {
-            var direction = point - transform.position;
-            var ray = new Ray(transform.position, direction);
+            var direction = point - source;
+            var ray = new Ray(source, direction);
 
             return !Physics.Raycast(ray, direction.magnitude, blockingMask);
         }
-        public static bool CanSee(this Transform transform, Collider collider, LayerMask blockingMask)
+        public static bool CanSee(this Vector3 source, Collider collider, LayerMask blockingMask)
         {
             var corners = collider.bounds.GetCorners();
-            foreach (var corner in corners) if (CanSee(transform, corner, blockingMask)) return true;
+            foreach (var corner in corners) if (CanSee(source, corner, blockingMask)) return true;
 
             return false;
         }

@@ -8,7 +8,7 @@ namespace Chrome
     public class KyleBrain : Solver
     {
         [SerializeField] private Vector2 ranges;
-        [SerializeField] private float commitment;
+        [SerializeField] private Vector3 commitments;
 
         private IGoal idleGoal;
         private IGoal fleeGoal;
@@ -22,6 +22,8 @@ namespace Chrome
         private bool isActive;
         private GoalDefinition activeGoal;
         private bool isActiveGoalBeingHandled;
+
+        private float commitment;
         private float timer;
 
         //--------------------------------------------------------------------------------------------------------------/
@@ -51,7 +53,7 @@ namespace Chrome
             
             timer = 0.0f;
 
-            if (selfLink.Value.IsPlayerInAnyBounds) isActive = true;
+            if (selfLink.Area.IsPlayerInAnyBounds) isActive = true;
             else
             {
                 isActive = false;
@@ -73,9 +75,11 @@ namespace Chrome
 
             var board = Owner.Identity.Packet.Get<IBlackboard>();
             var isLocked = board.Get<bool>(Refs.LOCK);
-            if (isLocked || activeGoal != GoalDefinition.Idle && isActiveGoalBeingHandled && timer < commitment)
+            if (isLocked) return;
+            
+            if (activeGoal != GoalDefinition.Idle && isActiveGoalBeingHandled && timer < commitment)
             {
-                timer += Mathf.Clamp(timer + Time.deltaTime, 0.0f, commitment);
+                timer = Mathf.Clamp(timer + Time.deltaTime, 0.0f, commitment);
                 return;
             }
             
@@ -83,9 +87,10 @@ namespace Chrome
             var selfPosition = new Vector2(self.position.x, self.localPosition.z);
             var distance = Vector2.Distance(playerFlatPosition, selfPosition);
 
+            var isFleeOnCooldown = IsFleeOnCooldown();
             if (distance < ranges.x)
             {
-                if (activeGoal == GoalDefinition.Flee || IsFleeOnCooldown()) return;
+                if (activeGoal == GoalDefinition.Flee || isFleeOnCooldown) return;
                 SwitchTo(GoalDefinition.Flee);
             }
             else if (distance < ranges.y)
@@ -113,6 +118,9 @@ namespace Chrome
                     break;
 
                 case GoalDefinition.Flee:
+
+                    commitment = commitments.x;
+                    
                     fleeGoal.IsActive = true;
                     idleGoal.Reset();
                     attackGoal.Reset();
@@ -120,6 +128,9 @@ namespace Chrome
                     break;
                 
                 case GoalDefinition.Attack:
+                    
+                    commitment = commitments.y;
+                    
                     attackGoal.IsActive = true;
                     idleGoal.Reset();
                     fleeGoal.Reset();
@@ -127,6 +138,9 @@ namespace Chrome
                     break;
                 
                 case GoalDefinition.Seek:
+                    
+                    commitment = commitments.z;
+                    
                     seekGoal.IsActive = true;
                     idleGoal.Reset();
                     fleeGoal.Reset();
@@ -154,12 +168,12 @@ namespace Chrome
 
         void OnPlayerEntry(Area area)
         {
-            if (area != selfLink.Value) return;
+            if (area != selfLink.Area) return;
             isActive = true;
         }
         void OnPlayerExit(Area area)
         {
-            if (area != selfLink.Value) return;
+            if (area != selfLink.Area) return;
             
             SwitchTo(GoalDefinition.Idle);
             isActive = false;

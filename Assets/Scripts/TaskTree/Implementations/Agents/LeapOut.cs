@@ -30,7 +30,7 @@ namespace Chrome
 
         //--------------------------------------------------------------------------------------------------------------/
 
-        public LeapOut(float speed, float range, float height, int resolution, IValue<NavMeshAgent> nav, IValue<Collider> collider, IValue<Transform> from)
+        public LeapOut(float speed, float range, float height, int resolution, IValue<NavMeshAgent> nav, IValue<Collider> collider, IValue<Transform> from, IValue<Transform> aim)
         {
             this.speed = speed;
             this.range = range;
@@ -40,6 +40,7 @@ namespace Chrome
             this.nav = nav;
             this.collider = collider;
             this.from = from;
+            this.aim = aim;
         }
         
         private float speed;
@@ -50,6 +51,7 @@ namespace Chrome
         private IValue<NavMeshAgent> nav;
         private IValue<Collider> collider;
         private IValue<Transform> from;
+        private IValue<Transform> aim;
 
         private float timer;
         private bool canLeap;
@@ -93,8 +95,14 @@ namespace Chrome
                 nav.Value.isStopped = false;
                 
                 nav.Value.SetDestination(navHit.position);
+                
+                if (aim.IsValid(packet)) aim.Value.localRotation = Quaternion.identity;
             }
-            else nav.Value.enabled = false;
+            else
+            {
+                nav.Value.updateRotation = false;
+                nav.Value.enabled = false;
+            }
         }
 
         private Vector3 GetDestination(Vector3 selfPosition)
@@ -136,7 +144,7 @@ namespace Chrome
 
         protected override void OnUse(Packet packet)
         {
-            if (!nav.IsValid(packet) || !collider.IsValid(packet) || !from.IsValid(packet))
+            if (!nav.IsValid(packet) || !collider.IsValid(packet) || !from.IsValid(packet) || !aim.IsValid(packet))
             {
                 isDone = true;
                 return;
@@ -156,7 +164,12 @@ namespace Chrome
                 else
                 {
                     var advance = data.velocity * timer + Vector3.up * (Physics.gravity.y * timer * timer / 2.0f);
-                    collider.Value.transform.position = data.start + advance;
+
+                    var end = data.start + advance;
+                    var direction = Vector3.Normalize(end - collider.Value.transform.position);
+
+                    aim.Value.rotation = Quaternion.LookRotation(direction);
+                    collider.Value.transform.position = end;
                 }
             }
             else if (nav.Value.hasPath && nav.Value.remainingDistance <= nav.Value.stoppingDistance + 0.1f)  isDone = true;
@@ -164,8 +177,6 @@ namespace Chrome
 
         protected override void OnShutdown(Packet packet)
         {
-            Debug.Log("Shutting down leap !");
-            
             nav.Value.enabled = true;
             nav.Value.Warp(nav.Value.transform.position);
         }

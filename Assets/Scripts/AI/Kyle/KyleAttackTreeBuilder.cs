@@ -7,6 +7,10 @@ namespace Chrome
     [Serializable]
     public class KyleAttackTreeBuilder : ITreeBuilder
     {
+        [SerializeField] private float coverRange;
+        [SerializeField] private float coverAcceptance;
+        [SerializeField] private float sightErrorThreshold;
+        
         public ITaskTree Build()
         {
             var playerRef = $"{PlayerRefs.BOARD}.{Refs.ROOT}".Reference<Transform>(ReferenceType.SubGlobal);
@@ -21,23 +25,26 @@ namespace Chrome
 
             return TT.START(GoalDefinition.Attack).Append
             (
-                TT.IF(new CanSee(viewRef, playerColRef, shootDirectionRef)).Append
+                new TakeCover(coverAcceptance, coverRange, sightErrorThreshold, new PackettedValue<AreaLink>(), navRef, viewRef, playerColRef).Append
                 (
-                    TT.IF_TRUE(new StopMoving(navRef)).Append
+                    TT.IF(new CanSee(viewRef, playerColRef)).Append
                     (
-                        TT.WITH_PRIO(0, new RootNode()).Append
+                        TT.IF_TRUE(new StopMoving(navRef)).Append
                         (
-                            new ComputeDirectionTo(shootDirectionRef, fireAnchorRef, playerColRef),
-                            new LookAt(playerColRef, pivotRef)
+                            TT.WITH_PRIO(0, new RootNode()).Append
+                            (
+                                new ComputeDirectionTo(shootDirectionRef, fireAnchorRef, playerColRef),
+                                new LookAt(playerColRef, pivotRef)
+                            ),
+                            TT.WITH_PRIO(1, new PressNode(1.0f)).Append
+                            (
+                                new WeaponNode(weaponRef)
+                            )
                         ),
-                        TT.WITH_PRIO(1, new PressNode(1.0f)).Append
+                        TT.IF_FALSE(new DiscardCover()).Append
                         (
-                            new WeaponNode(weaponRef)
+                            new MoveUntil(new CanSee(viewRef, playerColRef), 0.25f, navRef, playerRef, pivotRef)
                         )
-                    ),
-                    TT.IF_FALSE(new MoveTo(navRef, playerRef, pivotRef)).Append
-                    (
-                        new Delay(0.5f)
                     )
                 )
             );

@@ -4,35 +4,10 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Rendering;
 
 namespace Chrome
 {
-    public class Cover : MonoBehaviour, IInjectable, IInjectionCallbackListener
-    {
-        IReadOnlyList<IValue> IInjectable.Injections => injections;
-        private IValue[] injections;
-
-        void IInjectable.PrepareInjection()
-        {
-            area = new AnyValue<Area>();
-            injections = new IValue[] { area };
-        }
-
-        void IInjectionCallbackListener.OnInjectionDone(IRoot source)
-        {
-            spot = new CoverSpot(transform.position, transform.forward);
-            spot.Area = area.Value;
-            
-            CoverSystem.Register(spot);
-        }
-
-        //--------------------------------------------------------------------------------------------------------------/
-
-        private IValue<Area> area;
-
-        private CoverSpot spot;
-    }
-    
     [RequireComponent(typeof(BoxCollider))]
     public class CoverZone : MonoBehaviour, IInjectable, IInjectionCallbackListener
     {
@@ -165,14 +140,16 @@ namespace Chrome
         
         void OnDrawGizmos()
         {
-            if (UnityEditor.Selection.activeGameObject != gameObject) return;
-            
+            var selectedGameObject = UnityEditor.Selection.activeGameObject;
+            if (selectedGameObject == null || selectedGameObject != gameObject && !transform.IsChildOf(selectedGameObject.transform) && selectedGameObject.transform != transform.parent) return;
+
             var discColor = Color.magenta;
             discColor.a = 0.25f;
 
             var discOutlineColor = Color.black;
             discOutlineColor.a = 0.75f;
-            
+
+            UnityEditor.Handles.zTest = CompareFunction.Less;
             foreach (var spot in spots)
             {
                 UnityEditor.Handles.color = discColor;
@@ -182,6 +159,7 @@ namespace Chrome
                 UnityEditor.Handles.DrawWireDisc(spot.Position, Vector3.up, radius, 0.1f);
                 
                 UnityEditor.Handles.ArrowHandleCap(0, spot.Position, Quaternion.LookRotation(spot.Orientation), radius, EventType.Repaint);
+                UnityEditor.Handles.SphereHandleCap(0, spot.Position, Quaternion.identity, 0.1f, EventType.Repaint);
             }
         }
         #endif

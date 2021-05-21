@@ -28,7 +28,7 @@ namespace Chrome
        
             return new RootNode().Append
                 (
-                    TT.IF(new CanSee(viewRef, playerColRef, shootDirectionRef)).Append
+                    TT.IF(new CanSee(viewRef, playerColRef)).Append
                     (
                         TT.IF_TRUE(new StopMoving(navRef)).Append
                         (
