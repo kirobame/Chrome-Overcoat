@@ -54,9 +54,12 @@ namespace Flux.Data
                 }
                 
                 IsOperational = true;
+                
                 onReady?.Invoke();
+                OnReady();
             }
         }
+        protected virtual void OnReady() { }
         
         public virtual void AddProvider(Provider<T, TPoolable> provider) { }
 
@@ -131,7 +134,7 @@ namespace Flux.Data
             availableInstances[(TPoolable)poolable.Key].Enqueue(poolable);
             usedInstances.Remove(poolable);
             
-            poolable.transform.SetParent(transform);
+            poolable.transform.SetParent(transform, false);
         }
 
         private void Claim(TPoolable poolable, TPoolable key)
@@ -140,7 +143,7 @@ namespace Flux.Data
             poolable.Prepare();
             
             poolable.gameObject.SetActive(true);
-            poolable.transform.SetParent(null);
+            poolable.transform.SetParent(null, false);
             
             usedInstances.Add(poolable);
         }

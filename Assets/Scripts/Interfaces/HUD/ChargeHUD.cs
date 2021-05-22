@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Chrome
 {
-    public class ChargeHUD : MonoBehaviour, IHUD
+    public class ChargeHUD : MonoBehaviour, IDeprecatedHUD
     {
         [SerializeField] private Image charge;
         [SerializeField] private Color min;

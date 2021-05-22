@@ -41,7 +41,7 @@ namespace Chrome
             foreach (var hud in HUDAdresses)
             {
                 hud.Bootup();
-                IHUD _hud = Repository.Get<IHUD>(hud.Value);
+                IDeprecatedHUD _hud = Repository.Get<IDeprecatedHUD>(hud.Value);
                 _hud.Refresh(newValue, tag);
             }
         }

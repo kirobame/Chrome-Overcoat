@@ -43,7 +43,7 @@ namespace Chrome
         {
             airTimer = airTime;
             //HUD = Repository.Get<JetpackHUD>(Interface.Jetpack);
-            jetpackValues = Repository.Get<UIValue>(UIValuesReferences.Jetpack);
+            //jetpackValues = Repository.Get<UIValue>(UIValuesReferences.Jetpack);
         }
         
         //--------------------------------------------------------------------------------------------------------------/
@@ -64,7 +64,7 @@ namespace Chrome
                     if (key.IsOn())
                     {
                         Events.ZipCall(GaugeEvent.OnThrusterUsed, (byte)1);
-                        
+
                         airTimer -= Time.deltaTime;
                         if (airTimer < 0.0f)
                         {
@@ -88,7 +88,7 @@ namespace Chrome
                 }
             }
 
-            jetpackValues.Set(airTimer, "AIRTIME");
+            //jetpackValues.Set(airTimer, "AIRTIME");
             //HUD.IndicateAirTime(airTimer);
         }
     }

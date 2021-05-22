@@ -10,6 +10,7 @@ namespace Chrome
         Impact,
         Death,
         Agent,
-        Modification
+        Modification,
+        HUD
     }
 }

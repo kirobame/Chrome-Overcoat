@@ -2,7 +2,7 @@
 
 namespace Chrome
 {
-    public class GunHUD : MonoBehaviour, IHUD
+    public class GunHUD : MonoBehaviour, IDeprecatedHUD
     {
         [SerializeField] private GunPartHUD[] subHUDs;
 

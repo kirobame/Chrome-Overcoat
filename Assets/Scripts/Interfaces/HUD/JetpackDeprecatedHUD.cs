@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Chrome
 {
-    public class JetpackHUD : MonoBehaviour, IHUD
+    public class JetpackDeprecatedHUD : MonoBehaviour, IDeprecatedHUD
     {
         [SerializeField] private Image charge;
         [SerializeField] private Image airTime;
@@ -32,8 +32,7 @@ namespace Chrome
                     break;
             }
         }
-
-
+        
         private void IndicateCharge(float ratio) => charge.fillAmount = ratio;
         private void IndicateAirTime(float ratio) => airTime.fillAmount = ratio / 2.0f;
         private void IndicateCooldown(float value, float time)
@@ -57,6 +56,5 @@ namespace Chrome
                 cooldownFill.fillAmount = 0.0f;
             }
         }
-
     }
 }
