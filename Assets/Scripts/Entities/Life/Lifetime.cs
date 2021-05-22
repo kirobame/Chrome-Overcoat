@@ -122,9 +122,7 @@ namespace Chrome
         {
             if (IsAlive) return;
             IsAlive = true;
-            
-            Debug.Log($"[{root.Transform.name}] Lifetime starts");
-            
+
             var args = new WrapperArgs<byte>(0);
             CallListeners(args, CheckForSpawn);
             
@@ -154,8 +152,6 @@ namespace Chrome
             if (!IsAlive) return;
             IsAlive = false;
             
-            Debug.Log($"[{root.Transform.name}] Lifetime ends");
-            
             foreach (var lifebound in bounds)
             {
                 if (!lifebound.IsActive) continue;
@@ -181,15 +177,19 @@ namespace Chrome
 
         private void CallListeners(EventArgs args, Action<Token> callback)
         {
-            countdown = 0;
+            var results = new List<IListener<Lifetime>>();
             foreach (var listener in listeners)
             {
                 if (!listener.IsListeningTo(args)) continue;
+                results.Add(listener);
+            }
 
+            countdown = results.Count;
+            foreach (var listener in results)
+            {
                 var token = new Token();
                 token.onConsumption += callback;
-
-                countdown++;
+                
                 listener.Execute(token);
             }
         }

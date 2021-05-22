@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.AI;
+using Object = UnityEngine.Object;
 
 namespace Chrome
 {
@@ -8,31 +9,37 @@ namespace Chrome
     public class AttackTreeBuilder : ITreeBuilder
     {
         [SerializeField] private Weapon weapon;
+
+        private Weapon runtimeWeapon;
         
         public ITaskTree Build()
         {
+            var runtimeWeapon = Object.Instantiate(weapon);
+            runtimeWeapon.Build();
+
             var playerRef = $"{PlayerRefs.BOARD}.{Refs.ROOT}".Reference<Transform>(ReferenceType.SubGlobal);
             var playerColRef = $"{PlayerRefs.BOARD}.{Refs.COLLIDER}".Reference<Collider>(ReferenceType.SubGlobal);
             
+            var shootDirectionRef = Refs.SHOOT_DIRECTION.Reference<Vector3>();
             var navRef = AgentRefs.NAV.Reference<NavMeshAgent>();
             var pivotRef = Refs.PIVOT.Reference<Transform>();
             var fireAnchorRef = Refs.FIREANCHOR.Reference<Transform>();
-            var lineOfSightRef = AgentRefs.LINE_OF_SIGHT.Reference<LineOfSight>();
+            var viewRef = Refs.VIEW.Reference<Transform>();
        
             return new RootNode().Append
                 (
-                    new CanSee(playerColRef, lineOfSightRef).Append
+                    TT.IF(new CanSee(viewRef, playerColRef)).Append
                     (
                         TT.IF_TRUE(new StopMoving(navRef)).Append
                         (
                             TT.WITH_PRIO(0, new RootNode()).Append
                             (
-                                new ComputeDirectionTo("shootDir", fireAnchorRef, playerColRef),
+                                new ComputeDirectionTo(shootDirectionRef, fireAnchorRef, playerColRef),
                                 new LookAt(playerColRef, pivotRef)
                             ),
                             TT.WITH_PRIO(1, new PressNode(1.0f)).Append
                             (
-                                new WeaponNode(weapon)
+                                new WeaponNode(runtimeWeapon.Cache())
                             )
                         ),
                         TT.IF_FALSE(new MoveTo(navRef, playerRef, pivotRef)).Append

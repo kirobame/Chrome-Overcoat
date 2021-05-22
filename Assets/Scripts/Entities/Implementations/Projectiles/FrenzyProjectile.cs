@@ -35,7 +35,7 @@ namespace Chrome
             var entities = Physics.OverlapSphere(transform.position, explosionRadius);
             foreach (var entity in entities)
             {
-                if (entity.TryGetComponent<InteractionHub>(out var hub) && transform.CanSee(entity, hitMask))
+                if (entity.TryGetComponent<InteractionHub>(out var hub) && transform.position.CanSee(entity, hitMask))
                 {
                     packet.Set(hit);
                     hub.RelayDamage(identity.Value, damage);

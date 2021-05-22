@@ -16,7 +16,7 @@ namespace Chrome
         public static INode BIND_TO(int mask, INode node) => node.Mask(mask);
         public static INode BIND_TO<TEnum>(TEnum value, INode node) where TEnum : Enum => node.Mask(Convert.ToInt32(value));
         
-        public static CompositeConditionalNode IF(ICondition condition) => new CompositeConditionalNode(condition);
+        public static CompositeConditionalNode IF(ICondition condition) => new CompositeConditionalNode((condition, ConditionalOperator.NONE));
         public static CompositeConditionalNode AND(this CompositeConditionalNode node, ICondition condition)
         {
             node.Add(ConditionalOperator.AND, condition);
@@ -26,22 +26,36 @@ namespace Chrome
         {
             node.Add(ConditionalOperator.OR, condition);
             return node;
-        } 
+        }
+
+        public static INode LOCK() => WITH_PRIO(-1, new SetLocalReference<bool>(Refs.LOCK, true));
+        public static INode LOCK(this INode node) => LOCK().Append(node);
+        
+        public static INode UNLOCK() => WITH_PRIO(1, new SetLocalReference<bool>(Refs.LOCK, false));
+        public static INode UNLOCK(this INode node) => node.Append(UNLOCK());
+
+        public static INode BLOCK(this INode node)
+        {
+            return LOCK().Append
+            (
+                node.Append
+                (
+                    UNLOCK()
+                )
+            );
+        }
+        
+        public static ITaskTree START(GoalDefinition definition)
+        {
+            return new RootNode().Append
+            (
+                WITH_PRIO(-1, new Call<GoalDefinition>(AgentEvent.OnGoalHandlingStart, definition.Cache()))
+            );
+        }
     }
     
     public static class TreeExtensions
     {
-        public static ICondition Inverse(this ICondition condition)
-        {
-            condition.Inverse = true;
-            return condition;
-        }
-        public static ICondition Chain(this ICondition condition, ConditionalOperator op)
-        {
-            condition.Operator = op;
-            return condition;
-        }
-        
         public static bool HasChannel(this int mask, int channel) => (mask | channel) == mask;
         public static string ToBinary(this int value, int length = 4)
         {

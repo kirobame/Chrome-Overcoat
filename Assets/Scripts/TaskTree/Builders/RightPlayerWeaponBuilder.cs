@@ -18,7 +18,7 @@ namespace Chrome
             var ammoRef = $"{WeaponRefs.BOARD}.{WeaponRefs.AMMO}".Reference<float>(ReferenceType.Nested);
             
             return new GunNode().Append(
-                new Shoot("shootDir".Reference<Vector3>(), fireAnchorRef, colliderRef, bulletPrefab, muzzleFlashPrefab).Append(
+                new Shoot(Refs.SHOOT_DIRECTION.Reference<Vector3>(), fireAnchorRef, colliderRef, bulletPrefab, muzzleFlashPrefab).Append(
                     new ConsumeAmmo(1.0f, ammoRef),
                     new Delay(delay)).Mask(0b_0001));
         }

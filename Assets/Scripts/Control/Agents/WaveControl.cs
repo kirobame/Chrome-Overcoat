@@ -94,7 +94,6 @@ namespace Chrome
             {
                 if (conditions.Any(condition => !condition.Check(packet))) return;
                 
-                Debug.Log($"Spawning [{name}] wave in [{Owner.Area.Transform.gameObject.name}] area");
                 foreach (var spawn in spawns) spawn.Execute();
                 HasBeenTriggered = true;
                 

@@ -2,9 +2,6 @@
 {
     public abstract class Condition : ICondition
     {
-        public bool Inverse { get; set; }
-        public ConditionalOperator Operator { get; set; }
-        
         public virtual void Bootup(Packet packet) { }
         public virtual void Open(Packet packet) { }
         public virtual void Prepare(Packet packet) { }
