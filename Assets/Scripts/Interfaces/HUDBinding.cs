@@ -11,8 +11,8 @@ namespace Chrome
         Cooldown = 1 << 1,
         Gauge = 1 << 2,
         Ammo = 1 << 3,
+        Popup = 1 << 4,
         
-        Five = 1 << 4,
         Six = 1 << 5,
         Seven = 1 << 6,
         Height = 1 << 7,

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Flux;
 using Flux.Event;
 using Flux.Feedbacks;
 using UnityEngine;
@@ -10,6 +11,19 @@ namespace Chrome
 {
     public class Lifetime : MonoBehaviour, IInstaller, IInjectable, IInjectionCallbackListener
     {
+        public static bool IsBootupMessage(EventArgs args)
+        {
+            if (args is IWrapper<byte> byteWrapper) return byteWrapper.Value == 0;
+            else return false;
+        }
+        public static bool IsShutdownMessage(EventArgs args)
+        {
+            if (args is IWrapper<byte> byteWrapper) return byteWrapper.Value == 1;
+            else return false;
+        }
+        
+        //--------------------------------------------------------------------------------------------------------------/
+        
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         private IValue[] injections;
 

@@ -8,6 +8,7 @@ namespace Chrome
         Camera,
         VirtualCamera,
         Areas,
-        Pickups
+        Pickups,
+        WorldCanvas
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Flux.Data;
 using Sirenix.OdinInspector;
@@ -7,21 +8,31 @@ using Random = UnityEngine.Random;
 
 namespace Chrome
 {
-    public abstract class Loot : MonoBehaviour, IPickable, ILifebound, IInjectable, IInstaller
+    public abstract class Loot : MonoBehaviour, IPickable, ILifebound, IInjectable, IInstaller, IListener<Lifetime>
     {
+        protected const int GRAPH_LAYER = 0;
+        protected const int INDICATOR_LAYER = 1;
+
+        protected const string VOID_TAG = "Void";
+
+        protected const string IS_ACTIVE = "IsActive";
+        protected const string IS_INDICATING = "IsIndicating";
+        
+        //--------------------------------------------------------------------------------------------------------------/
+        
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         protected List<IValue> injections;
 
         void IInjectable.PrepareInjection()
         {
-            rigidbody = new AnyValue<Rigidbody>();
+            animator = new AnyValue<Animator>();
             identity = new AnyValue<IIdentity>();
             lifetime = new AnyValue<Lifetime>();
             
             injections = new List<IValue>()
             {
                 identity,
-                rigidbody,
+                animator,
                 lifetime
             };
             
@@ -30,6 +41,8 @@ namespace Chrome
         protected virtual void PrepareInjection() { }
         
         //--------------------------------------------------------------------------------------------------------------/
+
+        #region Destruction events
 
         private event Action<ILifebound> onLifeboundDestruction;
         event Action<ILifebound> IActive<ILifebound>.onDestruction
@@ -44,15 +57,23 @@ namespace Chrome
             add => onInteractionDestruction += value;
             remove => onInteractionDestruction -= value;
         }
+        
+        private event Action<IListener<Lifetime>> onListenerDestruction;
+        event Action<IListener<Lifetime>> IActive<IListener<Lifetime>>.onDestruction
+        {
+            add => onListenerDestruction += value;
+            remove => onListenerDestruction -= value;
+        }
 
+        #endregion
+        
         public Transform Transform => transform;
+        public float Radius => radius;
         public bool IsActive => true;
 
-        [FoldoutGroup("Values"), SerializeField] private Vector2 angleRange;
-        [FoldoutGroup("Values"), SerializeField] private Vector2 forceRange;
-        [FoldoutGroup("Values"), SerializeField] private Vector2 offsetRange;
+        [FoldoutGroup("Values"), SerializeField] private float radius;
 
-        protected new IValue<Rigidbody> rigidbody;
+        protected IValue<Animator> animator;
         protected IValue<Lifetime> lifetime;
         protected IValue<IIdentity> identity;
 
@@ -62,28 +83,53 @@ namespace Chrome
         {
             onLifeboundDestruction?.Invoke(this);
             onInteractionDestruction?.Invoke(this);
+            onListenerDestruction?.Invoke(this);
         }
 
         public virtual void Bootup()
         {
             Repository.AddTo(Reference.Pickups, (IPickable)this);
-            
-            var direction = Quaternion.Euler(Random.Range(angleRange.x, angleRange.y), Random.Range(0.0f, 360f), 0.0f) * Vector3.forward;
-            var point = rigidbody.Value.worldCenterOfMass + Random.insideUnitSphere * Random.Range(offsetRange.x, offsetRange.y);
-            
-            rigidbody.Value.AddForceAtPosition(direction * Random.Range(forceRange.x, forceRange.y), point, ForceMode.Impulse);
+            animator.Value.SetBool(IS_ACTIVE, true);
         }
         public virtual void Shutdown() => Repository.RemoveFrom(Reference.Pickups, (IPickable)this);
 
-        public virtual void OnHoverStart(IIdentity source) { }
-        public virtual void OnHoverEnd(IIdentity source) { }
+        public virtual void OnHoverStart(IIdentity source) => animator.Value.SetBool(IS_INDICATING, true);
+        public virtual void OnHoverEnd(IIdentity source) => animator.Value.SetBool(IS_INDICATING, false);
         
         public void Pickup(IIdentity source)
         {
+            OnHoverEnd(source);
             OnPickup(source);
+            
             lifetime.Value.End();
         }
         protected abstract void OnPickup(IIdentity source);
+
+        //--------------------------------------------------------------------------------------------------------------/
+
+        public bool IsListeningTo(EventArgs args) => Lifetime.IsShutdownMessage(args);
+        public void Execute(Token token) => StartCoroutine(WaitForAnimations(token));
+
+        private IEnumerator WaitForAnimations(Token token)
+        {
+            animator.Value.SetBool(IS_ACTIVE, false);
+
+            var graphStateInfo = animator.Value.GetCurrentAnimatorStateInfo(GRAPH_LAYER);
+            while (!graphStateInfo.IsTag(VOID_TAG))
+            {
+                yield return new WaitForEndOfFrame();
+                graphStateInfo = animator.Value.GetCurrentAnimatorStateInfo(GRAPH_LAYER);
+            }
+            
+            var indicatorStateInfo = animator.Value.GetCurrentAnimatorStateInfo(INDICATOR_LAYER);
+            while (!indicatorStateInfo.IsTag(VOID_TAG))
+            {
+                yield return new WaitForEndOfFrame();
+                indicatorStateInfo = animator.Value.GetCurrentAnimatorStateInfo(INDICATOR_LAYER);
+            }
+            
+            token.Consume();
+        }
         
         //--------------------------------------------------------------------------------------------------------------/
 

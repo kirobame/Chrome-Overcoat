@@ -35,6 +35,11 @@ namespace Chrome
             );
         }
 
+        public override void InstallDependenciesOn(IBlackboard board)
+        {
+            base.InstallDependenciesOn(board);
+            board.Set(WeaponRefs.CHARGE, gaugeBinding);
+        }
         public override IBindable[] GetBindables()
         {
             var output = base.GetBindables();

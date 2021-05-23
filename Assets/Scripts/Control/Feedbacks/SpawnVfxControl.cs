@@ -16,19 +16,17 @@ namespace Chrome
 
         void OnDestroy() => onDestruction?.Invoke(this);
 
-        public bool IsListeningTo(EventArgs args)
-        {
-            if (!(args is IWrapper<byte> byteWrapper) || byteWrapper.Value != 1) return false;
+        public bool IsListeningTo(EventArgs args) => Lifetime.IsShutdownMessage(args);
 
+        public void Execute(Token token)
+        {
             var pool = Repository.Get<VfxPool>(address);
             var instance = pool.RequestSingle(prefab);
 
             instance.transform.position = transform.position;
             instance.Play();
-
-            return true;
+            
+            token.Consume();
         }
-
-        public void Execute(Token token) => token.Consume();
     }
 }

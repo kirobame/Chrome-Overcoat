@@ -12,6 +12,7 @@ namespace Chrome
         Agent,
         Modification,
         Loot,
-        HUD
+        HUD,
+        WorldHUD
     }
 }

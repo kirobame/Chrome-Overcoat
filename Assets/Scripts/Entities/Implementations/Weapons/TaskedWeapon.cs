@@ -15,6 +15,7 @@ namespace Chrome
         {
             base.Build();
             root = builder.Build();
+            builder.InstallDependenciesOn(Board);
         }
         public override IBindable[] GetBindables() => builder.GetBindables();
         

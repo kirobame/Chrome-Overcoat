@@ -7,5 +7,6 @@
         
         public const string BOARD = "weaponBoard";
         public const string AMMO = "ammo";
+        public const string CHARGE = "charge";
     }
 }
