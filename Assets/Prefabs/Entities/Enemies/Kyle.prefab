@@ -401,7 +401,7 @@ MonoBehaviour:
   fireAnchor: {fileID: 4838587689590584925}
   renderer: {fileID: 166374288825024760}
   collider: {fileID: 166374289766527822}
-  weapon: {fileID: 11400000, guid: a932221ea4187fd4bb897b3242ff395c, type: 2}
+  weapon: {fileID: 11400000, guid: b7cdf48e7c00e154bb7daaf680ca5c45, type: 2}
 --- !u!114 &7915454871645043897
 MonoBehaviour:
   m_ObjectHideFlags: 0

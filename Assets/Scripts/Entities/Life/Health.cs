@@ -79,16 +79,6 @@ namespace Chrome
             this.amount = Mathf.Clamp(this.amount - damage, 0.0f, max);
             onChange?.Invoke(this.amount, max);
 
-            var sourceType = source.Packet.Get<byte>();
-            if (identity.Value.Faction == Faction.Player) Events.ZipCall<float,byte>(GaugeEvent.OnDamageReceived, damage, sourceType);
-            else if (source.Faction == Faction.Player)
-            {
-                var type = identity.Value.Packet.Get<byte>();
-                
-                Events.ZipCall<byte,float,byte>(GaugeEvent.OnDamageInflicted, type, damage, sourceType);
-                if (this.amount == 0) Events.ZipCall<byte,byte>(GaugeEvent.OnKill, type, sourceType);
-            }
-            
             if (this.amount == 0) lifetime.Value.End();
         }
 

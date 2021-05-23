@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Chrome
 {
     [Serializable]
-    public class UMPWeaponBuilder : WeaponBuilder
+    public class UMPBuilder : WeaponBuilder
     {
         [SerializeField] private GenericPoolable bulletPrefab;
         [SerializeField] private PoolableVfx muzzleFlashPrefab;

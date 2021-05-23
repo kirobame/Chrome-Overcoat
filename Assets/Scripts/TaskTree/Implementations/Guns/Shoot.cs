@@ -7,6 +7,10 @@ namespace Chrome
 {
     public class Shoot : TaskNode
     {
+        private const string SHOOT = "Shoot";
+        
+        //--------------------------------------------------------------------------------------------------------------/
+        
         public Shoot(IValue<Vector3> direction, IValue<Transform> fireAnchor, GenericPoolable projectilePrefab, PoolableVfx muzzleFlashPrefab)
         {
             this.direction = direction;
@@ -64,22 +68,23 @@ namespace Chrome
             var projectilePool = Repository.Get<GenericPool>(Pool.Projectile);
             var projectileInstance = projectilePool.CastSingle<Projectile>(projectilePrefab);
 
+            // TODO : Refactor this
+            #region Charge usage
+
             var board = packet.Get<IBlackboard>();
             float force;
+            
             
             if (!board.TryGet<bool>("charge.isUsed", out var isUsed) || !isUsed) force = 0.25f;
             else force = board.Get<float>("charge");
 
-            var type = board.Get<byte>("type");
-            if (type == 10)
-            {
-                Events.ZipCall(PlayerEvent.OnFire, force);
-                Events.ZipCall<byte,float>(GaugeEvent.OnGunFired, (byte)(projectilePrefab.name.Contains("Energy") ? 0 : 1), force);
-            }
-            
             packet.Set(force);
+            
+            #endregion
+            
+            if (packet.TryGet<Animator>(out var animator)) animator.SetTrigger(SHOOT);
+          
             projectileInstance.Shoot(packet.Get<IIdentity>(), fireAnchor.position, direction.normalized, packet);
-
             if (collider.IsValid(packet)) projectileInstance.Ignore(collider.Value);
         }
     }
