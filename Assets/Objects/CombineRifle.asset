@@ -16,11 +16,11 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: 4b309b09e0570e54f9c39e4e79c2a0d7, type: 2}
   builder:
     id: 0
-  maxAmmo: 15
   references:
     version: 1
     00000000:
-      type: {class: LeftPlayerWeaponBuilder, ns: Chrome, asm: Assembly-CSharp}
+      type: {class: CombineRifleBuilder, ns: Chrome, asm: Assembly-CSharp}
       data:
+        ammo: 15
         bulletPrefab: {fileID: 8335357938041984344, guid: ef9940d013dc87d4885ac6eeabbebfd9, type: 3}
         muzzleFlashPrefab: {fileID: 3541007952546055489, guid: 094f816bf309dd04bb08458f38cd9655, type: 3}

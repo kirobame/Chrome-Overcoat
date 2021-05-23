@@ -36,10 +36,10 @@ namespace Chrome
         protected override void PrepareInjection()
         {
             hasBeenBootedUp = false;
- 
+            
+            aimCompute = ChromeExtensions.CreateComputeAimDirection();
             runtimeDefaultWeapon = Instantiate(defaultWeapon);
             runtimeDefaultWeapon.Build();
-            aimCompute = ChromeExtensions.CreateComputeAimDirection();
 
             pressState = PressState.Released;
             switchState = SwitchState.None;
@@ -56,9 +56,6 @@ namespace Chrome
         protected override void OnInjectionDone(IRoot source)
         {
             packet.Set(false);
-            
-            onAmmoChangeToken = packet.GetOrCreateValueAt<string, Token>(TokenRefs.ON_AMMO_CHANGE);
-            onAmmoChangeToken.onConsumption += OnAmmoChange;
 
             hasBeenBootedUp = true;
             SwitchTo(runtimeDefaultWeapon);
@@ -97,18 +94,14 @@ namespace Chrome
 
         private Weapon targetWeapon;
         private Weapon runtimeDefaultWeapon;
-        private Token onAmmoChangeToken;
+        
+        private bool weaponHasAmmo;
+        private Bindable<float> ammoBinding;
         
         private bool hasBeenBootedUp;
 
         //--------------------------------------------------------------------------------------------------------------/
-
-        protected override void OnDestroy()
-        {
-            base.OnDestroy();
-            onAmmoChangeToken.onConsumption -= OnAmmoChange;
-        }
-
+        
         public override void Bootup()
         {
             packet.Set(false);
@@ -207,8 +200,14 @@ namespace Chrome
         private void Refresh()
         {
             if (targetWeapon == null) throw new InvalidOperationException($"[{this}] Cannot refresh to a new weapon if there is no target weapon assigned !");
-            
-            if (HasWeapon) Current.Shutdown(packet);
+
+            if (HasWeapon)
+            {
+                HUDBinder.Clear(HUDGroup.Weapon);
+                Current.Shutdown(packet);
+
+                if (weaponHasAmmo) ammoBinding.onChange -= OnAmmoChange;
+            }
             HasWeapon = true;
             
             Current = targetWeapon;
@@ -219,6 +218,16 @@ namespace Chrome
             
             Current.Bootup(packet);
             Current.AssignVisualsTo(visual.Value);
+
+            var bindables = Current.GetBindables();
+            HUDBinder.Declare(HUDGroup.Weapon, bindables);
+
+            if (bindables.TryGet<Bindable<float>>(HUDBinding.Ammo, out ammoBinding))
+            {
+                weaponHasAmmo = true;
+                ammoBinding.onChange += OnAmmoChange;
+            }
+            else weaponHasAmmo = false;
         }
         
         //--------------------------------------------------------------------------------------------------------------/
@@ -277,9 +286,9 @@ namespace Chrome
 
         //--------------------------------------------------------------------------------------------------------------/
 
-        void OnAmmoChange(Token token)
+        void OnAmmoChange(float value)
         {
-            if (Current == runtimeDefaultWeapon || Current.HasAmmo) return;
+            if (Current == runtimeDefaultWeapon || value > 0) return;
             DropCurrent();
         }
     }

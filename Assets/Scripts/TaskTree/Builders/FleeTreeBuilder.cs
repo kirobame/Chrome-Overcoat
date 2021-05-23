@@ -4,9 +4,9 @@ using UnityEngine.AI;
 namespace Chrome
 {
     [Serializable]
-    public class FleeTreeBuilder : ITreeBuilder
+    public class FleeTreeBuilder : TreeBuilder
     {
-        public ITaskTree Build()
+        public override ITaskTree Build()
         {
             var navReference = AgentRefs.NAV.Reference<NavMeshAgent>();
             

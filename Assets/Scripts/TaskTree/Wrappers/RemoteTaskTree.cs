@@ -8,13 +8,13 @@ using UnityEngine.UI;
 namespace Chrome
 {
     [CreateAssetMenu(fileName = "NewRemoteTaskTree", menuName = "Chrome Overcoat/Task Tree/Remote")]
-    public class RemoteTaskTree : ScriptableObject, ITaskTree, IBootable
+    public class RemoteTaskTree : ScriptableObject, ITaskTree
     {
         [SerializeReference] private ITreeBuilder builder;
         
         private ITaskTree root;
         
-        public void Bootup() => root = builder.Build();
+        public void Build(Packet packet) => root = builder.Build();
 
         //--------------------------------------------------------------------------------------------------------------/
         

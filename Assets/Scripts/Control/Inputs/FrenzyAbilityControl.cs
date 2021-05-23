@@ -12,7 +12,6 @@ namespace Chrome
         protected override void PrepareInjection()
         {
             aimCompute = ChromeExtensions.CreateComputeAimDirection();
-            
             runtimeWeapon = Instantiate(frenzyWeapon);
             runtimeWeapon.Build();
             

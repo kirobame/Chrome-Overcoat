@@ -6,13 +6,13 @@ using Object = UnityEngine.Object;
 namespace Chrome
 {
     [Serializable]
-    public class AttackTreeBuilder : ITreeBuilder
+    public class AttackTreeBuilder : TreeBuilder
     {
         [SerializeField] private Weapon weapon;
 
         private Weapon runtimeWeapon;
         
-        public ITaskTree Build()
+        public override ITaskTree Build()
         {
             var runtimeWeapon = Object.Instantiate(weapon);
             runtimeWeapon.Build();

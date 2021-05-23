@@ -27,10 +27,10 @@ namespace Chrome
 
         //--------------------------------------------------------------------------------------------------------------/
         
-        [FoldoutGroup("Values"), SerializeField] private float cooldown;
-        [FoldoutGroup("Values"), SerializeField] private Vector2 pressRange;
+        [FoldoutGroup("Values"), SerializeField] private BindableCooldown cooldown;
+        [FoldoutGroup("Values"), SerializeField] private BindableRatio charge;
         [FoldoutGroup("Values"), SerializeField] private Vector2 heightRange;
-        [FoldoutGroup("Values"), SerializeField] private Vector2 forwards;
+        [FoldoutGroup("Values"), SerializeField] private float forward;
         
         [FoldoutGroup("Feedbacks"), SerializeField] private float shakeFactor;
         [FoldoutGroup("Feedbacks"), SerializeField] private float maxShake;
@@ -38,73 +38,42 @@ namespace Chrome
         private IValue<CharacterBody> body;
         private IValue<Gravity> gravity;
         private IValue<MoveControl> move;
-        
-        private JetpackHUD HUD;
-        
-        private Coroutine cooldownRoutine;
-        private float pressTime;
+
         private CachedValue<Key> key;
-        
-        //--------------------------------------------------------------------------------------------------------------/
-        
-        void Start() => HUD = Repository.Get<JetpackHUD>(Interface.Jetpack);
 
         //--------------------------------------------------------------------------------------------------------------/
+
+        void Start() => HUDBinder.Declare(HUDGroup.Jetpack, charge, cooldown);
         
         void Update()
         {
             if (body.Value.IsGrounded)
             {
-                if (key.IsOn() && cooldownRoutine == null)
+                if (key.IsOn() && !cooldown.IsActive)
                 {
-                    pressTime += Time.deltaTime;
-                    var ratio = Mathf.InverseLerp(pressRange.x, pressRange.y, pressTime);
-                    
-                    HUD.IndicateCharge(ratio);
-                    Events.ZipCall(PlayerEvent.OnShake, ratio * shakeFactor, maxShake);
+                    charge.Value += Time.deltaTime;
+                    CO.SCREEN_SHAKE(charge.Compute() * shakeFactor, maxShake);
                 }
             }
 
-            if (!key.IsUp() || cooldownRoutine != null) return;
+            if (!key.IsUp() || cooldown.IsActive) return;
             
-            if (pressTime > pressRange.x)
+            if (!charge.IsAtMin)
             {
                 var attraction = gravity.Value.Force;
-
-                var ratio = Mathf.InverseLerp(pressRange.x, pressRange.y, pressTime);
-                var height = Mathf.Lerp(heightRange.x, heightRange.y, ratio);
+                
+                var height = Mathf.Lerp(heightRange.x, heightRange.y, charge.Compute());
                 var length = -Mathf.Sqrt(height * 2.0f * attraction.magnitude);
                 
                 var launch = attraction.normalized * length;
-
                 var direction = body.Value.transform.TransformVector(move.Value.Inputs);
-                if (move.Value.IsSprinting) launch += direction * forwards.y;
-                else if (move.Value.IsWalking) launch += direction * forwards.x;
+                launch += direction * (body.Value.Delta.magnitude * forward);
 
                 body.Value.velocity += launch;
-                cooldownRoutine = Routines.Start(CooldownRoutine());
-                
-                Events.ZipCall(GaugeEvent.OnJetpackUsed, launch);
+                cooldown.Start();
             }
 
-            pressTime = 0.0f;
-            HUD.IndicateCharge(0.0f);
-        }
-        
-        private IEnumerator CooldownRoutine()
-        {
-            var time = cooldown;
-
-            while (time > 0.0f)
-            {
-                HUD.IndicateCooldown(time, cooldown);
-                
-                yield return new WaitForEndOfFrame();
-                time -= Time.deltaTime;
-            }
-            
-            HUD.IndicateCooldown(0.0f, cooldown);
-            cooldownRoutine = null;
+            charge.Value = 0.0f;
         }
     }
 }

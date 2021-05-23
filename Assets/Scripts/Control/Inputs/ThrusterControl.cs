@@ -23,52 +23,30 @@ namespace Chrome
 
         //--------------------------------------------------------------------------------------------------------------/
         
-        [FoldoutGroup("Values"), SerializeField] private float airTime;
+        [FoldoutGroup("Values"), SerializeField] private BindableGauge gauge;
         [FoldoutGroup("Values"), SerializeField] private AnimationCurve map;
         [FoldoutGroup("Values"), SerializeField] private Vector2 inputRange;
         [FoldoutGroup("Values"), SerializeField] private float speed;
 
         private IValue<CharacterBody> body;
         private IValue<Gravity> gravity;
-        
-        private float airTimer;
-        private JetpackHUD HUD;
 
         private CachedValue<Key> key;
 
         //--------------------------------------------------------------------------------------------------------------/
-        
-        void Start()
-        {
-            airTimer = airTime;
-            HUD = Repository.Get<JetpackHUD>(Interface.Jetpack);
-        }
-        
-        //--------------------------------------------------------------------------------------------------------------/
-        
+
+        void Start() => HUDBinder.Declare(HUDGroup.Jetpack, gauge);
+
         void Update()
         {
-            if (body.Value.IsGrounded)
-            {
-                airTimer += Time.deltaTime;
-                if (airTimer > airTime) airTimer = airTime;
-            }
+            if (body.Value.IsGrounded) gauge.Value += Time.deltaTime;
             else
             {
-                if (airTimer > 0.0f)
+                if (!gauge.IsAtMin)
                 {
-                    if (key.IsDown()) Events.ZipCall(GaugeEvent.OnThrusterUsed, (byte)0);
-                    
                     if (key.IsOn())
                     {
-                        Events.ZipCall(GaugeEvent.OnThrusterUsed, (byte)1);
-                        
-                        airTimer -= Time.deltaTime;
-                        if (airTimer < 0.0f)
-                        {
-                            Events.ZipCall(GaugeEvent.OnThrusterUsed, (byte)2);
-                            airTimer = 0.0f;
-                        }
+                        gauge.Value -= Time.deltaTime;
 
                         var normalizedGravity = gravity.Value.Force.normalized;
                         var force = Vector3.Project(body.Value.Delta, normalizedGravity);
@@ -81,12 +59,8 @@ namespace Chrome
                         var delta = -gravity.Value.Force.normalized * (gravity.Value.Force.magnitude + speed * ratio);
                         body.Value.force += delta;
                     }
-                
-                    if (key.IsUp()) Events.ZipCall(GaugeEvent.OnThrusterUsed, (byte)2);
                 }
             }
-            
-            HUD.IndicateAirTime(airTimer);
         }
     }
 }

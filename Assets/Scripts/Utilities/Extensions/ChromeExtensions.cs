@@ -3,11 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using Flux.Data;
 using Flux.EDS;
+using Flux.Event;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace Chrome
 {
+    public static class CO
+    {
+        public static void SCREEN_SHAKE(float factor, float max) => Events.ZipCall(PlayerEvent.OnShake, factor, max);
+
+        //--------------------------------------------------------------------------------------------------------------/
+        
+        public static void CONCAT<T>(ref T[] source, params T[] addition)
+        {
+            var baseLength = source.Length;
+            Array.Resize(ref source, baseLength + addition.Length);
+
+            for (var i = baseLength; i < source.Length; i++) source[i] = addition[i - baseLength];
+            addition = null;
+        }
+    }
+    
     public static class ChromeExtensions
     {
         private static SpawnLocations[] allLocations;

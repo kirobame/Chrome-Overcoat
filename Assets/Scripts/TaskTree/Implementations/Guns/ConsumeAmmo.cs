@@ -4,25 +4,18 @@ namespace Chrome
 {
     public class ConsumeAmmo : TaskNode
     {
-        public ConsumeAmmo(float amount, IValue<float> ammo)
+        public ConsumeAmmo(float amount, Bindable<float> binding)
         {
             this.amount = amount;
-            this.ammo = ammo;
+            this.binding = binding;
         }
         
         private float amount;
-        private IValue<float> ammo;
+        private Bindable<float> binding;
  
         protected override void OnUse(Packet packet)
         {
-            if (ammo.IsValid(packet))
-            {
-                var current = ammo.Value;
-                ammo.Value = current - amount;
-
-                if (packet.TryGetValueAt<string, Token>(TokenRefs.ON_AMMO_CHANGE, out var token)) token.Consume();
-            }
-            
+            binding.Value -= amount;
             isDone = true;
         }
     }
