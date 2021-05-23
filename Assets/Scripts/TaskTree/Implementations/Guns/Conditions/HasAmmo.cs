@@ -5,14 +5,10 @@ namespace Chrome
     [Serializable]
     public class HasAmmo : Condition
     {
-        public HasAmmo(IValue<float> ammo) => this.ammo = ammo;
+        public HasAmmo(Bindable<float> binding) => this.binding = binding;
 
-        private IValue<float> ammo;
+        private Bindable<float> binding;
         
-        public override bool Check(Packet packet)
-        {
-            if (ammo.IsValid(packet)) return ammo.Value > 0.0f;
-            else return false;
-        }
+        public override bool Check(Packet packet) => binding.Value > 0.0f;
     }
 }

@@ -5,12 +5,12 @@ using UnityEngine;
 namespace Chrome
 {
     [Serializable]
-    public class FrenzyPlayerWeaponBuilder : ITreeBuilder
+    public class FrenzyPlayerWeaponBuilder : TreeBuilder
     {
         [SerializeField] private GenericPoolable bulletPrefab;
         [SerializeField] private PoolableVfx muzzleFlashPrefab;
 
-        public ITaskTree Build()
+        public override ITaskTree Build()
         {
             var fireAnchorReference = Refs.FIREANCHOR.Reference<Transform>();
             var colliderReference = Refs.COLLIDER.Reference<Collider>();

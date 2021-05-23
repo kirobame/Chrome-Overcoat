@@ -18,7 +18,6 @@ namespace Chrome
         protected override void OnBootup(Packet packet) => weapon.Bootup(packet);
         protected override void OnUse(Packet packet)
         {
-            
             weapon.Actualize(packet);
         }
         protected override void OnShutdown(Packet packet) => weapon.Shutdown(packet);

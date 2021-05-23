@@ -30,7 +30,7 @@ namespace Chrome
         [FoldoutGroup("Values"), SerializeField] private BindableCooldown cooldown;
         [FoldoutGroup("Values"), SerializeField] private BindableRatio charge;
         [FoldoutGroup("Values"), SerializeField] private Vector2 heightRange;
-        [FoldoutGroup("Values"), SerializeField] private Vector2 forwards;
+        [FoldoutGroup("Values"), SerializeField] private float forward;
         
         [FoldoutGroup("Feedbacks"), SerializeField] private float shakeFactor;
         [FoldoutGroup("Feedbacks"), SerializeField] private float maxShake;
@@ -52,7 +52,7 @@ namespace Chrome
                 if (key.IsOn() && !cooldown.IsActive)
                 {
                     charge.Value += Time.deltaTime;
-                    Events.ZipCall(PlayerEvent.OnShake, charge.Compute() * shakeFactor, maxShake);
+                    CO.SCREEN_SHAKE(charge.Compute() * shakeFactor, maxShake);
                 }
             }
 
@@ -66,15 +66,11 @@ namespace Chrome
                 var length = -Mathf.Sqrt(height * 2.0f * attraction.magnitude);
                 
                 var launch = attraction.normalized * length;
-
                 var direction = body.Value.transform.TransformVector(move.Value.Inputs);
-                if (move.Value.IsSprinting) launch += direction * forwards.y;
-                else if (move.Value.IsWalking) launch += direction * forwards.x;
+                launch += direction * (body.Value.Delta.magnitude * forward);
 
                 body.Value.velocity += launch;
                 cooldown.Start();
-                
-                Events.ZipCall(GaugeEvent.OnJetpackUsed, launch);
             }
 
             charge.Value = 0.0f;

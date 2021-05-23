@@ -5,11 +5,11 @@ using UnityEngine.AI;
 namespace Chrome
 {
     [Serializable]
-    public class AttackTreeBuilder : ITreeBuilder
+    public class AttackTreeBuilder : TreeBuilder
     {
         [SerializeField] private Weapon weapon;
         
-        public ITaskTree Build()
+        public override ITaskTree Build()
         {
             var playerRef = $"{PlayerRefs.BOARD}.{Refs.ROOT}".Reference<Transform>(ReferenceType.SubGlobal);
             var playerColRef = $"{PlayerRefs.BOARD}.{Refs.COLLIDER}".Reference<Collider>(ReferenceType.SubGlobal);

@@ -4,37 +4,35 @@ using System.Collections.Generic;
 
 namespace Chrome
 {
-    public class ChargeHUD : MonoBehaviour, IDeprecatedHUD
+    public class ChargeHUD : HUD
     {
+        public override HUDGroup WantedGroups => HUDGroup.Weapon;
+        
+        [SerializeField] private RectTransform threshold;
         [SerializeField] private Image charge;
-        [SerializeField] private Color min;
-        [SerializeField] private Color max;
+        [SerializeField] private Gradient gradient;
 
-        [Space, SerializeField] private RectTransform Treshold;
+        private BindableCappedGauge chargeBinding;
 
-        public void Refresh(object value, string tag)
+        public override void BindTo(RectTransform frame, IBindable[] bindables)
         {
-            switch (tag)
-            {
-                case ("THRESHOLD"):
-                    IndicateThreshold((float)value);
-                    break;
-                case ("CHARGE"):
-                    Set((float)value);
-                    break;
-                default:
-                    break;
-            }
+            RectTransform.SetParent(frame, false);
+
+            chargeBinding = bindables.Get<BindableCappedGauge>(HUDBinding.Gauge);
+            chargeBinding.onChange += OnChargeChange;
+
+            var ratio = Mathf.InverseLerp(chargeBinding.Range.x, chargeBinding.Range.y, chargeBinding.Cap);
+            threshold.rotation = Quaternion.Euler(0.0f, 0.0f, 90.0f - ratio * 180.0f);
         }
+        public override void UnbindFromCurrent() =>  chargeBinding.onChange -= OnChargeChange;
 
-        private void IndicateThreshold(float ratio)
-        {
-            Treshold.rotation = Quaternion.Euler(0.0f, 0.0f, 90.0f - ratio * 180.0f);
-        }
+        //--------------------------------------------------------------------------------------------------------------/
 
-        private void Set(float ratio)
+        void OnChargeChange(float value)
         {
-            charge.color = Color.Lerp(min, max, ratio);
+            var ratio = chargeBinding.ComputeRatio();
+
+            charge.color = gradient.Evaluate(ratio);
             charge.fillAmount = ratio / 2.0f;
         }
     }

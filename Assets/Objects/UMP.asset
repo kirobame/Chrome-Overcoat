@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b41d0f7962fb41c8b578d27ad5189d0a, type: 3}
+  m_Name: UMP
+  m_EditorClassIdentifier: 
+  mesh: {fileID: 4300002, guid: 182b7f11db452bc458d35a6c9eced06f, type: 3}
+  material: {fileID: 2100000, guid: e11c4f3ee458bf446918382a2f5f9451, type: 2}
+  builder:
+    id: 0
+  references:
+    version: 1
+    00000000:
+      type: {class: UMPWeaponBuilder, ns: Chrome, asm: Assembly-CSharp}
+      data:
+        ammo: 30
+        bulletPrefab: {fileID: 4146602574307847993, guid: 97d94cb4623951e499ee0ca4ba18d069, type: 3}
+        muzzleFlashPrefab: {fileID: 6581533253750990063, guid: a3bee71f8ad97b94082b82bcbed23d28, type: 3}
+        delay: 0.25

@@ -9,8 +9,8 @@ namespace Chrome
         {
             state = true;
             
-            runtimeWeapon = Instantiate(weapon);
-            runtimeWeapon.Build();
+            /*runtimeWeapon = Instantiate(weapon);
+            runtimeWeapon.Build(TODO);*/
             
             gun = injections.Register(new AnyValue<GunControl>());
         }
