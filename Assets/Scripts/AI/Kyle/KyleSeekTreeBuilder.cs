@@ -5,9 +5,9 @@ using UnityEngine.AI;
 namespace Chrome
 {
     [Serializable]
-    public class KyleSeekTreeBuilder : ITreeBuilder
+    public class KyleSeekTreeBuilder : TreeBuilder
     {
-        public ITaskTree Build()
+        public override ITaskTree Build()
         {
             var playerRef = $"{PlayerRefs.BOARD}.{Refs.ROOT}".Reference<Transform>(ReferenceType.SubGlobal);
             

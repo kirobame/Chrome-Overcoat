@@ -13,8 +13,10 @@ namespace Chrome
         {
             runtimeWeapon = Instantiate(weapon);
             runtimeWeapon.Build();
-
+            
             board.Set(AgentRefs.WEAPON, runtimeWeapon);
+            Debug.Log($"{runtimeWeapon} == {board.Get<Weapon>(AgentRefs.WEAPON)}");
+            board.Set(WeaponRefs.BOARD, runtimeWeapon.Board);
         }
     }
 }

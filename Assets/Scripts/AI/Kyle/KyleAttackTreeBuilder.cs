@@ -5,13 +5,13 @@ using UnityEngine.AI;
 namespace Chrome
 {
     [Serializable]
-    public class KyleAttackTreeBuilder : ITreeBuilder
+    public class KyleAttackTreeBuilder : TreeBuilder
     {
         [SerializeField] private float coverRange;
         [SerializeField] private float coverAcceptance;
         [SerializeField] private float sightErrorThreshold;
         
-        public ITaskTree Build()
+        public override ITaskTree Build()
         {
             var playerRef = $"{PlayerRefs.BOARD}.{Refs.ROOT}".Reference<Transform>(ReferenceType.SubGlobal);
             var playerColRef = $"{PlayerRefs.BOARD}.{Refs.COLLIDER}".Reference<Collider>(ReferenceType.SubGlobal);

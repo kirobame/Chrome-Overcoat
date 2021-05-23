@@ -5,7 +5,7 @@ using UnityEngine.AI;
 namespace Chrome
 {
     [Serializable]
-    public class KyleFleeTreeBuilder : ITreeBuilder
+    public class KyleFleeTreeBuilder : TreeBuilder
     {
         [SerializeField] private float cooldown;
         [SerializeField] private float speed;
@@ -13,7 +13,7 @@ namespace Chrome
         [SerializeField] private float height;
         [SerializeField] private int resolution;
 
-        public ITaskTree Build()
+        public override ITaskTree Build()
         {
             var playerRef = $"{PlayerRefs.BOARD}.{Refs.ROOT}".Reference<Transform>(ReferenceType.SubGlobal);
             

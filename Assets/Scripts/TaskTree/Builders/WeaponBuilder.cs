@@ -15,7 +15,7 @@ namespace Chrome
             ammoBinding = new Bindable<float>(HUDBinding.Ammo, ammo);
             return null;
         }
-//
+
         public override void Bootup(Packet packet)
         {
             var board = packet.Get<IBlackboard>();

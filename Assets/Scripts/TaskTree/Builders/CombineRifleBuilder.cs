@@ -20,13 +20,14 @@ namespace Chrome
             
             var fireAnchorReference = Refs.FIREANCHOR.Reference<Transform>();
             var colliderReference = Refs.COLLIDER.Reference<Collider>();
+            var shootDirectionRef = Refs.SHOOT_DIRECTION.Reference<Vector3>();
 
             return new GunNode().Append
             (
                 TT.BIND_TO(WeaponRefs.ON_MOUSE_DOWN, new Charge(gaugeBinding, 2.5f, 2.0f)),
                 TT.BIND_TO(WeaponRefs.ON_MOUSE_UP, TT.IF(new CheckCharge(gaugeBinding, 0.75f)).AND(new HasAmmo(ammoBinding))).Append
                 (
-                    TT.IF_TRUE(new Shoot(Refs.SHOOT_DIRECTION.Reference<Vector3>(), fireAnchorReference, colliderReference, bulletPrefab, muzzleFlashPrefab)).Append
+                    TT.IF_TRUE(new Shoot(shootDirectionRef, fireAnchorReference, colliderReference, bulletPrefab, muzzleFlashPrefab)).Append
                     (
                         new ConsumeAmmo(5.0f, ammoBinding)
                     )

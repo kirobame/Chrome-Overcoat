@@ -3,9 +3,9 @@
 namespace Chrome
 {
     [Serializable]
-    public class KyleIdleTreeBuilder : ITreeBuilder
+    public class KyleIdleTreeBuilder : TreeBuilder
     {
-        public ITaskTree Build()
+        public override ITaskTree Build()
         {
             return TT.START(GoalDefinition.Idle).Append
             (

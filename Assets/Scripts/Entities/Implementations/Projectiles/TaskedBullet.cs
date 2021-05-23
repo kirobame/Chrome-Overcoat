@@ -7,6 +7,7 @@ namespace Chrome
     public class TaskedBullet : TaskedProjectile
     {
         [FoldoutGroup("Values"), SerializeField] private float speed;
+        [FoldoutGroup("Values"), SerializeField] private float appearance = 0.15f;
         
         [FoldoutGroup("References"), SerializeField] private PoolableVfx impactVfx;
         [FoldoutGroup("References"), SerializeField] private GameObject graph;
@@ -34,7 +35,7 @@ namespace Chrome
                 
             return new ProjectileNode().Append(
                 new Enable(true, trailReference).Mask(0b_0001).Append(
-                    new Delay(0.15f).Append(
+                    new Delay(appearance).Append(
                         new SetActive(true, graphReference))),
                 new RootNode().Mask(0b_0010).Append(
                     new Timer("time".Reference<float>()).Append(

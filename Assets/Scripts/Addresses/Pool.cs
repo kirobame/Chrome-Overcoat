@@ -11,7 +11,7 @@ namespace Chrome
         Death,
         Agent,
         Modification,
-        Loot
+        Loot,
         HUD
     }
 }
