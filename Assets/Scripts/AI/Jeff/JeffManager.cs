@@ -38,19 +38,23 @@ namespace Chrome
 
         public static float GetSide(Transform self, Transform target, Transform aim)
         {
-            var targetDir = (self.position - target.position).normalized;
+            if (self != null && target != null && aim != null)
+            {
+                var targetDir = (self.position - target.position).normalized;
+                var dir = Vector3.Dot(aim.right, targetDir);
 
-            var dir = Vector3.Dot(aim.right, targetDir);
 
+                //Debug.Log(self.gameObject.name + " " + target.gameObject.name + " -> " + dir);
 
-            //Debug.Log(self.gameObject.name + " " + target.gameObject.name + " -> " + dir);
+                if (dir > 0.75f)
+                    return 1.0f;
+                else if (dir < -0.75f)
+                    return -1.0f;
+                else
+                    return 0.0f;
+            }
 
-            if (dir > 0.75f)
-                return 1.0f;
-            else if (dir < -0.75f)
-                return -1.0f;
-            else
-                return 0.0f;
+            return 0;
         }
 
     }

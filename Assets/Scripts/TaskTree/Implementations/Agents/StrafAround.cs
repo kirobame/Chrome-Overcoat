@@ -23,6 +23,7 @@ namespace Chrome
         {
             if (navMesh.IsValid(packet) && aim.IsValid(packet) && selfRoot.IsValid(packet))
             {
+                toRight = 0;
                 toRight = JeffManager.GetSide(selfRoot.Value, JeffManager.GetClosestJeff(selfRoot.Value), aim.Value);
                 navMesh.Value.updateRotation = false;
                 navMesh.Value.isStopped = false;
