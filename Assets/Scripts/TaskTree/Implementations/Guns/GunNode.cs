@@ -27,7 +27,7 @@ namespace Chrome
                 previousState = false;
                 
                 if (IsDone) return null;
-                
+
                 foreach (var branch in Branches) branch.Update(packet);
                 OnUse(packet);
                 

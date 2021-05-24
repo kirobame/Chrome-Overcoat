@@ -31,8 +31,8 @@ namespace Chrome
 
         void OnDestroy() => onDestruction?.Invoke(this);
 
-        public void Bootup() => time.Value = time.Range.y;
-        public void Shutdown() { }
+        public void Bootup(byte code) => time.Value = time.Range.y;
+        public void Shutdown(byte code) { }
         
         void Update()
         {

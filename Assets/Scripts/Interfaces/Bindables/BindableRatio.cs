@@ -9,8 +9,8 @@ namespace Chrome
         public BindableRatio(HUDBinding binding, Vector2 range) : base(binding) => this.range = range;
         public BindableRatio(HUDBinding binding, float initialValue, Vector2 range) : base(binding, initialValue) => this.range = range;
 
-        public bool IsAtMin => Compute() <= range.x;
-        public bool IsAtMax => Compute() >= range.y;
+        public bool IsAtMin => Compute() <= 0.0f;
+        public bool IsAtMax => Compute() >= 1.0f;
         public Vector2 Range => range; 
         
         [SerializeField] private Vector2 range;

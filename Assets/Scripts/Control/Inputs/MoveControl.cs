@@ -47,9 +47,6 @@ namespace Chrome
             {
                 isSprinting = value;
                 animator.SetBool(SPRINT_STATE, value);
-                
-                if (value) Events.ZipCall(GaugeEvent.OnSprint, (byte)0);
-                else Events.ZipCall(GaugeEvent.OnSprint, (byte)2);
             }
         }
         private bool isSprinting;
@@ -61,9 +58,6 @@ namespace Chrome
             {
                 isWalking = value;
                 animator.SetBool(WALK_STATE, value);
-                
-                if (value) Events.ZipCall(GaugeEvent.OnGroundMove, (byte)0);
-                else Events.ZipCall(GaugeEvent.OnGroundMove, (byte)2);
             }
         }
         private bool isWalking;
@@ -98,9 +92,6 @@ namespace Chrome
         
         void Update()
         {
-            if (IsSprinting) Events.ZipCall(GaugeEvent.OnSprint, (byte)1);
-            if (IsWalking) Events.ZipCall(GaugeEvent.OnGroundMove, (byte)1);
-
             if (!body.Value.IsGrounded)
             {
                 smoothedInputs = Vector3.zero;

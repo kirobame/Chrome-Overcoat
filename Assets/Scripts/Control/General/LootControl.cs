@@ -16,7 +16,6 @@ namespace Chrome
         public bool IsActive => true;
 
         [FoldoutGroup("Values"), SerializeField] private GenericPoolable lootPrefab;
-        [FoldoutGroup("Values"), SerializeField] private Vector3 offset;
         
         //--------------------------------------------------------------------------------------------------------------/
 
@@ -24,11 +23,17 @@ namespace Chrome
         
         public void AssignTo(Agent owner) => Owner = owner;
         
-        public void Bootup() { }
-        public void Shutdown()
+        public void Bootup(byte code) { }
+        public void Shutdown(byte code)
         {
+            if (code == 99) return;
+            
             var lootInstance = lootPrefab.GetGenericInstance<Loot>(Pool.Loot);
-            lootInstance.Transform.position = transform.position + offset;
+            if (lootInstance is IRebootable rebootable) rebootable.Reboot();
+
+            var ray = new Ray(transform.position + Vector3.up, Vector3.down);
+            if (Physics.Raycast(ray, out var hit, 100.0f, LayerMask.GetMask("Environment"))) lootInstance.transform.position = hit.point;
+            else lootInstance.transform.position = transform.position;
             
             Routines.Start(Routines.DoAfter(() => Owner.Lifetime.RemoveBound(this), new YieldFrame()));
         }

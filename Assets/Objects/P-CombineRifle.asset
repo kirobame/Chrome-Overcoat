@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b41d0f7962fb41c8b578d27ad5189d0a, type: 3}
+  m_Name: P-CombineRifle
+  m_EditorClassIdentifier: 
+  mesh: {fileID: 4300002, guid: 182b7f11db452bc458d35a6c9eced06f, type: 3}
+  material: {fileID: 2100000, guid: 4b309b09e0570e54f9c39e4e79c2a0d7, type: 2}
+  builder:
+    id: 0
+  references:
+    version: 1
+    00000000:
+      type: {class: CombineRifleBuilder, ns: Chrome, asm: Assembly-CSharp}
+      data:
+        ammo: 15
+        bulletPrefab: {fileID: 8335357938041984344, guid: 1e67d86e3a513cd4da520aeaf8e6856f, type: 3}
+        muzzleFlashPrefab: {fileID: 3541007952546055489, guid: 094f816bf309dd04bb08458f38cd9655, type: 3}
+        configuration: {x: 0.75, y: 0.125, z: 0.75}

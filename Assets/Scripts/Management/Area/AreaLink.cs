@@ -38,7 +38,7 @@ namespace Chrome
         
         void OnDestroy() => onDestruction?.Invoke(this);
 
-        public void Bootup()
+        public void Bootup(byte code)
         {
             if (isInArea) return;
 
@@ -50,7 +50,7 @@ namespace Chrome
                 break;
             }
         }
-        public void Shutdown()
+        public void Shutdown(byte code)
         {
             Area.Unregister(agent.Value);
             

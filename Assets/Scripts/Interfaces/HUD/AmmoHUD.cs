@@ -9,13 +9,13 @@ namespace Chrome
 
         [SerializeField] private TMP_Text ammo;
 
-        private Bindable<float> ammoBinding;
+        private BindableGauge ammoBinding;
         
         public override void BindTo(RectTransform frame, IBindable[] bindables)
         {
             RectTransform.SetParent(frame, false);
 
-            ammoBinding = bindables.Get<Bindable<float>>(HUDBinding.Ammo);
+            ammoBinding = bindables.Get<BindableGauge>(HUDBinding.Ammo);
             ammoBinding.onChange += OnAmmoChange;
 
             OnAmmoChange(ammoBinding.Value);
@@ -26,7 +26,7 @@ namespace Chrome
 
         void OnAmmoChange(float value)
         {
-            if (value < 0.0f)
+            if (value <= 0.0f)
             {
                 ammo.text = "000";
                 return;

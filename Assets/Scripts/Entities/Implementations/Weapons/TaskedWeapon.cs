@@ -7,6 +7,8 @@ namespace Chrome
     [CreateAssetMenu(fileName = "NewTaskedWeapon", menuName = "Chrome Overcoat/Weapons/Tasked")]
     public class TaskedWeapon : Weapon, ITaskTree
     {
+        public override bool IsMelee => false;
+
         [SerializeReference] private IWeaponBuilder builder;
         
         private ITaskTree root;
@@ -15,6 +17,7 @@ namespace Chrome
         {
             base.Build();
             root = builder.Build();
+            builder.InstallDependenciesOn(Board);
         }
         public override IBindable[] GetBindables() => builder.GetBindables();
         
@@ -55,7 +58,7 @@ namespace Chrome
         {
             builder.Bootup(packet);
             root.Bootup(packet);
-            root.Prepare(packet);
+            //root.Prepare(packet);
         }
 
         public void Prepare(Packet packet) => root.Prepare(packet);

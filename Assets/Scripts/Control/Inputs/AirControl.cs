@@ -22,13 +22,7 @@ namespace Chrome
         public bool IsMoving     
         {
             get => isMoving;
-            set
-            {
-                isMoving = value;
-
-                if (value) Events.ZipCall(GaugeEvent.OnAirMove, (byte)0);
-                else Events.ZipCall(GaugeEvent.OnAirMove, (byte)2);
-            }
+            set => isMoving = value;
         }
         private bool isMoving;
         
@@ -48,8 +42,6 @@ namespace Chrome
         
         void Update()
         {
-            if (IsMoving) Events.ZipCall(GaugeEvent.OnAirMove, (byte)1);
-            
             if (body.Value.IsGrounded)
             {
                 if (!isMoving) IsMoving = false;

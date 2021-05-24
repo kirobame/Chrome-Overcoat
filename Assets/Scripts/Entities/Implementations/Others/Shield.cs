@@ -50,7 +50,7 @@ namespace Chrome
         public bool IsBroken => isBroken;
         private bool isBroken = false;
 
-        void Awake() => Bootup();
+        void Awake() => Bootup(0);
         void OnDestroy()
         {
             onInteractionDestruction?.Invoke(this);
@@ -64,8 +64,6 @@ namespace Chrome
             health -= damage;
 
             var type = identity.Value.Packet.Get<byte>();
-
-            Events.ZipCall<byte, float>(GaugeEvent.OnDamageInflicted, type, damage);
 
             if (health <= 0) link.End();
         }
@@ -85,14 +83,14 @@ namespace Chrome
                 col.enabled = false;
         }
 
-        public void Bootup()
+        public void Bootup(byte code)
         {
             //Debug.Log("Shield bootup");
             health = maxHealth;
             isBroken = false;
         }
 
-        public void Shutdown()
+        public void Shutdown(byte code)
         {
             isBroken = true;
         }

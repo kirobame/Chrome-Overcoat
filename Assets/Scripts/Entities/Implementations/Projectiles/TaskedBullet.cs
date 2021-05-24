@@ -8,6 +8,7 @@ namespace Chrome
     {
         [FoldoutGroup("Values"), SerializeField] private float speed;
         [FoldoutGroup("Values"), SerializeField] private float appearance = 0.15f;
+        [FoldoutGroup("Values"), SerializeField] private float damage;
         
         [FoldoutGroup("References"), SerializeField] private PoolableVfx impactVfx;
         [FoldoutGroup("References"), SerializeField] private GameObject graph;
@@ -41,7 +42,7 @@ namespace Chrome
                     new Timer("time".Reference<float>()).Append(
                         new SetActive(false, identity.Value.Transform.gameObject.Cache()).Mask(0b_0001))),
                 new LinearMove(0.015f, "dir".Reference<Vector3>(), speed.Cache(), new PackettedValue<HashSet<Collider>>(), "self".Reference<Transform>()).Mask(0b_0010),
-                new Damage(1.0f.Cache()).Mask(0b_0100).Append(
+                new Damage(damage.Cache()).Mask(0b_0100).Append(
                     new PlayVfxImpact(impactVfx).Append(
                         new EndProjectile())),
                 new SetActive(false, graphReference).Mask(0b_1000).Append(
