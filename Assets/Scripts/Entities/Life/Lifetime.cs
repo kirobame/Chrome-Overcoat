@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Flux;
 using Flux.Event;
 using Flux.Feedbacks;
 using UnityEngine;
@@ -10,6 +11,19 @@ namespace Chrome
 {
     public class Lifetime : MonoBehaviour, IInstaller, IInjectable, IInjectionCallbackListener
     {
+        public static bool IsBootupMessage(EventArgs args)
+        {
+            if (args is IWrapper<byte> byteWrapper) return byteWrapper.Value == 0;
+            else return false;
+        }
+        public static bool IsShutdownMessage(EventArgs args)
+        {
+            if (args is IWrapper<byte> byteWrapper) return byteWrapper.Value == 1;
+            else return false;
+        }
+        
+        //--------------------------------------------------------------------------------------------------------------/
+        
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         private IValue[] injections;
 
@@ -41,6 +55,7 @@ namespace Chrome
         private Lifetime parent;
         private List<Lifetime> children;
 
+        private byte bootupCode;
         private int countdown;
 
         void Awake()
@@ -118,14 +133,13 @@ namespace Chrome
         
         //--------------------------------------------------------------------------------------------------------------/
 
-        public void Begin()
+        public void Begin(byte code = 0)
         {
             if (IsAlive) return;
             IsAlive = true;
-            
-            //Debug.Log($"[{root.Transform.name}] Lifetime starts");
-            
-            var args = new WrapperArgs<byte>(0);
+
+            bootupCode = code;
+            var args = new WrapperArgs<byte>(code);
             CallListeners(args, CheckForSpawn);
             
             if (countdown == 0) OnBeginComplete();
@@ -144,26 +158,24 @@ namespace Chrome
             foreach (var lifebound in bounds)
             {
                 if (!lifebound.IsActive) continue;
-                lifebound.Bootup();
+                lifebound.Bootup(bootupCode);
             }
             foreach (var child in children) child.Begin();
         }
         
-        public void End()
+        public void End(byte code = 1)
         {
             if (!IsAlive) return;
             IsAlive = false;
             
-            //Debug.Log($"[{root.Transform.name}] Lifetime ends");
-            
             foreach (var lifebound in bounds)
             {
                 if (!lifebound.IsActive) continue;
-                lifebound.Shutdown();
+                lifebound.Shutdown(code);
             }
             foreach (var child in children) child.End();
             
-            var args = new WrapperArgs<byte>(1);
+            var args = new WrapperArgs<byte>(code);
             CallListeners(args, CheckForDeath);
             
             if (countdown == 0) OnEndComplete();
@@ -181,15 +193,19 @@ namespace Chrome
 
         private void CallListeners(EventArgs args, Action<Token> callback)
         {
-            countdown = 0;
+            var results = new List<IListener<Lifetime>>();
             foreach (var listener in listeners)
             {
                 if (!listener.IsListeningTo(args)) continue;
+                results.Add(listener);
+            }
 
+            countdown = results.Count;
+            foreach (var listener in results)
+            {
                 var token = new Token();
                 token.onConsumption += callback;
-
-                countdown++;
+                
                 listener.Execute(token);
             }
         }

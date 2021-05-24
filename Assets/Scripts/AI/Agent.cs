@@ -8,8 +8,6 @@ namespace Chrome
 {
     public class Agent : MonoBehaviour, IAgent, ILifebound, IInstaller, IInjectable
     {
-        private const string JEFF_TAG = "JEFF";
-
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         protected List<IValue> injections;
 
@@ -75,6 +73,7 @@ namespace Chrome
         public virtual void Bootup(byte code)
         {
             Hive.Register(this);
+            
             if (!hasBeenBootedUp)
             {
                 foreach (var solver in solvers)
@@ -88,7 +87,6 @@ namespace Chrome
             else foreach (var solver in solvers) solver.Bootup();
             foreach (var goal in goals) goal.Reset();
 
-            //Debug.Log("Agent Bootup");
             isOperational = true;
             onSpawn?.Invoke(this);
         }
