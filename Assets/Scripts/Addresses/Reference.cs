@@ -9,6 +9,7 @@ namespace Chrome
         VirtualCamera,
         Areas,
         Pickups,
-        WorldCanvas
+        WorldCanvas,
+        Player
     }
 }

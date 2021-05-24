@@ -31,8 +31,8 @@ namespace Chrome
         
         void OnDestroy() => onDestruction?.Invoke(this);
         
-        public void Bootup() { }
-        public void Shutdown() => Routines.Start(Routine());
+        public void Bootup(byte code) { }
+        public void Shutdown(byte code) => Routines.Start(Routine());
 
         protected virtual IEnumerator Routine()
         {

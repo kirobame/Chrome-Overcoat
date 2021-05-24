@@ -12,8 +12,8 @@ namespace Chrome
         public BindableGauge(HUDBinding binding, Vector2 range) : base(binding) => this.range = range;
         public BindableGauge(HUDBinding binding, float initialValue, Vector2 range) : base(binding, initialValue) => this.range = range;
 
-        public bool IsAtMin => value == range.x;
-        public bool IsAtMax => value == range.y;
+        public virtual bool IsAtMin => value == range.x;
+        public virtual bool IsAtMax => value == range.y;
         public Vector2 Range => range; 
         
         [SerializeField] private Vector2 range;

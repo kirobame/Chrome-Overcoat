@@ -70,7 +70,7 @@ namespace Chrome
         }
         protected virtual void OnDestroy() => onDestruction?.Invoke(this);
         
-        public virtual void Bootup()
+        public virtual void Bootup(byte code)
         {
             Hive.Register(this);
             
@@ -90,7 +90,7 @@ namespace Chrome
             isOperational = true;
             onSpawn?.Invoke(this);
         }
-        public virtual void Shutdown()
+        public virtual void Shutdown(byte code)
         {
             foreach (var solver in solvers) solver.Shutdown();
 

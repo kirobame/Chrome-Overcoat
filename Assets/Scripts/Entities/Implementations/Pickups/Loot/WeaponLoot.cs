@@ -45,9 +45,9 @@ namespace Chrome
             ammoBinding.Value = ammoBinding.Range.y;
         }
 
-        public override void Bootup()
+        public override void Bootup(byte code)
         {
-            base.Bootup();
+            base.Bootup(code);
 
             if (!runtimeValue.Board.TryGet<BindableGauge>(WeaponRefs.AMMO, out var ammoBinding))
             {
@@ -61,9 +61,9 @@ namespace Chrome
             worldHUD.Bind(anchor, ammoBinding);
             hasWorldHUD = true;
         }
-        public override void Shutdown()
+        public override void Shutdown(byte code)
         {
-            base.Shutdown();
+            base.Shutdown(code);
             if (hasWorldHUD) worldHUD.Discard();
         }
 

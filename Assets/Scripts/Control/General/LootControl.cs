@@ -23,9 +23,11 @@ namespace Chrome
         
         public void AssignTo(Agent owner) => Owner = owner;
         
-        public void Bootup() { }
-        public void Shutdown()
+        public void Bootup(byte code) { }
+        public void Shutdown(byte code)
         {
+            if (code == 99) return;
+            
             var lootInstance = lootPrefab.GetGenericInstance<Loot>(Pool.Loot);
             if (lootInstance is IRebootable rebootable) rebootable.Reboot();
 

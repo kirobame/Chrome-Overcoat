@@ -104,15 +104,23 @@ namespace Chrome
 
         //--------------------------------------------------------------------------------------------------------------/
         
-        public override void Bootup()
+        public override void Bootup(byte code)
         {
+            if (Current.IsMelee) animator.Value.SetTrigger(MELEE);
             packet.Set(false);
-            base.Bootup();
+            
+            base.Bootup(code);
         }
-        public override void Shutdown()
+        public override void Shutdown(byte code)
         {
-            base.Shutdown();
+            base.Shutdown(code);
+            
             if (pressState == PressState.Pressed) OnMouseUp();
+            if (Current != runtimeDefaultWeapon)
+            {
+                targetWeapon = runtimeDefaultWeapon;
+                Refresh();
+            }
         }
 
         //--------------------------------------------------------------------------------------------------------------/
@@ -237,7 +245,6 @@ namespace Chrome
             targetWeapon = null;
 
             packet.Set(false);
-            //Debug.Break();
             
             var board = packet.Get<IBlackboard>();
             board.Set(WeaponRefs.BOARD, Current.Board);

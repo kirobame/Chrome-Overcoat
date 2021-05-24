@@ -23,7 +23,9 @@ namespace Chrome
         void IInjectionCallbackListener.OnInjectionDone(IRoot source)
         {
             OnInjectionDone(source);
+            
             SetupInputs();
+            input.Value.SetActiveAll(this, false);
         }
 
         protected virtual void OnInjectionDone(IRoot source) { }
@@ -41,12 +43,12 @@ namespace Chrome
         
         protected virtual void OnDestroy() => onDestruction?.Invoke(this);
         
-        public virtual void Bootup()
+        public virtual void Bootup(byte code)
         {
             input.Value.SetActiveAll(this, true);
             enabled = true;
         }
-        public virtual void Shutdown()
+        public virtual void Shutdown(byte code)
         {
             input.Value.SetActiveAll(this, false);
             enabled = false;

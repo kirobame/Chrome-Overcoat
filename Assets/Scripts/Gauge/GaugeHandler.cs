@@ -47,13 +47,13 @@ namespace Chrome
             handler.AddDependency(Events.Subscribe<byte>(GaugeEvent.OnGroundMove, OnGroundMove));
             handler.AddDependency(Events.Subscribe<byte>(GaugeEvent.OnAirMove, OnAirMove));
             
-            Bootup();
+            Bootup(0);
         }
         void OnDestroy() => onDestruction?.Invoke(this);
 
         //--------------------------------------------------------------------------------------------------------------/
         
-        public void Bootup()
+        public void Bootup(byte code)
         {
             var module = new GaugeInRangeModule(new Vector2(0.0f, 0.01f), (value, percentage, state) =>
             {
@@ -63,7 +63,7 @@ namespace Chrome
             module.lifetime = new ConstantModuleLifetime();
             firstGauge.AddModule(module);
         }
-        public void Shutdown() { }
+        public void Shutdown(byte code) { }
         
         //--------------------------------------------------------------------------------------------------------------/
         

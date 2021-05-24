@@ -26,8 +26,8 @@ namespace Chrome
         void Start() => ResetGauges();
         void OnDestroy() => onDestruction?.Invoke(this);
 
-        public void Bootup() { }
-        public void Shutdown() => ResetGauges();
+        public void Bootup(byte code) { }
+        public void Shutdown(byte code) => ResetGauges();
 
         private void ResetGauges()
         {

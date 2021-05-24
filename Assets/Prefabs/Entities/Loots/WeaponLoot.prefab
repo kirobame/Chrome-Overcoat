@@ -127,6 +127,7 @@ GameObject:
   - component: {fileID: 5160929454150984559}
   - component: {fileID: 5160929454150984547}
   - component: {fileID: 5160929454150984554}
+  - component: {fileID: 2641868353529299446}
   m_Layer: 31
   m_Name: WeaponLoot
   m_TagString: Untagged
@@ -218,6 +219,18 @@ MonoBehaviour:
   decrease: 0.1
   anchor: {fileID: 3482298998681804624}
   worldHUDPrefab: {fileID: 6036406636585253393, guid: 57e89f6f32a3e97488654757cac90947, type: 3}
+--- !u!114 &2641868353529299446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5160929454150984555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ea2724fcf0f4431ad22e8dcfaa21f0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5160929455357038854
 GameObject:
   m_ObjectHideFlags: 0

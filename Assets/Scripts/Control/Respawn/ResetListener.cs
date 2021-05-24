@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Sirenix.OdinInspector;
+using Flux.Event;
 using UnityEngine;
 
 namespace Chrome
 {
-    public class TimerControl : MonoBehaviour, ILifebound, IInjectable
+    public class ResetListener : MonoBehaviour, IInjectable, ILifebound
     {
         IReadOnlyList<IValue> IInjectable.Injections => injections;
         private IValue[] injections;
@@ -17,27 +17,20 @@ namespace Chrome
         }
 
         //--------------------------------------------------------------------------------------------------------------/
-
+        
         public event Action<ILifebound> onDestruction;
 
         public bool IsActive => true;
+
         private IValue<Lifetime> lifetime;
-        
-        [FoldoutGroup("Values"), SerializeField] private BindableGauge time;
 
         //--------------------------------------------------------------------------------------------------------------/
 
-        void Start() => HUDBinder.Declare(HUDGroup.Timer, time);
-
         void OnDestroy() => onDestruction?.Invoke(this);
 
-        public void Bootup(byte code) => time.Value = time.Range.y;
-        public void Shutdown(byte code) { }
-        
-        void Update()
-        {
-            time.Value -= Time.deltaTime;
-            if (time.IsAtMin) lifetime.Value.End();
-        }
+        public void Bootup(byte code) => Events.Subscribe(GlobalEvent.OnReset, OnReset);
+        public void Shutdown(byte code) => Events.Unsubscribe(GlobalEvent.OnReset, OnReset);
+
+        void OnReset() => lifetime.Value.End(99);
     }
 }

@@ -86,12 +86,12 @@ namespace Chrome
             onListenerDestruction?.Invoke(this);
         }
 
-        public virtual void Bootup()
+        public virtual void Bootup(byte code)
         {
             Repository.AddTo(Reference.Pickups, (IPickable)this);
             animator.Value.SetBool(IS_ACTIVE, true);
         }
-        public virtual void Shutdown() => Repository.RemoveFrom(Reference.Pickups, (IPickable)this);
+        public virtual void Shutdown(byte code) => Repository.RemoveFrom(Reference.Pickups, (IPickable)this);
 
         public virtual void OnHoverStart(IIdentity source) => animator.Value.SetBool(IS_INDICATING, true);
         public virtual void OnHoverEnd(IIdentity source) => animator.Value.SetBool(IS_INDICATING, false);
