@@ -1,14 +1,25 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Chrome
 {
     [Serializable]
     public class HasAmmo : Condition
     {
-        public HasAmmo(Bindable<float> binding) => this.binding = binding;
+        public HasAmmo(IValue<float> ammo) => this.ammo = ammo;
 
-        private Bindable<float> binding;
+        private IValue<float> ammo;
         
-        public override bool Check(Packet packet) => binding.Value > 0.0f;
+        public override bool Check(Packet packet)
+        {
+            var bb = packet.Get<IBlackboard>();
+            //Debug.Log("HasAmmo");
+            if (ammo.IsValid(packet)) return ammo.Value > 0.0f;
+            else
+            {
+                Debug.Log($"not valid {bb.Get<IBlackboard>(WeaponRefs.BOARD)}" );
+                return false;
+            }
+        }
     }
 }
