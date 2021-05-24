@@ -19,13 +19,11 @@ namespace Chrome
         private IValue<Transform> playerRoot;
         private IValue<Transform> selfRoot;
 
-        //new StrafAround(navRef, pivotRef, JeffManager.GetSide2D(rootRef.Value, JeffManager.GetClosestJeff(rootRef.Value))),
         protected override void OnUse(Packet packet)
         {
             if (navMesh.IsValid(packet) && aim.IsValid(packet) && selfRoot.IsValid(packet))
             {
                 toRight = JeffManager.GetSide(selfRoot.Value, JeffManager.GetClosestJeff(selfRoot.Value), aim.Value);
-                //Debug.Log(toRight);
                 navMesh.Value.updateRotation = false;
                 navMesh.Value.isStopped = false;
                 //Debug.Log(aim.Value.forward);
@@ -44,11 +42,6 @@ namespace Chrome
                 {
                     navMesh.Value.isStopped = true;
                 }
-                //navMesh.Value.transform.Translate(direction, Space.Self);
-
-
-                
-                //if (aim.IsValid(packet)) aim.Value.localRotation = Quaternion.identity;
             }
             
             isDone = true;

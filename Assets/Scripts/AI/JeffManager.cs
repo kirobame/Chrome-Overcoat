@@ -18,22 +18,6 @@ namespace Chrome
             }
             return true;
         }
-        /*
-        public static Vector3 GetNewPos(float degree, bool toRight, Packet packet)
-        {
-            var playerTr = $"{PlayerRefs.BOARD}.{Refs.ROOT}".Reference<Transform>(ReferenceType.SubGlobal);
-            var pivotRef = Refs.PIVOT.Reference<Transform>();
-
-            if (!playerTr.IsValid(packet) || !pivotRef.IsValid(packet)) return Vector3.zero;
-
-            Vector3 pos;
-            if (toRight)
-                pos = Quaternion.Euler(0, 30, 0) * pivotRef.Value.position;
-            else
-                pos = Quaternion.Euler(0, -30, 0) * pivotRef.Value.position;
-
-            return pos;
-        }*/
         public static Transform GetClosestJeff(Transform self)
         {
             Transform closestJeff = null;

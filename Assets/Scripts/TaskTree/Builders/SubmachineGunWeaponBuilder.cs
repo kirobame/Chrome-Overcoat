@@ -28,39 +28,10 @@ namespace Chrome
                 new Shoot("shootDir".Reference<Vector3>(), fireAnchorRef, colliderRef, bulletPrefab, muzzleFlashPrefab).Append
                 (
                     new BurstCountNode(),
-                    new Delay(fireRateDelay)/*.Append
-                    (
-                        new BulletBurst()
-                    )*/
+                    new Delay(fireRateDelay)
                 )
 
             ) ;
-            /*
-            return new GunNode().Append
-            (
-                TT.IF(new BulletBurst()).Append
-                (
-                    TT.IF_TRUE(new Shoot("shootDir".Reference<Vector3>(), fireAnchorRef, colliderRef, bulletPrefab, muzzleFlashPrefab)).Append
-                    (
-                        new Delay(fireRateDelay)
-                    ),
-                    TT.IF_FALSE(new Delay(burstDelay))
-                )
-            );*/
-
-            /*
-            return new GunNode().Append
-            (
-                TT.BIND_TO(0b_0001, TT.IF(new BulletBurst(burstAmmount))).Append
-                (
-                    TT.IF_TRUE(new Shoot("shootDir".Reference<Vector3>(), fireAnchorRef, colliderRef, bulletPrefab, muzzleFlashPrefab)).Append
-                    (
-                        new Delay(fireRateDelay)
-                    ),
-                    TT.IF_FALSE(new Delay(burstDelay))
-                )
-            );
-            */
         }
     }
 }
