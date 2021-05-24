@@ -13,6 +13,8 @@ namespace Chrome
         [BoxGroup("Dependencies", Order = -1), SerializeField] private CharacterController controller;
 
         private ControllerColliderHit hit;
+
+        //--------------------------------------------------------------------------------------------------------------/
         
         protected override Vector3 Move(Vector3 delta)
         {

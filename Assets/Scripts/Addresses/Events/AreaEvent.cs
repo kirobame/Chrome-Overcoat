@@ -5,6 +5,8 @@ namespace Chrome
     [Address]
     public enum AreaEvent : byte
     {
-        OnEnemyDeath
+        OnEnemyDeath,
+        OnPlayerEntry,
+        OnPlayerExit
     }
 }

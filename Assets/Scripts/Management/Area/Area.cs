@@ -13,15 +13,22 @@ namespace Chrome
         public event Action onPlayerExit;
         
         public int Occupancy { get; private set; }
+        public bool IsPlayerInAnyBounds => state;
 
         private bool state;
         private BoxCollider[] colliders;
+
+        private bool isActive;
 
         //--------------------------------------------------------------------------------------------------------------/
         
         protected override void Awake()
         {
             base.Awake();
+            
+            isActive = false;
+            Events.Subscribe(GlobalEvent.OnReset, OnReset);
+            Events.Subscribe(GlobalEvent.OnStart, OnStart);
             
             Occupancy = 0;
             state = false;
@@ -33,30 +40,30 @@ namespace Chrome
         }
         protected override void HandlePacket(Packet packet) => packet.Set(this);
 
+        void OnDestroy()
+        {
+            Events.Unsubscribe(GlobalEvent.OnReset, OnReset);
+            Events.Unsubscribe(GlobalEvent.OnStart, OnStart);
+        }
+
         //--------------------------------------------------------------------------------------------------------------/
-        
+
         void Update()
         {
+            if (!isActive) return;
+
             var playerBoard = Blackboard.Global.Get<IBlackboard>(PlayerRefs.BOARD);
             var player = playerBoard.Get<Collider>(Refs.COLLIDER);
 
             if (!state)
             {
-                if (colliders.Any(collider => collider.bounds.Intersects(player.bounds)))
-                {
-                    state = true;
-                    onPlayerEntry?.Invoke();
-                }
+                if (colliders.Any(collider => collider.bounds.Intersects(player.bounds))) OnPlayerEntry();
             }
-            else if (colliders.All(collider => !collider.bounds.Intersects(player.bounds)))
-            {
-                state = false;
-                onPlayerExit?.Invoke();
-            }
+            else if (colliders.All(collider => !collider.bounds.Intersects(player.bounds))) OnPlayerExit();
         }
 
         //--------------------------------------------------------------------------------------------------------------/
-
+        
         public bool Contains(Collider collider) => colliders.Any(candidate => candidate.bounds.Intersects(collider.bounds));
 
         public void Register(Agent agent) => Occupancy++;
@@ -65,5 +72,29 @@ namespace Chrome
             Occupancy--;
             Events.Call(AreaEvent.OnEnemyDeath);
         }
+
+        //--------------------------------------------------------------------------------------------------------------/
+
+        void OnPlayerEntry()
+        {
+            state = true;
+                    
+            Events.ZipCall(AreaEvent.OnPlayerEntry, this);
+            onPlayerEntry?.Invoke();
+        }
+        void OnPlayerExit()
+        {
+            state = false;
+                
+            Events.ZipCall(AreaEvent.OnPlayerExit, this);
+            onPlayerExit?.Invoke();
+        }
+        
+        void OnReset()
+        {
+            if (state) OnPlayerExit();
+            isActive = false;
+        }
+        void OnStart() => isActive = true;
     }
 }

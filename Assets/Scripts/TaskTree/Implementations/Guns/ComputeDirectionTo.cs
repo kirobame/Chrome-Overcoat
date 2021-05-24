@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using UnityEngine;
 
 namespace Chrome
@@ -6,38 +7,47 @@ namespace Chrome
     [Serializable]
     public class ComputeDirectionTo : TaskNode
     {
-        public ComputeDirectionTo(string path, IValue<Transform> from, IValue<Collider> target)
+        public ComputeDirectionTo(IValue<Vector3> direction, IValue<Transform> from, IValue<Collider> target)
         {
-            this.path = path;
-
+            this. direction =  direction;
             this.from = from;
             this.target = target;
         }
-        public ComputeDirectionTo(string path, IValue<Transform> from, IValue<Collider> target, Vector3 offset)
-        {
-            this.path = path;
 
-            this.from = from;
-            this.target = target;
-
-            this.offset = offset;
-        }
-        
-        [SerializeField] private string path;
-
+        private IValue<Vector3> direction;
         private IValue<Transform> from;
         private IValue<Collider> target;
 
-        private Vector3 offset;
-
         protected override void OnUse(Packet packet)
         {
-            if (from.IsValid(packet) && target.IsValid(packet))
+            if (direction.IsValid(packet) && from.IsValid(packet) && target.IsValid(packet))
             {
-                var board = packet.Get<IBlackboard>();
+                var mask = LayerMask.GetMask("Environment");
+                var corners = target.Value.bounds.GetCorners().ToList();
 
-                var point = target.Value.bounds.center + offset;
-                board.Set(path, Vector3.Normalize(point - from.Value.position));
+                var point = Vector3.zero;
+                for (var i = 0; i < corners.Count; i++)
+                {
+                    if (from.Value.position.CanSee(corners[i], mask))
+                    {
+                        point += corners[i];
+                        continue;
+                    }
+                
+                    corners.RemoveAt(i);
+                    i--;
+                }
+
+                if (corners.Any())
+                {
+                    point /= corners.Count;
+                    
+                    var nudge = target.Value.bounds.center - point;
+                    point += nudge * 0.33f;
+                    
+                    direction.Value = Vector3.Normalize(point - from.Value.position);
+                }
+                else direction.Value = Vector3.Normalize(target.Value.bounds.center - from.Value.position);
             }
 
             isDone = true;

@@ -7,7 +7,7 @@ namespace Chrome
     {
         None = 0,
         
-        Peon = 1,
-        Guard = 2
+        Kyle = 1,
+        Jeff = 2
     }
 }

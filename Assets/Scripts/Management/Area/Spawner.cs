@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Flux.Data;
+using Flux.Event;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.AI;
@@ -29,7 +30,10 @@ namespace Chrome
         
         //--------------------------------------------------------------------------------------------------------------/
 
-        void Start()
+        void Awake() => Events.Subscribe(GlobalEvent.OnStart, OnStart);
+        void OnDestroy() => Events.Unsubscribe(GlobalEvent.OnStart, OnStart);
+
+        void OnStart()
         {
             if (!hasCachedEnemy) return;
             

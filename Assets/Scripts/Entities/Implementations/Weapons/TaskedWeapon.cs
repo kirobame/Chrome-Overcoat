@@ -7,24 +7,20 @@ namespace Chrome
     [CreateAssetMenu(fileName = "NewTaskedWeapon", menuName = "Chrome Overcoat/Weapons/Tasked")]
     public class TaskedWeapon : Weapon, ITaskTree
     {
-        [SerializeReference] private ITreeBuilder builder;
+        public override bool IsMelee => false;
+
+        [SerializeReference] private IWeaponBuilder builder;
         
         private ITaskTree root;
         
         public override void Build()
         {
             base.Build();
-            
-            Board.Set(WeaponRefs.AMMO, maxAmmo);
             root = builder.Build();
+            builder.InstallDependenciesOn(Board);
         }
-
-        //--------------------------------------------------------------------------------------------------------------/
-
-        public override bool HasAmmo => Board.Get<float>(WeaponRefs.AMMO) > 0.0f;
-
-        [SerializeField] private float maxAmmo;
-
+        public override IBindable[] GetBindables() => builder.GetBindables();
+        
         public override void Actualize(Packet packet) => Use(packet);
         
         //--------------------------------------------------------------------------------------------------------------/
@@ -60,15 +56,20 @@ namespace Chrome
         
         public override void Bootup(Packet packet)
         {
+            builder.Bootup(packet);
             root.Bootup(packet);
-            root.Prepare(packet);
+            //root.Prepare(packet);
         }
 
         public void Prepare(Packet packet) => root.Prepare(packet);
         public IEnumerable<INode> Use(Packet packet) => root.Use(packet);
 
         public void Close(Packet packet) => root.Close(packet);
-        public override void Shutdown(Packet packet) => root.Shutdown(packet);
+        public override void Shutdown(Packet packet)
+        {
+            root.Shutdown(packet);
+            builder.Shutdown(packet);
+        }
 
         //--------------------------------------------------------------------------------------------------------------/
         

@@ -4,27 +4,27 @@ using UnityEngine;
 
 namespace Chrome
 {
-    public class IsCloseTo : ConditionalNode
+    public class IsCloseTo : Condition
     {
-        public IsCloseTo(IValue<Transform> transform, IValue<Transform> target, float distanceMin)
+        public IsCloseTo(float range, IValue<Transform> transform, IValue<Transform> target)
         {
+            this.range = range;
+            
             this.transform = transform;
             this.target = target;
-            this.distanceMin = distanceMin;
         }
 
+        private float range;
+        
         private IValue<Transform> transform;
         private IValue<Transform> target;
-        private float distanceMin;
-
-        protected override bool Check(Packet packet)
+        
+        public override bool Check(Packet packet)
         {
             if (!target.IsValid(packet) || !transform.IsValid(packet)) return false;
 
             var distance = Vector3.Distance(transform.Value.position, target.Value.position);
-            
-            if (distance < distanceMin) return true;
-            else return false;
+            return distance < range;
         }
     }
 }

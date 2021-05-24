@@ -2,7 +2,7 @@
 {
     public interface ILifebound : IActive<ILifebound>
     {
-        void Bootup();
-        void Shutdown();
+        void Bootup(byte code);
+        void Shutdown(byte code);
     }
 }

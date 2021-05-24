@@ -3,6 +3,7 @@
     public static class AgentRefs
     {
         public const string NAV = "navMesh";
-        public const string LINE_OF_SIGHT = "lineOfSight";
+        public const string WEAPON = "weapon";
+        public const string COVER = "cover";
     }
 }

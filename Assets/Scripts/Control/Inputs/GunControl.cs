@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Flux.Data;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -30,16 +31,17 @@ namespace Chrome
         private const string HOLSTER_RATIO = "HolsterRatio";
         private const string TAKE_OUT = "TakeOut";
         private const string TAKE_OUT_RATIO = "TakeOutRatio";
+        private const string MELEE = "Melee";
 
         //--------------------------------------------------------------------------------------------------------------/
         
         protected override void PrepareInjection()
         {
             hasBeenBootedUp = false;
- 
+            
+            aimCompute = ChromeExtensions.CreateComputeAimDirection();
             runtimeDefaultWeapon = Instantiate(defaultWeapon);
             runtimeDefaultWeapon.Build();
-            aimCompute = ChromeExtensions.CreateComputeAimDirection();
 
             pressState = PressState.Released;
             switchState = SwitchState.None;
@@ -56,9 +58,6 @@ namespace Chrome
         protected override void OnInjectionDone(IRoot source)
         {
             packet.Set(false);
-            
-            onAmmoChangeToken = packet.GetOrCreateValueAt<string, Token>(TokenRefs.ON_AMMO_CHANGE);
-            onAmmoChangeToken.onConsumption += OnAmmoChange;
 
             hasBeenBootedUp = true;
             SwitchTo(runtimeDefaultWeapon);
@@ -94,30 +93,34 @@ namespace Chrome
         private Coroutine switchRoutine;
         private float holsterTimer;
         private float takeOutTimer;
-
+        
         private Weapon targetWeapon;
         private Weapon runtimeDefaultWeapon;
-        private Token onAmmoChangeToken;
+        
+        private bool weaponHasAmmo;
+        private Bindable<float> ammoBinding;
         
         private bool hasBeenBootedUp;
 
         //--------------------------------------------------------------------------------------------------------------/
-
-        protected override void OnDestroy()
+        
+        public override void Bootup(byte code)
         {
-            base.OnDestroy();
-            onAmmoChangeToken.onConsumption -= OnAmmoChange;
-        }
-
-        public override void Bootup()
-        {
+            if (Current.IsMelee) animator.Value.SetTrigger(MELEE);
             packet.Set(false);
-            base.Bootup();
+            
+            base.Bootup(code);
         }
-        public override void Shutdown()
+        public override void Shutdown(byte code)
         {
-            base.Shutdown();
+            base.Shutdown(code);
+            
             if (pressState == PressState.Pressed) OnMouseUp();
+            if (Current != runtimeDefaultWeapon)
+            {
+                targetWeapon = runtimeDefaultWeapon;
+                Refresh();
+            }
         }
 
         //--------------------------------------------------------------------------------------------------------------/
@@ -159,6 +162,16 @@ namespace Chrome
         {
             switchState = SwitchState.Holstering;
             
+            if (Current.IsMelee)
+            {
+                takeOutTimer = 0.0f;
+                
+                Refresh();
+                switchRoutine = StartCoroutine(TakeOutRoutine());
+                
+                yield break;
+            }
+            
             animator.Value.SetBool(TAKE_OUT, false);
             animator.Value.SetBool(HOLSTER, true);
             yield return new WaitForEndOfFrame();
@@ -183,6 +196,17 @@ namespace Chrome
         {
             switchState = SwitchState.TakingOut;
 
+            if (Current.IsMelee)
+            {
+                animator.Value.SetTrigger(MELEE);
+                yield return new WaitForEndOfFrame();
+                
+                switchState = SwitchState.None;
+                switchRoutine = null;
+
+                yield break;
+            }
+            
             animator.Value.SetBool(HOLSTER, false);
             animator.Value.SetBool(TAKE_OUT, true);
             yield return new WaitForEndOfFrame();
@@ -206,19 +230,42 @@ namespace Chrome
 
         private void Refresh()
         {
-            if (targetWeapon == null) throw new InvalidOperationException($"[{this}] Cannot refresh to a new weapon if there is no target weapon assigned !");
-            
-            if (HasWeapon) Current.Shutdown(packet);
+            if (targetWeapon == null) throw new InvalidOperationException($"[{this}] Cannot refresh to a new weapon if there is no target weapon assigned!");
+
+            if (HasWeapon)
+            {
+                HUDBinder.Clear(HUDGroup.Weapon);
+                Current.Shutdown(packet);
+
+                if (weaponHasAmmo) ammoBinding.onChange -= OnAmmoChange;
+            }
             HasWeapon = true;
             
             Current = targetWeapon;
             targetWeapon = null;
 
+            packet.Set(false);
+            
             var board = packet.Get<IBlackboard>();
             board.Set(WeaponRefs.BOARD, Current.Board);
             
             Current.Bootup(packet);
-            Current.AssignVisualsTo(visual.Value);
+            if (!Current.IsMelee) Current.AssignVisualsTo(visual.Value);
+
+            var bindables = Current.GetBindables();
+            if (!bindables.Any())
+            {
+                weaponHasAmmo = false;
+                return;
+            }
+            
+            HUDBinder.Declare(HUDGroup.Weapon, bindables);
+            if (bindables.TryGet<Bindable<float>>(HUDBinding.Ammo, out ammoBinding))
+            {
+                weaponHasAmmo = true;
+                ammoBinding.onChange += OnAmmoChange;
+            }
+            else weaponHasAmmo = false;
         }
         
         //--------------------------------------------------------------------------------------------------------------/
@@ -277,9 +324,9 @@ namespace Chrome
 
         //--------------------------------------------------------------------------------------------------------------/
 
-        void OnAmmoChange(Token token)
+        void OnAmmoChange(float value)
         {
-            if (Current == runtimeDefaultWeapon || Current.HasAmmo) return;
+            if (Current == runtimeDefaultWeapon || value > 0) return;
             DropCurrent();
         }
     }

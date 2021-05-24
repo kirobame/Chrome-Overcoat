@@ -7,30 +7,24 @@ namespace Chrome
     [Serializable]
     public class WeaponNode : TaskNode
     {
-        public WeaponNode(Weapon weapon)
-        {
-            this.weapon = Object.Instantiate(weapon);
-            this.weapon.Build();
-        }
+        public WeaponNode(IValue<Weapon> weapon) => this.weapon = weapon;
 
-        private Weapon weapon;
+        private IValue<Weapon> weapon;
 
         protected override void OnBootup(Packet packet)
         {
-            weapon.Bootup(packet);
+            if (!weapon.IsValid(packet)) return;
+            weapon.Value.Bootup(packet);
         }
-
-        protected override void Open(Packet packet)
-        {
-        }
-
         protected override void OnUse(Packet packet)
         {
-            var bb = packet.Get<IBlackboard>();
-            bb.Set(WeaponRefs.BOARD, weapon.Board);
-            //Debug.Log("WeaponNode OnUse");
-            weapon.Actualize(packet);
+            if (!weapon.IsValid(packet)) return;
+            weapon.Value.Actualize(packet);
         }
-        protected override void OnShutdown(Packet packet) => weapon.Shutdown(packet);
+        protected override void OnShutdown(Packet packet)
+        {
+            if (!weapon.IsValid(packet)) return;
+            weapon.Value.Shutdown(packet);
+        } 
     }
 }

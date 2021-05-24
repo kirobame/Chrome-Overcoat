@@ -31,23 +31,25 @@ namespace Chrome
         private float pitch;
 
         //--------------------------------------------------------------------------------------------------------------/
-
-        void Awake()
+        
+        public override void Bootup(byte code)
         {
+            base.Bootup(code);
+            
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
 
             yaw = yawTarget.localEulerAngles.y;
             pitch = pitchTarget.localEulerAngles.x;
         }
-        protected override void OnDestroy()
+        public override void Shutdown(byte code)
         {
-            base.OnDestroy();
+            base.Shutdown(code);
             
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
         }
-        
+
         //--------------------------------------------------------------------------------------------------------------/
         
         void Update()

@@ -31,26 +31,39 @@ namespace Chrome
         
         private float pressTime;
         private float error;
+        private bool hasJumped;
 
         private CachedValue<Key> key;
+
+        //--------------------------------------------------------------------------------------------------------------/
+        
+        void Awake()
+        {
+            pressTime = 0.0f;
+            error = 0.0f;
+            hasJumped = false;
+        }
         
         void Update()
         {
             if (key.IsOn()) pressTime += Time.deltaTime;
 
-            if (body.Value.IsGrounded) error = 0.0f;
+            if (body.Value.IsGrounded)
+            {
+                error = 0.0f;
+                if (hasJumped) hasJumped = false;
+            }
             else error += Time.deltaTime;
             
             if (!key.IsUp()) return;
             
-            if (error <= margin && pressTime <= pressThreshold)
+            if (!hasJumped && error <= margin && pressTime <= pressThreshold)
             {
-                Events.Call(GaugeEvent.OnJump);
-                
                 var attraction = gravity.Value.Force;
                 var length = -Mathf.Sqrt(height * 2.0f * attraction.magnitude);
                 
                 body.Value.velocity += attraction.normalized * length;
+                hasJumped = true;
             }
             
             pressTime = 0.0f;

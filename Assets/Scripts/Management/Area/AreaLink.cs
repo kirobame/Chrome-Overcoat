@@ -27,20 +27,20 @@ namespace Chrome
         public event Action<ILifebound> onDestruction;
 
         public bool IsActive => enabled;
-        public Area Value { get; private set; }
+        public Area Area { get; private set; }
 
         private new IValue<Collider> collider;
         private IValue<Agent> agent;
         
-        private bool hasValue;
+        private bool isInArea;
 
         //--------------------------------------------------------------------------------------------------------------/
         
         void OnDestroy() => onDestruction?.Invoke(this);
 
-        public void Bootup()
+        public void Bootup(byte code)
         {
-            if (hasValue) return;
+            if (isInArea) return;
 
             foreach (var area in Repository.GetAll<Area>(Reference.Areas))
             {
@@ -50,22 +50,22 @@ namespace Chrome
                 break;
             }
         }
-        public void Shutdown()
+        public void Shutdown(byte code)
         {
-            Value.Unregister(agent.Value);
+            Area.Unregister(agent.Value);
             
-            hasValue = false;
-            Value = null;
+            isInArea = false;
+            Area = null;
         }
 
         //--------------------------------------------------------------------------------------------------------------/
 
         public void Set(Area area)
         {
-            Value = area;
-            hasValue = true;
+            Area = area;
+            isInArea = true;
             
-            Value.Register(agent.Value);
+            Area.Register(agent.Value);
         }
 
         //--------------------------------------------------------------------------------------------------------------/

@@ -1,20 +1,20 @@
 using System;
 using System.Collections;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Chrome
 {
     public abstract class Weapon : ScriptableObject
     {
-        public event Action onAmmoChange;
-        
-        public abstract bool HasAmmo { get; }
+        public abstract bool IsMelee { get; }
         public IBlackboard Board { get; private set; }
     
-        [SerializeField] private Mesh mesh;
-        [SerializeField] private Material material;
+        [SerializeField, HideIf("IsMelee")] private Mesh mesh;
+        [SerializeField, HideIf("IsMelee")] private Material material;
 
         public virtual void Build() => Board = new Blackboard();
+        public abstract IBindable[] GetBindables();
         
         public abstract void Bootup(Packet packet);
         public abstract void Actualize(Packet packet);
@@ -25,7 +25,5 @@ namespace Chrome
             visual.Renderer.sharedMesh = mesh;
             visual.Renderer.material = material;
         }
-
-        protected void NotifyAmmoChange() => onAmmoChange?.Invoke();
     }
 }

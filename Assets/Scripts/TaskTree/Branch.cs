@@ -7,6 +7,8 @@ namespace Chrome
 {
     public class Branch
     {
+        private const int STOP_CODE = -42;
+        
         public Branch(ITaskTree source, int key)
         {
             Key = key;
@@ -22,6 +24,8 @@ namespace Chrome
             this.source = source;
         }
 
+        //--------------------------------------------------------------------------------------------------------------/
+
         public bool IsDone => actives.Count == 0 || actives.All(node => node is RootNode && node.IsDone);
 
         public int Key { get; private set; }
@@ -35,30 +39,29 @@ namespace Chrome
         
         private ITaskTree source;
 
+        //--------------------------------------------------------------------------------------------------------------/
+
         public void Update(Packet packet)
         {
             for (var i = 0; i < actives.Count; i++)
             {
                 i = UpdateAt(packet, i);
-                if (i == -1) return;
+                if (i == STOP_CODE) return;
             }
         }
-
+        
         private int UpdateAt(Packet packet, int index)
         {
             var current = actives[index];
-                
-            var snapshot = packet.Save();
             var results = current.Use(packet);
-
+            
             source.ActualizeCommands(packet);
-            if (actives.Count == 0) return -1;
+            if (actives.Count == 0) return STOP_CODE;
 
             if (results == null) return index;
             actives.RemoveAt(index);
 
-            var count = results.Count();
-            if (count == 0)
+            if (!results.Any())
             {
                 leaves.Add(current);
                 return index - 1;
@@ -66,13 +69,12 @@ namespace Chrome
 
             var sortedResults = results.ToList();
             sortedResults.Sort(CompareNodes);
-            actives.InsertRange(index, results);
-            
-            for (var i = 0; i < count; i++) index = UpdateAt(packet, index + i);
-
-            packet.Load(snapshot);
-            return index;
+            actives.InsertRange(index, sortedResults);
+;
+            return -1;
         }
+
+        //--------------------------------------------------------------------------------------------------------------/
 
         public void Add(INode node)
         {

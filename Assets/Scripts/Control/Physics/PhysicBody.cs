@@ -28,7 +28,7 @@ namespace Chrome
 
         void OnDestroy() => onDestruction?.Invoke(this);
         
-        public void Bootup()
+        public void Bootup(byte code)
         {
             Velocity = Vector3.zero;
             Delta = Vector3.zero;
@@ -36,7 +36,7 @@ namespace Chrome
             force = Vector3.zero;
             velocity = Vector3.zero;
         }
-        public void Shutdown() { }
+        public void Shutdown(byte code) { }
         
         void Update()
         {

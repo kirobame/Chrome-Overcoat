@@ -3,11 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using Flux.Data;
 using Flux.EDS;
+using Flux.Event;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace Chrome
 {
+    public static class CO
+    {
+        public static void SCREEN_SHAKE(float factor, float max) => Events.ZipCall(PlayerEvent.OnShake, factor, max);
+
+        //--------------------------------------------------------------------------------------------------------------/
+        
+        public static void CONCAT<T>(ref T[] source, params T[] addition)
+        {
+            var baseLength = source.Length;
+            Array.Resize(ref source, baseLength + addition.Length);
+
+            for (var i = baseLength; i < source.Length; i++) source[i] = addition[i - baseLength];
+            addition = null;
+        }
+    }
+    
     public static class ChromeExtensions
     {
         private static SpawnLocations[] allLocations;
@@ -105,11 +122,12 @@ namespace Chrome
         public static ComputeAimDirection CreateComputeAimDirection()
         {
             var mask = LayerMask.GetMask("Environment", "Entity");
-            var pivot = Refs.PIVOT.Reference<Transform>();
-            var fireAnchor = Refs.FIREANCHOR.Reference<Transform>();
-            var collider = Refs.COLLIDER.Reference<Collider>();
+            var pivotRef = Refs.PIVOT.Reference<Transform>();
+            var fireAnchorRef = Refs.FIREANCHOR.Reference<Transform>();
+            var colliderRef = Refs.COLLIDER.Reference<Collider>();
+            var shootDirectionRef = Refs.SHOOT_DIRECTION.Reference<Vector3>();
             
-            return new ComputeAimDirection("shootDir", mask, fireAnchor, pivot, collider);
+            return new ComputeAimDirection(shootDirectionRef, mask, fireAnchorRef, pivotRef, colliderRef);
         }
 
         //--------------------------------------------------------------------------------------------------------------/
@@ -201,6 +219,8 @@ namespace Chrome
 
         //--------------------------------------------------------------------------------------------------------------/
 
+        public static bool Contains(this Vector2 range, float value) => value >= range.x && value <= range.y;
+        
         public static void RebootLocally(this Transform transform)
         {
             transform.localPosition = Vector3.zero;

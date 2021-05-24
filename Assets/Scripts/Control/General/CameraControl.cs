@@ -14,7 +14,7 @@ namespace Chrome
         void Awake() => parent = transform.parent;
         void OnDestroy() => onDestruction?.Invoke(this);
 
-        public void Bootup() => transform.SetParent(parent);
-        public void Shutdown() => transform.SetParent(null);
+        public void Bootup(byte code) => transform.SetParent(parent);
+        public void Shutdown(byte code) => transform.SetParent(null);
     }
 }

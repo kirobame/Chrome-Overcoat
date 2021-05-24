@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Flux.Data;
+using Flux.Event;
 using UnityEngine;
 
 namespace Chrome
@@ -61,6 +62,7 @@ namespace Chrome
                 Owner = owner;
                 foreach (var spawn in spawns) spawn.AssignTo(this);
             }
+            public void Reset() => HasBeenTriggered = false;
 
             public void Bootup()
             {
@@ -94,7 +96,6 @@ namespace Chrome
             {
                 if (conditions.Any(condition => !condition.Check(packet))) return;
                 
-                //Debug.Log($"Spawning [{name}] wave in [{Owner.Area.Transform.gameObject.name}] area");
                 foreach (var spawn in spawns) spawn.Execute();
                 HasBeenTriggered = true;
                 
@@ -150,9 +151,12 @@ namespace Chrome
         public Wave this[string name] => waves.First(wave => wave.Name == name);
 
         //--------------------------------------------------------------------------------------------------------------/
-        
+
+        void Awake() => Events.Subscribe(GlobalEvent.OnReset, OnReset);
         void OnDestroy()
         {
+            Events.Unsubscribe(GlobalEvent.OnReset, OnReset);
+            
             area.Value.onPlayerEntry -= OnPlayerEntry;
             area.Value.onPlayerExit -= OnPlayerExit;
         }
@@ -183,6 +187,8 @@ namespace Chrome
         //--------------------------------------------------------------------------------------------------------------/
 
         public bool TryGetSpawner(SpawnLocations location, out Spawner spawner) => spawners.Value.TryGetValue(location, out spawner);
+
+        void OnReset() { foreach (var wave in waves) wave.Reset(); }
 
         //--------------------------------------------------------------------------------------------------------------/
         

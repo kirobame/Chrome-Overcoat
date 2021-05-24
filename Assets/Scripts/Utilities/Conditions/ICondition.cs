@@ -2,9 +2,6 @@
 {
     public interface ICondition
     {
-        bool Inverse { get; set; }
-        ConditionalOperator Operator { get; set; }
-        
         void Bootup(Packet packet);
         void Open(Packet packet);
 
