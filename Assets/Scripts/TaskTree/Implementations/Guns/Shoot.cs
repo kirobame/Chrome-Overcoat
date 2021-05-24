@@ -68,22 +68,16 @@ namespace Chrome
             var projectilePool = Repository.Get<GenericPool>(Pool.Projectile);
             var projectileInstance = projectilePool.CastSingle<Projectile>(projectilePrefab);
 
-            // TODO : Refactor this
-            #region Charge usage
-
             var board = packet.Get<IBlackboard>();
+            var weaponBoard = board.Get<IBlackboard>(WeaponRefs.BOARD);
+            
             float force;
-            
-            
-            if (!board.TryGet<bool>("charge.isUsed", out var isUsed) || !isUsed) force = 0.25f;
-            else force = board.Get<float>("charge");
+            if (!weaponBoard.TryGet<BindableCappedGauge>(WeaponRefs.CHARGE, out var chargeBinding)) force = 0.25f; 
+            else force = chargeBinding.ComputeRatio();
 
             packet.Set(force);
             
-            #endregion
-            
             if (packet.TryGet<Animator>(out var animator)) animator.SetTrigger(SHOOT);
-          
             projectileInstance.Shoot(packet.Get<IIdentity>(), fireAnchor.position, direction.normalized, packet);
             if (collider.IsValid(packet)) projectileInstance.Ignore(collider.Value);
         }

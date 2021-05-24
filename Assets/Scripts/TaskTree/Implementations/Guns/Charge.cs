@@ -18,7 +18,7 @@ namespace Chrome
             this.shakeFactor = shakeFactor;
             this.maxShake = maxShake;
         }
-        
+
         [SerializeField] private float shakeFactor;
         [SerializeField] private float maxShake;
 

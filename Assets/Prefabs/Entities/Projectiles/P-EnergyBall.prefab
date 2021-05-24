@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61b1fce0bd6a4702acbdad9df76430d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: {x: 1, y: 4}
-  otherSpeed: {x: 8.5, y: 16.5}
+  damage: {x: 2, y: 8}
+  otherSpeed: {x: 17, y: 33}
   size: {x: 0.15, y: 0.5}
   impactVfx: {fileID: 8427945788675049256, guid: 11b044480f01489458de3b6c9d48f14a, type: 3}
   bounceVfx: {fileID: 7838945871387715447, guid: 2255f558cf31df24f8f4f84db3af5571, type: 3}
@@ -52,7 +52,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 881910187986800339, guid: 70109a9cccd352c459294234c986676e, type: 3}
       propertyPath: m_Name
-      value: Alt-EnergyBall
+      value: P-EnergyBall
       objectReference: {fileID: 0}
     - target: {fileID: 3084122353275200940, guid: 70109a9cccd352c459294234c986676e, type: 3}
       propertyPath: value

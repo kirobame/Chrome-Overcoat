@@ -10,17 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b41d0f7962fb41c8b578d27ad5189d0a, type: 3}
-  m_Name: CombineRifle
+  m_Name: E-LaserRifle
   m_EditorClassIdentifier: 
   mesh: {fileID: 4300002, guid: 182b7f11db452bc458d35a6c9eced06f, type: 3}
-  material: {fileID: 2100000, guid: 4b309b09e0570e54f9c39e4e79c2a0d7, type: 2}
+  material: {fileID: 2100000, guid: 9dcf9f4401606c249b25f4f88dd5063a, type: 2}
   builder:
     id: 0
   references:
     version: 1
     00000000:
-      type: {class: CombineRifleBuilder, ns: Chrome, asm: Assembly-CSharp}
+      type: {class: UMPBuilder, ns: Chrome, asm: Assembly-CSharp}
       data:
-        ammo: 15
-        bulletPrefab: {fileID: 8335357938041984344, guid: ef9940d013dc87d4885ac6eeabbebfd9, type: 3}
-        muzzleFlashPrefab: {fileID: 3541007952546055489, guid: 094f816bf309dd04bb08458f38cd9655, type: 3}
+        ammo: 30
+        bulletPrefab: {fileID: 4104665428271210412, guid: 3a5a2e8b747d6d843813d3966b66ac12, type: 3}
+        muzzleFlashPrefab: {fileID: 1284898355391203522, guid: 6e5f26f20e4697d4f852f29c07b0aa8c, type: 3}
+        rate: 9999
+        delay: 1

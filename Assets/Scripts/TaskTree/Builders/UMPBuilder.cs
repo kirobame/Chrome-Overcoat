@@ -9,8 +9,9 @@ namespace Chrome
     {
         [SerializeField] private GenericPoolable bulletPrefab;
         [SerializeField] private PoolableVfx muzzleFlashPrefab;
+        [SerializeField] private float rate;
         [SerializeField] private float delay;
-        
+
         public override ITaskTree Build()
         {
             base.Build();
@@ -21,12 +22,12 @@ namespace Chrome
 
             return new GunNode().Append
             (
-                TT.BIND_TO(WeaponRefs.ON_MOUSE_DOWN, TT.IF(new HasAmmo(ammoBinding))).Append
+                TT.BIND_TO(WeaponRefs.ON_MOUSE_DOWN, TT.IF(new HasAmmo(ammoBinding)).AND(new IsDelayDown(delay))).Append
                 (
-                    new Shoot(shootDirectionRef, fireAnchorRef, colliderRef, bulletPrefab, muzzleFlashPrefab).Append
+                    TT.IF_TRUE(new Shoot(shootDirectionRef, fireAnchorRef, colliderRef, bulletPrefab, muzzleFlashPrefab)).Append
                     (
                         new ConsumeAmmo(1.0f, ammoBinding),
-                        new Delay(delay)
+                        new Delay(rate)
                     )
                 )
             );
