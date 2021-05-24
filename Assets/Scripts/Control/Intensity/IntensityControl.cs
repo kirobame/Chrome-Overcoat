@@ -26,6 +26,7 @@ namespace Chrome
             get => gauge.Value;
             set => gauge.Value = value;
         }
+        public float Ratio => gauge.ComputeRatio();
         
         [SerializeReference] private IIntensityPassive[] passives = new IIntensityPassive[0];
 

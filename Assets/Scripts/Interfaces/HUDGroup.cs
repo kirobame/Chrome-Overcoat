@@ -13,8 +13,8 @@ namespace Chrome
         Pickup = 1 << 3,
         Health = 1 << 4,
         Intensity = 1 << 5,
+        Stomp = 1 << 6,
         
-        G = 1 << 6,
         H = 1 << 7,
         I = 1 << 8,
         J = 1 << 9
