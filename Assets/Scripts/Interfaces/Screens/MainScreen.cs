@@ -22,6 +22,7 @@ namespace Chrome
 
         //--------------------------------------------------------------------------------------------------------------/
 
+        void Awake() => group.alpha = 1.0f;
         void Start()
         {
             Events.Subscribe<string>(GlobalEvent.OnReset, Appear);

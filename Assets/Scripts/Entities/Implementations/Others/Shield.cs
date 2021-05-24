@@ -65,8 +65,6 @@ namespace Chrome
 
             var type = identity.Value.Packet.Get<byte>();
 
-            Events.ZipCall<byte, float>(GaugeEvent.OnDamageInflicted, type, damage);
-
             if (health <= 0) link.End();
         }
 

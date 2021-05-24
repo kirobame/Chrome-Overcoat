@@ -219,6 +219,8 @@ namespace Chrome
 
         //--------------------------------------------------------------------------------------------------------------/
 
+        public static bool Contains(this Vector2 range, float value) => value >= range.x && value <= range.y;
+        
         public static void RebootLocally(this Transform transform)
         {
             transform.localPosition = Vector3.zero;
