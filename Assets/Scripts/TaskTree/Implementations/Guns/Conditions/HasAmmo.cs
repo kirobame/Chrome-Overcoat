@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Chrome
 {
@@ -11,8 +12,14 @@ namespace Chrome
         
         public override bool Check(Packet packet)
         {
+            var bb = packet.Get<IBlackboard>();
+            //Debug.Log("HasAmmo");
             if (ammo.IsValid(packet)) return ammo.Value > 0.0f;
-            else return false;
+            else
+            {
+                Debug.Log($"not valid {bb.Get<IBlackboard>(WeaponRefs.BOARD)}" );
+                return false;
+            }
         }
     }
 }

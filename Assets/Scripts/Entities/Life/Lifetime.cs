@@ -123,7 +123,7 @@ namespace Chrome
             if (IsAlive) return;
             IsAlive = true;
             
-            Debug.Log($"[{root.Transform.name}] Lifetime starts");
+            //Debug.Log($"[{root.Transform.name}] Lifetime starts");
             
             var args = new WrapperArgs<byte>(0);
             CallListeners(args, CheckForSpawn);
@@ -154,7 +154,7 @@ namespace Chrome
             if (!IsAlive) return;
             IsAlive = false;
             
-            Debug.Log($"[{root.Transform.name}] Lifetime ends");
+            //Debug.Log($"[{root.Transform.name}] Lifetime ends");
             
             foreach (var lifebound in bounds)
             {

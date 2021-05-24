@@ -15,10 +15,20 @@ namespace Chrome
 
         private Weapon weapon;
 
-        protected override void OnBootup(Packet packet) => weapon.Bootup(packet);
+        protected override void OnBootup(Packet packet)
+        {
+            weapon.Bootup(packet);
+        }
+
+        protected override void Open(Packet packet)
+        {
+        }
+
         protected override void OnUse(Packet packet)
         {
-            
+            var bb = packet.Get<IBlackboard>();
+            bb.Set(WeaponRefs.BOARD, weapon.Board);
+            //Debug.Log("WeaponNode OnUse");
             weapon.Actualize(packet);
         }
         protected override void OnShutdown(Packet packet) => weapon.Shutdown(packet);

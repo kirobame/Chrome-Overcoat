@@ -98,6 +98,7 @@ MonoBehaviour:
   lineOfSight: {fileID: 1627768641731386857}
   pivot: {fileID: 1627768642194767726}
   fireAnchor: {fileID: 6341059076847180024}
+  root: {fileID: 1627768641731386863}
   collider: {fileID: 1627768641731386859}
 --- !u!114 &6341059077407569188
 MonoBehaviour:

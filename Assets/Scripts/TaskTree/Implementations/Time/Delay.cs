@@ -26,6 +26,7 @@ namespace Chrome
                 IsLocked = false;
                 isDone = true;
             }
+            //Debug.Log(isDone);
         }
     }
 }
