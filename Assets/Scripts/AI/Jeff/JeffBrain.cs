@@ -21,7 +21,6 @@ namespace Chrome
             idleGoal = Owner[GoalDefinition.Idle];
             attackGoal = Owner[GoalDefinition.Attack];
 
-            var board = Owner.Identity.Packet.Get<IBlackboard>();
             selfLink = Owner.Identity.Packet.Get<AreaLink>();
         }
 
@@ -46,7 +45,6 @@ namespace Chrome
         {
             Events.Unsubscribe<Area>(AreaEvent.OnPlayerEntry, OnPlayerEntry);
             Events.Unsubscribe<Area>(AreaEvent.OnPlayerExit, OnPlayerExit);
-
         }
 
         //--------------------------------------------------------------------------------------------------------------/

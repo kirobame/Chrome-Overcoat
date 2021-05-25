@@ -98,7 +98,7 @@ namespace Chrome
         private Weapon runtimeDefaultWeapon;
         
         private bool weaponHasAmmo;
-        private Bindable<float> ammoBinding;
+        private BindableGauge ammoBinding;
         
         private bool hasBeenBootedUp;
 
@@ -130,7 +130,11 @@ namespace Chrome
         {
             if (switchState == SwitchState.None) // Launch normally
             {
-                if (Current == weapon) return;
+                if (Current == weapon)
+                {
+                    if (weaponHasAmmo) ammoBinding.Value = ammoBinding.Range.y;
+                    return;
+                }
                 targetWeapon = weapon;
 
                 if (HasWeapon) switchRoutine = StartCoroutine(HolsterRoutine());
@@ -164,6 +168,7 @@ namespace Chrome
             
             if (Current.IsMelee)
             {
+                holsterTimer = 1.0f;
                 takeOutTimer = 0.0f;
                 
                 Refresh();
@@ -200,6 +205,9 @@ namespace Chrome
             {
                 animator.Value.SetTrigger(MELEE);
                 yield return new WaitForEndOfFrame();
+
+                takeOutTimer = 1.0f;
+                holsterTimer = 0.0f;
                 
                 switchState = SwitchState.None;
                 switchRoutine = null;
@@ -260,7 +268,7 @@ namespace Chrome
             }
             
             HUDBinder.Declare(HUDGroup.Weapon, bindables);
-            if (bindables.TryGet<Bindable<float>>(HUDBinding.Ammo, out ammoBinding))
+            if (bindables.TryGet<BindableGauge>(HUDBinding.Ammo, out ammoBinding))
             {
                 weaponHasAmmo = true;
                 ammoBinding.onChange += OnAmmoChange;

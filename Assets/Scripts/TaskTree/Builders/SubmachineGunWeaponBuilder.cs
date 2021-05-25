@@ -10,7 +10,7 @@ namespace Chrome
     {
         [SerializeField] private GenericPoolable bulletPrefab;
         [SerializeField] private PoolableVfx muzzleFlashPrefab;
-        [SerializeField] private int burstAmmount;
+        [SerializeField] private int burstAmount;
         [SerializeField] private float fireRateDelay;
         [SerializeField] private float burstDelay;
 
@@ -31,7 +31,6 @@ namespace Chrome
                     new BurstCountNode(),
                     new Delay(fireRateDelay)
                 )
-
             ) ;
         }
     }

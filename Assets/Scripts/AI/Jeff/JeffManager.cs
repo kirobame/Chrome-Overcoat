@@ -42,10 +42,7 @@ namespace Chrome
             {
                 var targetDir = (self.position - target.position).normalized;
                 var dir = Vector3.Dot(aim.right, targetDir);
-
-
-                //Debug.Log(self.gameObject.name + " " + target.gameObject.name + " -> " + dir);
-
+                
                 if (dir > 0.75f)
                     return 1.0f;
                 else if (dir < -0.75f)

@@ -41,8 +41,6 @@ namespace Chrome
             var board = Owner.Identity.Packet.Get<IBlackboard>();
             self = board.Get<Transform>(Refs.ROOT);
             selfLink = Owner.Identity.Packet.Get<AreaLink>();
-            
-            board.Set(KyleRefs.FLEE_COOLDOWN, 0.0f);
         }
 
         public override void Bootup()
@@ -51,6 +49,8 @@ namespace Chrome
             Events.Subscribe<Area>(AreaEvent.OnPlayerExit, OnPlayerExit);
             Events.Subscribe<GoalDefinition>(AgentEvent.OnGoalHandlingStart, OnGoalHandlingStart);
             
+            var board = Owner.Identity.Packet.Get<IBlackboard>();
+            board.Set<float>(KyleRefs.FLEE_COOLDOWN, 0.0f);
             timer = 0.0f;
 
             if (selfLink.Area.IsPlayerInAnyBounds) isActive = true;
