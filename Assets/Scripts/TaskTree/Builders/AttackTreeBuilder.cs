@@ -8,15 +8,8 @@ namespace Chrome
     [Serializable]
     public class AttackTreeBuilder : TreeBuilder
     {
-        [SerializeField] private Weapon weapon;
-
-        private Weapon runtimeWeapon;
-        
         public override ITaskTree Build()
         {
-            var runtimeWeapon = Object.Instantiate(weapon);
-            runtimeWeapon.Build();
-
             var playerRef = $"{PlayerRefs.BOARD}.{Refs.ROOT}".Reference<Transform>(ReferenceType.SubGlobal);
             var playerColRef = $"{PlayerRefs.BOARD}.{Refs.COLLIDER}".Reference<Collider>(ReferenceType.SubGlobal);
             
@@ -25,7 +18,8 @@ namespace Chrome
             var pivotRef = Refs.PIVOT.Reference<Transform>();
             var fireAnchorRef = Refs.FIREANCHOR.Reference<Transform>();
             var viewRef = Refs.VIEW.Reference<Transform>();
-       
+            var weaponRef = AgentRefs.WEAPON.Reference<Weapon>();
+
             return new RootNode().Append
                 (
                     TT.IF(new CanSee(viewRef, playerColRef)).Append
@@ -39,7 +33,7 @@ namespace Chrome
                             ),
                             TT.WITH_PRIO(1, new PressNode(1.0f)).Append
                             (
-                                new WeaponNode(runtimeWeapon.Cache())
+                                new WeaponNode(weaponRef)
                             )
                         ),
                         TT.IF_FALSE(new MoveTo(navRef, playerRef, pivotRef)).Append

@@ -23480,7 +23480,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   value: 8
   hasCachedEnemy: 1
-  agentPrefab: {fileID: 6728529343152112552, guid: 3e0327e7ad65069479008166a154a10f, type: 3}
+  agentPrefab: {fileID: 6728529343152112552, guid: e1ac1e7237f6dbd4cb97359382f1a2ab, type: 3}
   modifications:
   - id: 0
   references:
@@ -23708,7 +23708,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   value: 16
   hasCachedEnemy: 1
-  agentPrefab: {fileID: 6728529343152112552, guid: 3e0327e7ad65069479008166a154a10f, type: 3}
+  agentPrefab: {fileID: 6728529343152112552, guid: e1ac1e7237f6dbd4cb97359382f1a2ab, type: 3}
   modifications:
   - id: 0
   references:
