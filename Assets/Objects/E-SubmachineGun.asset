@@ -24,6 +24,6 @@ MonoBehaviour:
         ammo: 999
         bulletPrefab: {fileID: 4146602574307847993, guid: 2d56ea426ee5eae43bf59821b74d6ac5, type: 3}
         muzzleFlashPrefab: {fileID: 6581533253750990063, guid: a3bee71f8ad97b94082b82bcbed23d28, type: 3}
-        burstAmount: 4
-        fireRateDelay: 0.35
+        burstAmount: 3
+        fireRateDelay: 0.4
         burstDelay: 6
