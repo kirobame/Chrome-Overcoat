@@ -7,15 +7,16 @@ namespace Chrome
     public class InputInstaller : MonoBehaviour
     {
         [FoldoutGroup("Values"), SerializeField] private InputActionAsset asset;
+        
+        [FoldoutGroup("General"), SerializeField] private InputActionReference escape;
 
         [FoldoutGroup("Gameplay"), SerializeField] private InputActionReference view;
         [FoldoutGroup("Gameplay"), SerializeField] private InputActionReference jump;
         [FoldoutGroup("Gameplay"), SerializeField] private InputActionReference move;
         [FoldoutGroup("Gameplay"), SerializeField] private InputActionReference sprint;
         [FoldoutGroup("Gameplay"), SerializeField] private InputActionReference shoot;
-        [FoldoutGroup("Gameplay"), SerializeField] private InputActionReference cast;
-        [FoldoutGroup("Gameplay"), SerializeField] private InputActionReference pickWeapon01;
-        [FoldoutGroup("Gameplay"), SerializeField] private InputActionReference pickWeapon02;
+        [FoldoutGroup("Gameplay"), SerializeField] private InputActionReference pickup;
+        [FoldoutGroup("Gameplay"), SerializeField] private InputActionReference stomp;
         
         private Blackboard blackboard;
         
@@ -24,7 +25,14 @@ namespace Chrome
             blackboard = new Blackboard();
             Blackboard.Global.Set<IBlackboard>(InputRefs.BOARD, blackboard);
 
+            var generalMap = asset.FindActionMap("General");
+            generalMap.Enable();
+            blackboard.Set(InputRefs.GENERAL_MAP, generalMap);
+            
+            blackboard.Set(InputRefs.ESCAPE, escape.action);
+            
             var gameplayMap = asset.FindActionMap("Gameplay");
+            gameplayMap.Enable();
             blackboard.Set(InputRefs.GAMEPLAY_MAP, gameplayMap);
             
             blackboard.Set(InputRefs.VIEW, view.action);
@@ -32,9 +40,8 @@ namespace Chrome
             blackboard.Set(InputRefs.MOVE, move.action);
             blackboard.Set(InputRefs.SPRINT, sprint.action);
             blackboard.Set(InputRefs.SHOOT, shoot.action);
-            blackboard.Set(InputRefs.CAST, cast.action);
-            blackboard.Set(InputRefs.PICK_WP_01, pickWeapon01.action);
-            blackboard.Set(InputRefs.PICK_WP_02, pickWeapon02.action);
+            blackboard.Set(InputRefs.PICKUP, pickup.action);
+            blackboard.Set(InputRefs.STOMP, stomp.action);
         }
 
         void OnEnable()

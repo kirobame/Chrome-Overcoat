@@ -83,5 +83,7 @@ namespace Chrome
             
             group.alpha = 0.0f;
         }
+        
+        public void Quit() => Application.Quit();
     }
 }
