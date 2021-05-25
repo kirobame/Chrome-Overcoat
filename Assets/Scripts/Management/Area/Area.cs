@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Flux.Data;
 using Flux.Event;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Chrome
@@ -13,7 +14,7 @@ namespace Chrome
         public event Action onPlayerExit;
         
         public int Occupancy { get; private set; }
-        public bool IsPlayerInAnyBounds => state;
+        [ShowInInspector, DisableInEditorMode] public bool IsPlayerInAnyBounds => state;
 
         private bool state;
         private BoxCollider[] colliders;

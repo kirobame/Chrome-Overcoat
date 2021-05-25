@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Chrome
@@ -121,7 +122,7 @@ namespace Chrome
         [SerializeField] private string entry;
         [SerializeField] private State[] states;
 
-        private State current;
+        [ShowInInspector, DisableInEditorMode] private State current;
 
         public override void Build()
         {

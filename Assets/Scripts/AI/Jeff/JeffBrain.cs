@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Flux;
 using Flux.Event;
 
 namespace Chrome
@@ -28,17 +29,21 @@ namespace Chrome
         {
             Events.Subscribe<Area>(AreaEvent.OnPlayerEntry, OnPlayerEntry);
             Events.Subscribe<Area>(AreaEvent.OnPlayerExit, OnPlayerExit);
-
-            if (selfLink.Area.IsPlayerInAnyBounds)
+            
+            Routines.Start(Routines.DoAfter(() =>
             {
-                attackGoal.IsActive = true;
-                idleGoal.Reset();
-            }
-            else
-            {
-                idleGoal.IsActive = true;
-                attackGoal.Reset();
-            }
+                if (selfLink.Area.IsPlayerInAnyBounds)
+                {
+                    attackGoal.IsActive = true;
+                    idleGoal.Reset();
+                }
+                else
+                {
+                    idleGoal.IsActive = true;
+                    attackGoal.Reset();
+                }
+                
+            }, new YieldFrame()));
         }
 
         public override void Shutdown()

@@ -138,10 +138,12 @@ namespace Chrome
 
         private Dictionary<InputAction, List<Entry>> repository;
         private List<IContinuous> callbackListeners;
-        
+
+        private bool hasBeenBootedUp => repository != null;
+
         //--------------------------------------------------------------------------------------------------------------/
 
-        void Awake()
+        void Bootup()
         {
             repository = new Dictionary<InputAction, List<Entry>>();
             callbackListeners = new List<IContinuous>();
@@ -151,8 +153,12 @@ namespace Chrome
             foreach (var entry in repository.SelectMany(kvp => kvp.Value)) entry.Unbind();
             repository.Clear();
         }
-        
-        void OnEnable() { foreach (var entry in repository.SelectMany(kvp => kvp.Value)) entry.isLocked = false; }
+
+        void OnEnable()
+        {
+            if (!hasBeenBootedUp) Bootup();
+            foreach (var entry in repository.SelectMany(kvp => kvp.Value)) entry.isLocked = false;
+        }
         void OnDisable() { foreach (var entry in repository.SelectMany(kvp => kvp.Value)) entry.isLocked = true; }
 
         void LateUpdate()
@@ -257,6 +263,10 @@ namespace Chrome
 
         int IInstaller.Priority => 1;
 
-        void IInstaller.InstallDependenciesOn(Packet packet) => packet.Set(this);
+        void IInstaller.InstallDependenciesOn(Packet packet)
+        {
+            if (!hasBeenBootedUp) Bootup();
+            packet.Set(this);
+        }
     }
 }

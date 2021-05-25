@@ -59,6 +59,7 @@ namespace Chrome
             var anchors = Blackboard.Global.Get<Transform[]>(respawnPath);          
             
             player.transform.position = anchors[respawnIndex].position;
+            player.transform.rotation = anchors[respawnIndex].rotation;
             player.gameObject.SetActive(true);
             player.Begin();
             
