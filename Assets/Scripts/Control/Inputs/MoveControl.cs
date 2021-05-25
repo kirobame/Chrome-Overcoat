@@ -88,6 +88,8 @@ namespace Chrome
             body.Value.onCollision -= OnBodyCollision;
         }
 
+        public override void Shutdown(byte code) => Inputs = Vector3.zero;
+
         //--------------------------------------------------------------------------------------------------------------/
         
         void Update()

@@ -6,6 +6,8 @@ namespace Chrome
 {
     public class ViewControl : InputControl<ViewControl>
     {
+        public const string MULTIPLIER = "viewSensbility";
+        
         protected override void SetupInputs()
         {
             inputs = new CachedValue<Vector2>(Vector2.zero);
@@ -16,6 +18,8 @@ namespace Chrome
 
         public Vector2 Inputs => inputs.Value;
         public Vector2 Delta => new Vector2(yawKnob.Value, pitchKnob.Value);
+
+        [FoldoutGroup("Shared"), SerializeField] private BindableGauge multiplier;
         
         [FoldoutGroup("Yaw"), SerializeField] private Transform yawTarget;
         [FoldoutGroup("Yaw"), SerializeField] private Knob yawKnob;
@@ -31,6 +35,12 @@ namespace Chrome
         private float pitch;
 
         //--------------------------------------------------------------------------------------------------------------/
+
+        void Awake()
+        {
+            multiplier = new BindableGauge(HUDBinding.Gauge, 1.0f, new Vector2(0.0f, 3.0f));
+            Blackboard.Global.Set(MULTIPLIER, multiplier);
+        }
         
         public override void Bootup(byte code)
         {
@@ -57,13 +67,13 @@ namespace Chrome
             var euler = yawTarget.localEulerAngles;
             var yawInput = Inputs.x;
             yawInput += yawAcceleration.Process(yawInput);
-            yaw += yawKnob.Process(yawInput) * Time.deltaTime;
+            yaw += yawKnob.Process(yawInput) * Time.deltaTime * multiplier.Value;
             
             euler.y = yaw;
             yawTarget.localEulerAngles = euler;
 
             euler = pitchTarget.localEulerAngles;
-            pitch += pitchKnob.Process(-Inputs.y) * Time.deltaTime;
+            pitch += pitchKnob.Process(-Inputs.y) * Time.deltaTime * multiplier.Value;
             pitch = Mathf.Clamp(pitch, pitchRange.x, pitchRange.y);
             
             euler.x = pitch;

@@ -10,7 +10,7 @@ namespace Chrome
         protected override void SetupInputs()
         {
             key = new CachedValue<Key>(Key.Inactive);
-            input.Value.BindKey(InputRefs.PICK_WP_01, this, key);
+            input.Value.BindKey(InputRefs.STOMP, this, key);
         }
 
         //--------------------------------------------------------------------------------------------------------------/

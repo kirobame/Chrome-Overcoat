@@ -38,7 +38,7 @@
                     "interactions": ""
                 },
                 {
-                    "name": "PickFirstWeapon",
+                    "name": "Pickup",
                     "type": "Button",
                     "id": "2ead60d1-69d5-4f27-a1ca-d6f01a63876f",
                     "expectedControlType": "Button",
@@ -46,15 +46,7 @@
                     "interactions": ""
                 },
                 {
-                    "name": "PickSecondWeapon",
-                    "type": "Button",
-                    "id": "93ea10d7-a8ee-4b56-8a05-0305532bbf1e",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
-                    "name": "Cast",
+                    "name": "Stomp",
                     "type": "Button",
                     "id": "49aa11e4-0a12-44ed-a668-760e25c60532",
                     "expectedControlType": "Button",
@@ -166,29 +158,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "PickFirstWeapon",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "9bfe8e31-4854-4017-b3a2-7bbffc7426bf",
-                    "path": "<Keyboard>/r",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "PickSecondWeapon",
+                    "action": "Pickup",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "c5093e19-f7c0-4128-be77-296147a8eaf6",
-                    "path": "<Keyboard>/q",
+                    "path": "<Keyboard>/f",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Cast",
+                    "action": "Stomp",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -200,6 +181,33 @@
                     "processors": "",
                     "groups": "",
                     "action": "View",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "General",
+            "id": "dad2e470-374c-4244-8a18-283ea20f98ba",
+            "actions": [
+                {
+                    "name": "Escape",
+                    "type": "Button",
+                    "id": "a89d5d35-957e-44dc-991a-847d5b4d0398",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "6a10e15c-05b2-4b26-b2c9-78cc10dffb1f",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Escape",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
