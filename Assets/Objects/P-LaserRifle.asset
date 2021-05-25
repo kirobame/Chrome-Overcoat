@@ -25,4 +25,4 @@ MonoBehaviour:
         bulletPrefab: {fileID: 4104665428271210412, guid: 25d5c693ab8e505419b5edd9bd343209, type: 3}
         muzzleFlashPrefab: {fileID: 1284898355391203522, guid: a109455584867ff4085a481c65238189, type: 3}
         rate: 9999
-        delay: 0.8
+        delay: 0.75

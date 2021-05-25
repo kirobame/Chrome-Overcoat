@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61b1fce0bd6a4702acbdad9df76430d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: {x: 2, y: 8}
-  otherSpeed: {x: 17, y: 33}
+  damage: {x: 1, y: 6}
+  otherSpeed: {x: 16, y: 32}
   size: {x: 0.15, y: 0.5}
   impactVfx: {fileID: 8427945788675049256, guid: 11b044480f01489458de3b6c9d48f14a, type: 3}
   bounceVfx: {fileID: 7838945871387715447, guid: 2255f558cf31df24f8f4f84db3af5571, type: 3}

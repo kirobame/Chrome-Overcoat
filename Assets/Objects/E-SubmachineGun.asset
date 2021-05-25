@@ -21,9 +21,9 @@ MonoBehaviour:
     00000000:
       type: {class: SubmachineGunWeaponBuilder, ns: Chrome, asm: Assembly-CSharp}
       data:
-        ammo: 30
+        ammo: 999
         bulletPrefab: {fileID: 4146602574307847993, guid: 2d56ea426ee5eae43bf59821b74d6ac5, type: 3}
         muzzleFlashPrefab: {fileID: 6581533253750990063, guid: a3bee71f8ad97b94082b82bcbed23d28, type: 3}
-        burstAmount: 6
-        fireRateDelay: 0.125
-        burstDelay: 10
+        burstAmount: 4
+        fireRateDelay: 0.35
+        burstDelay: 6

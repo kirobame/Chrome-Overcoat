@@ -21,7 +21,7 @@ MonoBehaviour:
     00000000:
       type: {class: CombineRifleBuilder, ns: Chrome, asm: Assembly-CSharp}
       data:
-        ammo: 15
+        ammo: 9999
         bulletPrefab: {fileID: 8335357938041984344, guid: ef9940d013dc87d4885ac6eeabbebfd9, type: 3}
         muzzleFlashPrefab: {fileID: 3541007952546055489, guid: 094f816bf309dd04bb08458f38cd9655, type: 3}
         configuration: {x: 1, y: 0.2, z: 0.75}

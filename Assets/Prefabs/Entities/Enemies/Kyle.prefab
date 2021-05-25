@@ -472,7 +472,7 @@ MonoBehaviour:
       type: {class: KyleBrain, ns: Chrome, asm: Assembly-CSharp}
       data:
         ranges: {x: 5, y: 25}
-        commitments: {x: 0, y: 2.5, z: 0}
+        commitments: {x: 0, y: 1.5, z: 1}
     00000005:
       type: {class: StateMachine, ns: Chrome, asm: Assembly-CSharp}
       data:
@@ -615,8 +615,8 @@ MonoBehaviour:
     00000017:
       type: {class: KyleFleeTreeBuilder, ns: Chrome, asm: Assembly-CSharp}
       data:
-        cooldown: 5
-        speed: 1.75
+        cooldown: 6
+        speed: 2
         range: 7.5
         height: 2.25
         resolution: 6
@@ -625,7 +625,7 @@ MonoBehaviour:
       data:
         coverRange: 12.5
         coverAcceptance: 0
-        sightErrorThreshold: 1.75
+        sightErrorThreshold: 2
     00000019:
       type: {class: KyleSeekTreeBuilder, ns: Chrome, asm: Assembly-CSharp}
 --- !u!195 &166374289766527819
@@ -638,8 +638,8 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 4.375
-  m_Acceleration: 32
+  m_Speed: 4
+  m_Acceleration: 26
   avoidancePriority: 50
   m_AngularSpeed: 1280
   m_StoppingDistance: 0.1
@@ -738,7 +738,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68e99121213d46cc98968f134d52eb25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  max: 8
+  max: 5
 --- !u!114 &881180404256073477
 MonoBehaviour:
   m_ObjectHideFlags: 0

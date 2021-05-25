@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba7a0fa2aca943d8adafe36585396539, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 80
+  speed: 70
   appearance: 0.1
-  damage: 1
+  damage: 2
   impactVfx: {fileID: 3183420789188184947, guid: 66e5059132311884482d84c5ce0d3f37, type: 3}
   graph: {fileID: 8189052088170407738}
   trail: {fileID: 4175077589236259546}

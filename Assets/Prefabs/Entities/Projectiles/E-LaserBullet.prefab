@@ -236,9 +236,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba7a0fa2aca943d8adafe36585396539, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 35
+  speed: 50
   appearance: 0.05
-  damage: 1
+  damage: 2
   impactVfx: {fileID: 320572718257505907, guid: 8262978f6b413834a9eb48bbd692064f, type: 3}
   graph: {fileID: 6705579439055659705}
   trail: {fileID: 4075151374846224975}

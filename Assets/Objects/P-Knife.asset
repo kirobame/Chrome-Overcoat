@@ -21,8 +21,8 @@ MonoBehaviour:
     00000000:
       type: {class: KnifeWeaponBuilder, ns: Chrome, asm: Assembly-CSharp}
       data:
-        damage: 3
+        damage: 2
         configuration: {x: 20, y: 3, z: 6}
         delay: 0.075
-        cooldown: 0.8
+        cooldown: 0.5
         hitVfxPrefab: {fileID: 1478064287326258996, guid: 9b5cddd4e77160f4db4633edeb9c02f3, type: 3}

@@ -24,4 +24,4 @@ MonoBehaviour:
         ammo: 15
         bulletPrefab: {fileID: 8335357938041984344, guid: 1e67d86e3a513cd4da520aeaf8e6856f, type: 3}
         muzzleFlashPrefab: {fileID: 3541007952546055489, guid: 094f816bf309dd04bb08458f38cd9655, type: 3}
-        configuration: {x: 0.75, y: 0.125, z: 0.75}
+        configuration: {x: 1, y: 0.15, z: 0.75}
